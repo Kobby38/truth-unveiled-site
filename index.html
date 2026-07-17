@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="color-scheme" content="dark light">
 <title>Truth Unveiled Ministries</title>
 <meta name="description" content="Truth Unveiled Ministries — unveiling the truth of God's Word through sound biblical teaching, fervent prayer, and the ministry of the Holy Spirit. Established 2026.">
 
@@ -831,7 +832,7 @@
 
 
   /* ===================== Socials ===================== */
-  .socials{ background:var(--black); }
+  .socials{ background:var(--purple-deep); }
   .socials .section-head .eyebrow{ color:var(--gold-light); }
   .socials .section-head h2{ color:var(--cream); }
   .socials .section-head p{ color:rgba(251,247,238,0.75); }
@@ -862,20 +863,23 @@
     border-color:rgba(212,165,55,0.5);
   }
   .social-icon{
-    width:44px;
-    height:44px;
-    border-radius:50%;
-    background:linear-gradient(135deg, var(--gold-light), var(--gold));
+    width:48px;
+    height:48px;
+    border-radius:14px;
     display:flex;
     align-items:center;
     justify-content:center;
     flex-shrink:0;
+    box-shadow:0 6px 16px rgba(0,0,0,0.35);
   }
   .social-icon svg{
-    width:22px;
-    height:22px;
-    fill:var(--black);
+    width:24px;
+    height:24px;
   }
+  .social-icon.whatsapp{ background:linear-gradient(135deg, #25D366, #128C7E); }
+  .social-icon.instagram{ background:radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+  .social-icon.tiktok{ background:#010101; }
+  .social-icon.youtube{ background:#FF0000; }
   .social-card .social-name{
     font-family:var(--font-heading);
     font-size:1.05rem;
@@ -893,10 +897,9 @@
   .connect{ background:var(--cream); }
   .connect-grid{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:28px;
+    grid-template-columns:1fr;
+    max-width:560px;
   }
-  @media (max-width:860px){ .connect-grid{ grid-template-columns:1fr; } }
 
   .info-card{
     background:var(--linen);
@@ -921,14 +924,6 @@
   .info-list li:last-child{ border-bottom:none; }
   .info-list .label{ color:#5c5468; font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; }
 
-  .give-card{
-    background:linear-gradient(135deg, var(--purple-deep), var(--purple));
-    color:var(--cream);
-    border-radius:var(--radius);
-    padding:32px;
-  }
-  .give-card h3{ color:var(--gold-light); font-size:1.2rem; }
-  .give-card p{ color:rgba(251,247,238,0.85); }
 
 
   .contact-email{
@@ -940,7 +935,7 @@
 
   /* ===================== Footer ===================== */
   .site-footer{
-    background:var(--black);
+    background:var(--purple-deep);
     color:rgba(251,247,238,0.7);
     padding:56px 0 28px;
   }
@@ -1530,32 +1525,36 @@
       <div class="social-grid">
         <!-- REPLACE hrefs below if these links ever change -->
         <a class="social-card" href="https://whatsapp.com/channel/0029Vb60rooKbYMG4gBuNg44" target="_blank" rel="noopener">
-          <span class="social-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.42a9.85 9.85 0 0 0 4.62 1.18h.005c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm0 18.06h-.004a8.14 8.14 0 0 1-4.15-1.14l-.298-.177-3.216.844.859-3.135-.194-.322a8.12 8.12 0 0 1-1.246-4.32c0-4.49 3.655-8.14 8.153-8.14 2.177 0 4.222.848 5.76 2.387a8.09 8.09 0 0 1 2.385 5.76c0 4.49-3.654 8.147-8.05 8.147z"/></svg>
+          <span class="social-icon whatsapp" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.42a9.85 9.85 0 0 0 4.62 1.18h.005c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm0 18.06h-.004a8.14 8.14 0 0 1-4.15-1.14l-.298-.177-3.216.844.859-3.135-.194-.322a8.12 8.12 0 0 1-1.246-4.32c0-4.49 3.655-8.14 8.153-8.14 2.177 0 4.222.848 5.76 2.387a8.09 8.09 0 0 1 2.385 5.76c0 4.49-3.654 8.147-8.05 8.147z"/></svg>
           </span>
           <span class="social-name">WhatsApp</span>
           <span class="social-sub">Follow Our Channel</span>
         </a>
 
         <a class="social-card" href="https://www.instagram.com/truthunveiledministries?igsh=MW03aHhqemZ4MHQ4Zg==" target="_blank" rel="noopener">
-          <span class="social-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.332.014 7.052.072 2.695.272.273 2.69.073 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.332 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.668-.072-4.948C23.729 2.699 21.311.273 16.951.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          <span class="social-icon instagram" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.332.014 7.052.072 2.695.272.273 2.69.073 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.332 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.668-.072-4.948C23.729 2.699 21.311.273 16.951.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
           </span>
           <span class="social-name">Instagram</span>
           <span class="social-sub">@truthunveiledministries</span>
         </a>
 
         <a class="social-card" href="https://vt.tiktok.com/ZSXhXH2w6/" target="_blank" rel="noopener">
-          <span class="social-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M16.6 5.82c-1.02-.9-1.66-2.19-1.75-3.62V2h-3.4v13.4a2.59 2.59 0 1 1-2.13-2.55v-3.5a6 6 0 1 0 5.53 5.98c0-.08 0-.16-.01-.24V8.87a8.16 8.16 0 0 0 4.76 1.52V6.98a4.85 4.85 0 0 1-3-1.16z"/></svg>
+          <span class="social-icon tiktok" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path fill="#25F4EE" transform="translate(-0.9,0)" d="M16.6 5.82c-1.02-.9-1.66-2.19-1.75-3.62V2h-3.4v13.4a2.59 2.59 0 1 1-2.13-2.55v-3.5a6 6 0 1 0 5.53 5.98c0-.08 0-.16-.01-.24V8.87a8.16 8.16 0 0 0 4.76 1.52V6.98a4.85 4.85 0 0 1-3-1.16z"/>
+              <path fill="#FE2C55" transform="translate(0.9,0)" d="M16.6 5.82c-1.02-.9-1.66-2.19-1.75-3.62V2h-3.4v13.4a2.59 2.59 0 1 1-2.13-2.55v-3.5a6 6 0 1 0 5.53 5.98c0-.08 0-.16-.01-.24V8.87a8.16 8.16 0 0 0 4.76 1.52V6.98a4.85 4.85 0 0 1-3-1.16z"/>
+              <path fill="#fff" d="M16.6 5.82c-1.02-.9-1.66-2.19-1.75-3.62V2h-3.4v13.4a2.59 2.59 0 1 1-2.13-2.55v-3.5a6 6 0 1 0 5.53 5.98c0-.08 0-.16-.01-.24V8.87a8.16 8.16 0 0 0 4.76 1.52V6.98a4.85 4.85 0 0 1-3-1.16z"/>
+            </svg>
           </span>
           <span class="social-name">TikTok</span>
           <span class="social-sub">Watch Our Clips</span>
         </a>
 
         <a class="social-card" href="https://youtube.com/@kwabenaopoku4?si=QSY3v2KoLUtKDXSr" target="_blank" rel="noopener">
-          <span class="social-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          <span class="social-icon youtube" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="#fff"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
           </span>
           <span class="social-name">YouTube</span>
           <span class="social-sub">Watch Full Sermons</span>
@@ -1569,7 +1568,7 @@
     <div class="container">
       <div class="section-head">
         <p class="eyebrow">Stay Connected</p>
-        <h2 id="connect-heading">Connect &amp; Give</h2>
+        <h2 id="connect-heading">Connect</h2>
       </div>
 
       <div class="connect-grid">
@@ -1582,11 +1581,6 @@
             <li><span class="label">Prayer Room</span><span>Saturdays, 6–9 AM GMT</span></li>
             <li><span class="label">Events</span><span>In-Person Prophetic Conference, Oct 2026</span></li>
           </ul>
-        </div>
-
-        <div class="give-card" id="give">
-          <h3>Give</h3>
-          <p>Your giving helps sustain the teaching, prayer, and outreach ministries of Truth Unveiled Ministries. Thank you for sowing into this work.</p>
         </div>
       </div>
     </div>
