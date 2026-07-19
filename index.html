@@ -938,16 +938,15 @@
     text-align:center;
     gap:12px;
     padding:28px 20px;
-    background:linear-gradient(160deg, var(--gold-light), var(--gold));
-    border:1px solid rgba(10,10,12,0.15);
+    background:var(--panel-dark);
+    border:1px solid rgba(212,165,55,0.18);
     border-radius:var(--radius);
     text-decoration:none;
-    box-shadow:0 10px 26px rgba(0,0,0,0.28);
-    transition:transform var(--transition), box-shadow var(--transition);
+    transition:transform var(--transition), border-color var(--transition);
   }
   .social-card:hover{
     transform:translateY(-4px);
-    box-shadow:0 16px 34px rgba(0,0,0,0.35);
+    border-color:rgba(212,165,55,0.5);
   }
   .social-icon{
     width:48px;
@@ -970,14 +969,14 @@
   .social-card .social-name{
     font-family:var(--font-heading);
     font-size:1.05rem;
-    color:var(--charcoal);
+    color:var(--cream);
   }
   .social-card .social-sub{
     font-family:var(--font-mono);
     font-size:0.7rem;
     letter-spacing:0.05em;
     text-transform:uppercase;
-    color:rgba(10,10,12,0.6);
+    color:rgba(251,247,238,0.55);
   }
 
   /* ===================== Connect / Give ===================== */
@@ -2274,7 +2273,13 @@
     <div class="modal-success" id="booking-modal-success">
       <h3>You're booked</h3>
       <p id="booking-success-text">Thank you — we look forward to meeting with you.</p>
-      <button type="button" class="btn btn-gold btn-block" id="booking-modal-done">Done</button>
+      <div class="zoom-link-box">
+        <p class="zoom-link-instruction">Join meeting using this link:</p>
+        <a class="zoom-link-url" href="https://us02web.zoom.us/j/89478115474" target="_blank" rel="noopener">https://us02web.zoom.us/j/89478115474</a>
+        <a class="btn btn-gold btn-block" href="https://us02web.zoom.us/j/89478115474" target="_blank" rel="noopener">Join Meeting Now</a>
+      </div>
+      <button type="button" class="btn btn-outline btn-block" id="booking-modal-edit">Edit Details</button>
+      <button type="button" class="btn btn-outline btn-block" id="booking-modal-done">Done</button>
     </div>
   </div>
 </div>
@@ -2720,65 +2725,11 @@
         if(wedEl) wedEl.textContent = '· ' + nextDateFor(3); // 3 = Wednesday
       })();
 
-      // Replaces the GMT time shown on each slot with the visitor's own local time,
-      // detected from their browser's timezone setting (Intl API — reads the device's
-      // clock/timezone config, no location permission prompt, no IP lookup — "using their
-      // location" in practice means this, since true GPS geolocation would need a
-      // permission prompt for information a timezone already gives us for free). This
-      // handles daylight saving correctly for ANY timezone worldwide. The underlying GMT
-      // time is kept on the button as a data attribute (data-slot-time) and is what
-      // actually gets submitted — only the visible label changes. If detection isn't
-      // available for some reason, it falls back to America/New_York, which — via the
-      // same Intl mechanism — correctly shows EDT (GMT-4) in summer and EST (GMT-5) in
-      // winter, rather than a hardcoded, season-blind offset.
-      (function(){
-        var displayTz;
-        try {
-          displayTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York';
-        } catch(e) {
-          displayTz = 'America/New_York';
-        }
-
-        function upcomingUTCDateFor(targetWeekday){
-          var now = new Date();
-          var d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-          var daysUntil = (targetWeekday - d.getUTCDay() + 7) % 7;
-          d.setUTCDate(d.getUTCDate() + daysUntil);
-          return d;
-        }
-
-        var mondayBase = upcomingUTCDateFor(1);
-        var wednesdayBase = upcomingUTCDateFor(3);
-
-        var timeFmt = new Intl.DateTimeFormat('en-US', {
-          hour: 'numeric', minute: '2-digit', hour12: true, timeZoneName: 'short', timeZone: displayTz
-        });
-        var localWeekdayFmt = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: displayTz });
-        var gmtWeekdayFmt = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'UTC' });
-
-        document.querySelectorAll('.slot-btn[data-slot-id]').forEach(function(btn){
-          var id = btn.getAttribute('data-slot-id');
-          var match = id.match(/(\d{2})(\d{2})$/);
-          if(!match) return;
-          var hour = parseInt(match[1], 10);
-          var minute = parseInt(match[2], 10);
-          var base = id.indexOf('mon-') === 0 ? mondayBase : wednesdayBase;
-          var slotUTC = new Date(Date.UTC(base.getUTCFullYear(), base.getUTCMonth(), base.getUTCDate(), hour, minute));
-
-          var label = timeFmt.format(slotUTC);
-          if(localWeekdayFmt.format(slotUTC) !== gmtWeekdayFmt.format(slotUTC)){
-            label += ' · ' + localWeekdayFmt.format(slotUTC);
-          }
-
-          var timeEl = btn.querySelector('.slot-time');
-          if(timeEl) timeEl.textContent = label;
-        });
-      })();
-
       var overlay = document.getElementById('booking-modal-overlay');
       var panel = document.getElementById('booking-modal-panel');
       var closeBtn = document.getElementById('booking-modal-close');
       var doneBtn = document.getElementById('booking-modal-done');
+      var editBtn = document.getElementById('booking-modal-edit');
       var form = document.getElementById('booking-modal-form');
       var success = document.getElementById('booking-modal-success');
       var successText = document.getElementById('booking-success-text');
@@ -2912,6 +2863,17 @@
       doneBtn.addEventListener('click', closeModal);
       overlay.addEventListener('click', function(e){
         if(e.target === overlay) closeModal();
+      });
+
+      // Lets someone fix a mistake right after booking, in the same visit — reopens the
+      // form pre-filled with exactly what they submitted (nothing is cleared), and
+      // resubmitting sends a corrected entry to Formspree. This isn't editing the original
+      // submission (Formspree has no way to do that), it's a fresh corrected one — good
+      // enough for "I want to fix a typo I just made," not meant for changing plans days later.
+      editBtn.addEventListener('click', function(){
+        success.classList.remove('show');
+        form.classList.remove('hide');
+        firstNameInput.focus();
       });
 
       form.addEventListener('submit', function(e){
