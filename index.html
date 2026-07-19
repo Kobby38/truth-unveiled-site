@@ -1020,6 +1020,161 @@
     word-break:break-word;
   }
 
+  /* ===================== Prayer Requests ===================== */
+  .prayer-requests{ background:var(--cream); }
+  .prayer-requests .section-head .eyebrow{ color:var(--purple); }
+  .prayer-requests .section-head h2{ color:var(--charcoal); }
+  .prayer-request-card{
+    max-width:560px;
+    background:var(--panel-dark);
+    color:var(--cream);
+    border-radius:var(--radius);
+    padding:40px 36px;
+    text-align:center;
+    border-top:3px solid var(--gold);
+    box-shadow:var(--shadow-soft);
+  }
+  .prayer-request-card h3{
+    color:var(--gold-light);
+    font-size:1.3rem;
+    margin-bottom:0.5em;
+  }
+  .prayer-request-card p{
+    color:rgba(251,247,238,0.8);
+    margin-bottom:1.6em;
+  }
+
+  /* ===================== One-on-One Booking ===================== */
+  .booking{ background:var(--black); color:var(--cream); }
+  .booking .section-head .eyebrow{ color:var(--gold-light); }
+  .booking .section-head h2{ color:var(--cream); }
+  .booking .section-head p{ color:rgba(251,247,238,0.75); }
+  .booking-day-group{ margin-bottom:36px; }
+  .booking-day-group:last-of-type{ margin-bottom:28px; }
+  .booking-day-title{
+    font-family:var(--font-heading);
+    font-size:1.3rem;
+    color:var(--gold-light);
+    margin-bottom:4px;
+  }
+  .booking-date{
+    font-family:var(--font-mono);
+    font-size:0.85rem;
+    font-weight:400;
+    color:rgba(251,247,238,0.6);
+  }
+  .booking-day-sub{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color:rgba(251,247,238,0.55);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:18px;
+  }
+  .slot-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .slot-btn{
+    --slot-accent: var(--gold);
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+    padding:12px 18px;
+    border-radius:10px;
+    background:rgba(251,247,238,0.06);
+    border:1px solid rgba(212,165,55,0.35);
+    color:var(--cream);
+    text-decoration:none;
+    font-family:inherit;
+    cursor:pointer;
+    transition:transform var(--transition), border-color var(--transition), background var(--transition);
+    animation:slotGlow 2.6s ease-in-out infinite;
+  }
+  @keyframes slotGlow{
+    0%, 100% { box-shadow: 0 0 3px 0 var(--slot-accent); border-left-color: color-mix(in srgb, var(--slot-accent) 55%, transparent); }
+    50% { box-shadow: 0 0 16px 2px var(--slot-accent); border-left-color: var(--slot-accent); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .slot-btn{ animation:none; box-shadow:none; }
+  }
+  .slot-btn:hover{
+    border-color:var(--gold);
+    background:rgba(212,165,55,0.12);
+    transform:translateY(-2px);
+  }
+  .slot-time{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:0.9rem;
+  }
+  .slot-est{
+    font-family:var(--font-mono);
+    font-size:0.7rem;
+    color:rgba(251,247,238,0.55);
+  }
+  .slot-btn.full{
+    opacity:0.4;
+    pointer-events:none;
+    border-color:rgba(251,247,238,0.15);
+    background:transparent;
+  }
+  .slot-btn.full .slot-time::after{
+    content:' — Full';
+    color:#ff9b8a;
+  }
+  .booking-note{
+    font-size:0.85rem;
+    color:rgba(251,247,238,0.5);
+    margin-top:8px;
+  }
+  .booking-dashboard{
+    background:rgba(251,247,238,0.05);
+    border:1px solid rgba(212,165,55,0.25);
+    border-radius:var(--radius);
+    padding:18px 24px;
+    margin-bottom:36px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .booking-dashboard-total{
+    font-family:var(--font-heading);
+    font-size:1.1rem;
+    color:var(--gold-light);
+    margin:0;
+  }
+  .booking-dashboard-split{
+    display:flex;
+    gap:22px;
+    font-size:0.88rem;
+    color:rgba(251,247,238,0.75);
+  }
+  .booking-dashboard-split strong{ color:var(--cream); }
+
+  /* Distinct accent color per slot, cycling through a 10-color palette so Monday and
+     Wednesday share the same rhythm — purely decorative, doesn't affect availability logic. */
+  .slot-btn{ border-left:4px solid var(--slot-accent); }
+  .slot-btn:nth-child(10n+1){ --slot-accent:#D4A537; animation-delay:0s; }
+  .slot-btn:nth-child(10n+2){ --slot-accent:#B49FE0; animation-delay:0.26s; }
+  .slot-btn:nth-child(10n+3){ --slot-accent:#E88FA0; animation-delay:0.52s; }
+  .slot-btn:nth-child(10n+4){ --slot-accent:#5FBFAE; animation-delay:0.78s; }
+  .slot-btn:nth-child(10n+5){ --slot-accent:#E8A54E; animation-delay:1.04s; }
+  .slot-btn:nth-child(10n+6){ --slot-accent:#6FB8E0; animation-delay:1.3s; }
+  .slot-btn:nth-child(10n+7){ --slot-accent:#7FBF7F; animation-delay:1.56s; }
+  .slot-btn:nth-child(10n+8){ --slot-accent:#E88A6B; animation-delay:1.82s; }
+  .slot-btn:nth-child(10n+9){ --slot-accent:#9F8FE0; animation-delay:2.08s; }
+  .slot-btn:nth-child(10n+10){ --slot-accent:#E0A5C4; animation-delay:2.34s; }
+  .slot-btn.full{
+    --slot-accent: rgba(251,247,238,0.15);
+    animation:none;
+    box-shadow:none;
+  }
+
   /* ===================== Footer ===================== */
   .site-footer{
     background:var(--purple-deep);
@@ -1161,6 +1316,19 @@
     font-size:0.92rem;
     margin-bottom:1.4em;
   }
+  .welcome-modal-panel{
+    text-align:center;
+    max-width:400px;
+  }
+  .welcome-modal-panel .eyebrow{
+    color:var(--gold-light);
+    display:block;
+    margin-bottom:0.8em;
+  }
+  .welcome-modal-panel h3{
+    font-family:var(--font-heading);
+    font-size:1.5rem;
+  }
   .modal-field{
     margin-bottom:18px;
   }
@@ -1188,6 +1356,28 @@
     outline:2px solid var(--gold);
     outline-offset:1px;
     border-color:var(--gold);
+  }
+  .modal-field textarea{
+    width:100%;
+    background:rgba(251,247,238,0.06);
+    border:1px solid rgba(251,247,238,0.2);
+    border-radius:8px;
+    padding:12px 14px;
+    color:var(--cream);
+    font-family:var(--font-body);
+    font-size:0.95rem;
+    resize:vertical;
+    min-height:100px;
+  }
+  .modal-field textarea::placeholder{ color:rgba(251,247,238,0.35); }
+  .modal-field textarea:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:1px;
+    border-color:var(--gold);
+  }
+  .modal-success .btn + .btn,
+  .modal-success .btn + a.btn{
+    margin-top:12px;
   }
   .modal-fieldset{
     border:none;
@@ -1282,6 +1472,8 @@
       <a href="#about">About</a>
       <a href="#prayer-room">Prayer Room</a>
       <a href="#events">Events</a>
+      <a href="#prayer-requests">Prayer Requests</a>
+      <a href="#booking">Prayer Session</a>
       <a href="#socials">Socials</a>
       <a href="#connect">Connect</a>
     </nav>
@@ -1312,8 +1504,8 @@
 
     <div class="hero-inner">
       <p class="eyebrow">Established 2026</p>
-      <h1>Truth <em>Unveiled</em> — a light that draws the veil back</h1>
-      <p class="lead">Truth Unveiled Ministries exists to unveil the truth of God's Word through sound biblical teaching, fervent prayer, and the ministry of the Holy Spirit — guiding all who seek Him into deeper intimacy with Christ.</p>
+      <h1>Truth <em>Unveiled</em><br>a light that draws the veil back</h1>
+      <p class="lead">Truth Unveiled Ministries exists to unveil the truth of God's Word through sound biblical teaching, fervent prayer, and the ministry of the Holy Spirit, guiding all who seek Him into deeper intimacy with Christ.</p>
       <div class="hero-ctas">
         <a class="btn btn-gold" href="#prayer-room" id="hero-prayer-cta"><span class="live-dot" id="hero-live-dot" aria-hidden="true" hidden></span><span id="hero-prayer-cta-text">Join the Prayer Room</span></a>
         <a class="btn btn-outline" href="#events">Upcoming Events</a>
@@ -1662,7 +1854,7 @@
       <!-- TEMPLATE ROW: duplicate this .gathering-row block for each new event.
            EDITABLE: exact date, description, and venue below are placeholders. -->
       <div class="gathering-row">
-        <div class="gathering-date">Oct 17, 2026</div>
+        <div class="gathering-date">Oct 31, 2026</div>
         <div class="gathering-body">
           <h3>In-Person Prophetic Conference</h3>
           <p>A one-day in-person gathering of prophetic ministry, worship, and impartation. Venue to be announced.</p>
@@ -1675,6 +1867,106 @@
         </div>
       </div>
       <!-- END TEMPLATE ROW -->
+    </div>
+  </section>
+
+  <!-- ===================== Prayer Requests ===================== -->
+  <section class="prayer-requests" id="prayer-requests" aria-labelledby="prayer-requests-heading">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">We're Praying With You</p>
+        <h2 id="prayer-requests-heading">Prayer Requests</h2>
+        <p>Whatever you're carrying, you don't have to carry it alone. Share your request and our prayer team will lift it up.</p>
+      </div>
+
+      <div class="prayer-request-card">
+        <h3>Submit a Prayer Request</h3>
+        <p>Share what's on your heart — only our prayer team sees what you submit.</p>
+        <button type="button" class="btn btn-gold btn-block" id="open-prayer-request-modal">Submit a Prayer Request</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== One-on-One Booking ===================== -->
+  <!-- Live slot availability is read from a published Google Sheet CSV (SLOT_COUNTS_CSV_URL below).
+       Until that URL is set, every slot shows as available (fails open, not closed) — see the JS
+       further down for the fallback behavior and the exact Sheet formula needed. -->
+  <section class="booking" id="booking" aria-labelledby="booking-heading">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Meet With Us</p>
+        <h2 id="booking-heading">Personal Prayer &amp; Prophetic Session</h2>
+        <p>A private, one-on-one time of prayer and prophetic ministration. Pick an open slot below — sessions are limited to one person per slot, and the schedule refreshes every Friday at 12:00 AM GMT.</p>
+      </div>
+
+      <div class="booking-dashboard">
+        <p class="booking-dashboard-total" id="booking-remaining-total">15 of 15 slots remaining this week</p>
+        <div class="booking-dashboard-split">
+          <span><strong>Monday:</strong> <span id="booking-remaining-monday">5 of 5 open</span></span>
+          <span><strong>Wednesday:</strong> <span id="booking-remaining-wednesday">10 of 10 open</span></span>
+        </div>
+      </div>
+
+      <div class="booking-day-group">
+        <h3 class="booking-day-title">Monday <span class="booking-date" id="booking-date-monday"></span></h3>
+        <p class="booking-day-sub">5 slots</p>
+        <div class="slot-grid" data-day="Monday">
+          <button type="button" class="slot-btn" data-slot-id="mon-1400" data-slot-day="Monday" data-slot-time="2:00 PM GMT">
+            <span class="slot-time">2:00 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="mon-1430" data-slot-day="Monday" data-slot-time="2:30 PM GMT">
+            <span class="slot-time">2:30 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="mon-1500" data-slot-day="Monday" data-slot-time="3:00 PM GMT">
+            <span class="slot-time">3:00 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="mon-1530" data-slot-day="Monday" data-slot-time="3:30 PM GMT">
+            <span class="slot-time">3:30 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="mon-1600" data-slot-day="Monday" data-slot-time="4:00 PM GMT">
+            <span class="slot-time">4:00 PM GMT</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="booking-day-group">
+        <h3 class="booking-day-title">Wednesday <span class="booking-date" id="booking-date-wednesday"></span></h3>
+        <p class="booking-day-sub">10 slots</p>
+        <div class="slot-grid" data-day="Wednesday">
+          <button type="button" class="slot-btn" data-slot-id="wed-1200" data-slot-day="Wednesday" data-slot-time="12:00 PM GMT">
+            <span class="slot-time">12:00 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="wed-1220" data-slot-day="Wednesday" data-slot-time="12:20 PM GMT">
+            <span class="slot-time">12:20 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="wed-1240" data-slot-day="Wednesday" data-slot-time="12:40 PM GMT">
+            <span class="slot-time">12:40 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="wed-1300" data-slot-day="Wednesday" data-slot-time="1:00 PM GMT">
+            <span class="slot-time">1:00 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="wed-1320" data-slot-day="Wednesday" data-slot-time="1:20 PM GMT">
+            <span class="slot-time">1:20 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="wed-1340" data-slot-day="Wednesday" data-slot-time="1:40 PM GMT">
+            <span class="slot-time">1:40 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="wed-1400" data-slot-day="Wednesday" data-slot-time="2:00 PM GMT">
+            <span class="slot-time">2:00 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="wed-1420" data-slot-day="Wednesday" data-slot-time="2:20 PM GMT">
+            <span class="slot-time">2:20 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="wed-1440" data-slot-day="Wednesday" data-slot-time="2:40 PM GMT">
+            <span class="slot-time">2:40 PM GMT</span>
+          </button>
+          <button type="button" class="slot-btn" data-slot-id="wed-1500" data-slot-day="Wednesday" data-slot-time="3:00 PM GMT">
+            <span class="slot-time">3:00 PM GMT</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="booking-note">Times shown are automatically converted to your own local time. A grayed-out slot means it's already booked for this week.</p>
     </div>
   </section>
 
@@ -1781,7 +2073,8 @@
             <li><a href="#events">Events</a></li>
             <li><a href="#socials">Socials</a></li>
             <li><a href="#connect">Connect</a></li>
-            <li><a href="#give">Give</a></li>
+            <li><a href="#prayer-requests">Prayer Requests</a></li>
+            <li><a href="#booking">Prayer Session</a></li>
           </ul>
         </div>
       </div>
@@ -1875,6 +2168,113 @@
       <h3>You're on the list!</h3>
       <p id="rsvp-modal-success-text">Thanks for your RSVP.</p>
       <button type="button" class="btn btn-gold btn-block" id="rsvp-modal-done">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- First-time visitor welcome modal — shown once per browser, tracked via localStorage -->
+<div class="modal-overlay" id="welcome-modal-overlay">
+  <div class="modal-panel welcome-modal-panel" role="dialog" aria-modal="true" aria-labelledby="welcome-modal-title" id="welcome-modal-panel">
+    <button type="button" class="modal-close" id="welcome-modal-close" aria-label="Close">&times;</button>
+    <span class="eyebrow">Welcome</span>
+    <h3 id="welcome-modal-title">Glad you're here</h3>
+    <p>Truth Unveiled Ministries is a place to encounter God's Word, join us in prayer, and grow deeper in Christ together.</p>
+  </div>
+</div>
+
+<!-- Prayer Request modal — submits to Formspree, shows an instant on-page confirmation,
+     and offers to share the request into the ministry's WhatsApp prayer group. A website
+     cannot silently post into a WhatsApp group (no API for that on a plain invite link),
+     so "Share to WhatsApp" opens WhatsApp with the request pre-filled for the visitor to send. -->
+<div class="modal-overlay" id="prayer-request-modal-overlay">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="prayer-request-modal-title" id="prayer-request-modal-panel">
+    <button type="button" class="modal-close" id="prayer-request-modal-close" aria-label="Close">&times;</button>
+
+    <form class="modal-form" id="prayer-request-modal-form">
+      <h3 id="prayer-request-modal-title">Submit a Prayer Request</h3>
+      <p>Share what's on your heart. Only our prayer team will see this.</p>
+
+      <div class="modal-field">
+        <label for="prayer-request-name">Name (optional)</label>
+        <input type="text" id="prayer-request-name" name="name" placeholder="Jane Doe" autocomplete="name">
+      </div>
+      <div class="modal-field">
+        <label for="prayer-request-text">Your prayer request</label>
+        <textarea id="prayer-request-text" name="request" rows="4" placeholder="Share what's on your heart…" required></textarea>
+      </div>
+
+      <p class="modal-error hide" id="prayer-request-modal-error">Something went wrong sending your request — please try again, or reach out to us directly.</p>
+
+      <button type="submit" class="btn btn-gold btn-block" id="prayer-request-submit">Send Prayer Request</button>
+    </form>
+
+    <div class="modal-success" id="prayer-request-modal-success">
+      <h3>Received</h3>
+      <p id="prayer-request-success-text">Thank you. Our prayer team is committed to lifting this up.</p>
+      <button type="button" class="btn btn-gold btn-block" id="prayer-request-modal-done">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Personal Prayer & Prophetic Session booking modal — submits to Formspree (like RSVP and
+     Prayer Requests) and separately pings a Google Apps Script Web App to increment that
+     slot's live count, which is what powers the automatic "Full" state on the slot buttons. -->
+<div class="modal-overlay" id="booking-modal-overlay">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title" id="booking-modal-panel">
+    <button type="button" class="modal-close" id="booking-modal-close" aria-label="Close">&times;</button>
+
+    <form class="modal-form" id="booking-modal-form">
+      <h3 id="booking-modal-title">Personal Prayer &amp; Prophetic Session</h3>
+      <p id="booking-modal-slot-label">Selected time:</p>
+
+      <input type="hidden" id="booking-day" name="day">
+      <input type="hidden" id="booking-time" name="time">
+      <input type="hidden" id="booking-local-time" name="localTime">
+
+      <div class="modal-field">
+        <label for="booking-first-name">First name</label>
+        <input type="text" id="booking-first-name" name="firstName" placeholder="Jane" autocomplete="given-name" required>
+      </div>
+      <div class="modal-field">
+        <label for="booking-last-name">Last name</label>
+        <input type="text" id="booking-last-name" name="lastName" placeholder="Doe" autocomplete="family-name" required>
+      </div>
+      <div class="modal-field">
+        <label for="booking-contact">Contact number (optional)</label>
+        <input type="tel" id="booking-contact" name="contact" placeholder="+233 000 000 000" autocomplete="tel">
+      </div>
+      <div class="modal-field">
+        <label for="booking-email">Email address</label>
+        <input type="email" id="booking-email" name="email" placeholder="jane@example.com" autocomplete="email" required>
+      </div>
+
+      <fieldset class="modal-fieldset">
+        <legend>Will you be attending alone or with another person?</legend>
+        <div class="radio-row">
+          <label><input type="radio" name="attendingWith" value="alone" id="booking-alone" required> Alone</label>
+          <label><input type="radio" name="attendingWith" value="another" id="booking-with-another"> With another person</label>
+        </div>
+      </fieldset>
+
+      <div class="modal-field hide" id="booking-companion-field">
+        <label for="booking-companion-name">Their name</label>
+        <input type="text" id="booking-companion-name" name="companionName" placeholder="Full name">
+      </div>
+
+      <div class="modal-field">
+        <label for="booking-prayer-request">Prayer request (optional)</label>
+        <textarea id="booking-prayer-request" name="prayerRequest" rows="3" placeholder="Anything you'd like us to be praying about ahead of your session…"></textarea>
+      </div>
+
+      <p class="modal-error hide" id="booking-modal-error">Something went wrong booking your session — please try again, or reach out to us directly.</p>
+
+      <button type="submit" class="btn btn-gold btn-block" id="booking-submit">Confirm Booking</button>
+    </form>
+
+    <div class="modal-success" id="booking-modal-success">
+      <h3>You're booked</h3>
+      <p id="booking-success-text">Thank you — we look forward to meeting with you.</p>
+      <button type="button" class="btn btn-gold btn-block" id="booking-modal-done">Done</button>
     </div>
   </div>
 </div>
@@ -2186,6 +2586,436 @@
           submitBtn.textContent = 'Submit RSVP';
         });
       });
+    })();
+
+    // Prayer Request modal — submits to Formspree (separate form from RSVP, so submissions
+    // don't mix) and shows an instant on-page confirmation. Formspree emails the ministry's
+    // inbox on every submission.
+    (function(){
+      var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xjgnwdwk';
+      var openBtn = document.getElementById('open-prayer-request-modal');
+      var overlay = document.getElementById('prayer-request-modal-overlay');
+      var panel = document.getElementById('prayer-request-modal-panel');
+      var closeBtn = document.getElementById('prayer-request-modal-close');
+      var doneBtn = document.getElementById('prayer-request-modal-done');
+      var form = document.getElementById('prayer-request-modal-form');
+      var success = document.getElementById('prayer-request-modal-success');
+      var successText = document.getElementById('prayer-request-success-text');
+      var errorEl = document.getElementById('prayer-request-modal-error');
+      var submitBtn = document.getElementById('prayer-request-submit');
+      var nameInput = document.getElementById('prayer-request-name');
+      var requestInput = document.getElementById('prayer-request-text');
+      var lastFocused = null;
+
+      function openModal(){
+        lastFocused = document.activeElement;
+        form.reset();
+        form.classList.remove('hide');
+        success.classList.remove('show');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        requestInput.focus();
+        document.addEventListener('keydown', onKeydown);
+      }
+
+      function closeModal(){
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onKeydown);
+        if(lastFocused) lastFocused.focus();
+      }
+
+      function onKeydown(e){
+        if(e.key === 'Escape'){
+          closeModal();
+          return;
+        }
+        if(e.key === 'Tab'){
+          var focusable = panel.querySelectorAll('button, input, textarea, a[href]');
+          focusable = Array.prototype.filter.call(focusable, function(el){ return el.offsetParent !== null; });
+          if(focusable.length === 0) return;
+          var first = focusable[0];
+          var last = focusable[focusable.length - 1];
+          if(e.shiftKey && document.activeElement === first){
+            e.preventDefault();
+            last.focus();
+          } else if(!e.shiftKey && document.activeElement === last){
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      doneBtn.addEventListener('click', closeModal);
+      overlay.addEventListener('click', function(e){
+        if(e.target === overlay) closeModal();
+      });
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        if(!form.checkValidity()){
+          form.reportValidity();
+          return;
+        }
+
+        errorEl.classList.add('hide');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+
+        fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        }).then(function(res){
+          if(!res.ok) throw new Error('Formspree responded with ' + res.status);
+          var name = nameInput.value.trim();
+          successText.textContent = name
+            ? 'Thank you, ' + name + '. Our prayer team is committed to lifting this up.'
+            : 'Thank you. Our prayer team is committed to lifting this up.';
+          form.classList.add('hide');
+          success.classList.add('show');
+          doneBtn.focus();
+        }).catch(function(){
+          errorEl.classList.remove('hide');
+        }).finally(function(){
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Prayer Request';
+        });
+      });
+    })();
+
+    // Personal Prayer & Prophetic Session booking. Two moving parts:
+    //  1. A Google Apps Script Web App (APPS_SCRIPT_URL) is the live "how full is each slot"
+    //     source — GET returns this week's counts as JSON, POST increments one slot by 1. The
+    //     script itself resets the count weekly (since last Friday 12:00 AM GMT), so nobody
+    //     ever needs to open the underlying Sheet — it's a silent backend, not a dashboard.
+    //  2. Formspree (FORMSPREE_ENDPOINT) captures the actual booking details (name, contact,
+    //     email) exactly like the RSVP and Prayer Request forms — that's what the ministry
+    //     actually reads day to day.
+    // Until both URLs below are filled in, every slot shows as available (fails open) and
+    // submissions only go to Formspree — see the placeholders for exactly what to replace.
+    (function(){
+      var APPS_SCRIPT_URL = ''; // Google Apps Script Web App URL — see setup notes
+      var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xvzeandl';
+      var CAPACITY_PER_SLOT = 1;
+
+      // Shows the actual calendar date next to "Monday" / "Wednesday" (e.g. "July 20, 2026")
+      // so attendees always know exactly which date they're booking — computed fresh from
+      // today's date (GMT) every time the page loads, so this stays correct every week
+      // through the rest of the year with no manual updates ever needed.
+      (function(){
+        var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        function nextDateFor(targetWeekday){
+          var now = new Date();
+          var utcNow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+          var daysUntil = (targetWeekday - utcNow.getUTCDay() + 7) % 7;
+          utcNow.setUTCDate(utcNow.getUTCDate() + daysUntil);
+          return MONTHS[utcNow.getUTCMonth()] + ' ' + utcNow.getUTCDate() + ', ' + utcNow.getUTCFullYear();
+        }
+        var monEl = document.getElementById('booking-date-monday');
+        var wedEl = document.getElementById('booking-date-wednesday');
+        if(monEl) monEl.textContent = '· ' + nextDateFor(1); // 1 = Monday
+        if(wedEl) wedEl.textContent = '· ' + nextDateFor(3); // 3 = Wednesday
+      })();
+
+      // Replaces the GMT time shown on each slot with the visitor's own local time,
+      // detected from their browser's timezone setting (Intl API — reads the device's
+      // clock/timezone config, no location permission prompt, no IP lookup — "using their
+      // location" in practice means this, since true GPS geolocation would need a
+      // permission prompt for information a timezone already gives us for free). This
+      // handles daylight saving correctly for ANY timezone worldwide. The underlying GMT
+      // time is kept on the button as a data attribute (data-slot-time) and is what
+      // actually gets submitted — only the visible label changes. If detection isn't
+      // available for some reason, it falls back to America/New_York, which — via the
+      // same Intl mechanism — correctly shows EDT (GMT-4) in summer and EST (GMT-5) in
+      // winter, rather than a hardcoded, season-blind offset.
+      (function(){
+        var displayTz;
+        try {
+          displayTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York';
+        } catch(e) {
+          displayTz = 'America/New_York';
+        }
+
+        function upcomingUTCDateFor(targetWeekday){
+          var now = new Date();
+          var d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+          var daysUntil = (targetWeekday - d.getUTCDay() + 7) % 7;
+          d.setUTCDate(d.getUTCDate() + daysUntil);
+          return d;
+        }
+
+        var mondayBase = upcomingUTCDateFor(1);
+        var wednesdayBase = upcomingUTCDateFor(3);
+
+        var timeFmt = new Intl.DateTimeFormat('en-US', {
+          hour: 'numeric', minute: '2-digit', hour12: true, timeZoneName: 'short', timeZone: displayTz
+        });
+        var localWeekdayFmt = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: displayTz });
+        var gmtWeekdayFmt = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'UTC' });
+
+        document.querySelectorAll('.slot-btn[data-slot-id]').forEach(function(btn){
+          var id = btn.getAttribute('data-slot-id');
+          var match = id.match(/(\d{2})(\d{2})$/);
+          if(!match) return;
+          var hour = parseInt(match[1], 10);
+          var minute = parseInt(match[2], 10);
+          var base = id.indexOf('mon-') === 0 ? mondayBase : wednesdayBase;
+          var slotUTC = new Date(Date.UTC(base.getUTCFullYear(), base.getUTCMonth(), base.getUTCDate(), hour, minute));
+
+          var label = timeFmt.format(slotUTC);
+          if(localWeekdayFmt.format(slotUTC) !== gmtWeekdayFmt.format(slotUTC)){
+            label += ' · ' + localWeekdayFmt.format(slotUTC);
+          }
+
+          var timeEl = btn.querySelector('.slot-time');
+          if(timeEl) timeEl.textContent = label;
+        });
+      })();
+
+      var overlay = document.getElementById('booking-modal-overlay');
+      var panel = document.getElementById('booking-modal-panel');
+      var closeBtn = document.getElementById('booking-modal-close');
+      var doneBtn = document.getElementById('booking-modal-done');
+      var form = document.getElementById('booking-modal-form');
+      var success = document.getElementById('booking-modal-success');
+      var successText = document.getElementById('booking-success-text');
+      var errorEl = document.getElementById('booking-modal-error');
+      var submitBtn = document.getElementById('booking-submit');
+      var firstNameInput = document.getElementById('booking-first-name');
+      var slotLabel = document.getElementById('booking-modal-slot-label');
+      var dayInput = document.getElementById('booking-day');
+      var timeInput = document.getElementById('booking-time');
+      var localTimeInput = document.getElementById('booking-local-time');
+      var aloneRadio = document.getElementById('booking-alone');
+      var withAnotherRadio = document.getElementById('booking-with-another');
+      var companionField = document.getElementById('booking-companion-field');
+      var companionNameInput = document.getElementById('booking-companion-name');
+      var lastFocused = null;
+      var activeSlotBtn = null;
+
+      function markSlotFull(btn){
+        btn.classList.add('full');
+        btn.disabled = true;
+        btn.setAttribute('aria-disabled', 'true');
+        updateDashboard();
+      }
+
+      function onAttendingChange(){
+        var withAnother = withAnotherRadio.checked;
+        companionField.classList.toggle('hide', !withAnother);
+        companionNameInput.required = withAnother;
+        if(!withAnother) companionNameInput.value = '';
+      }
+      aloneRadio.addEventListener('change', onAttendingChange);
+      withAnotherRadio.addEventListener('change', onAttendingChange);
+
+      function updateDashboard(){
+        var allSlots = document.querySelectorAll('.slot-btn[data-slot-id]');
+        var total = allSlots.length;
+        var full = document.querySelectorAll('.slot-btn[data-slot-id].full').length;
+        var remaining = total - full;
+        var totalEl = document.getElementById('booking-remaining-total');
+        if(totalEl) totalEl.textContent = remaining + ' of ' + total + ' slots remaining this week';
+
+        ['monday', 'wednesday'].forEach(function(day){
+          var grid = document.querySelector('.slot-grid[data-day="' + (day === 'monday' ? 'Monday' : 'Wednesday') + '"]');
+          if(!grid) return;
+          var dayTotal = grid.querySelectorAll('.slot-btn').length;
+          var dayFull = grid.querySelectorAll('.slot-btn.full').length;
+          var dayEl = document.getElementById('booking-remaining-' + day);
+          if(dayEl) dayEl.textContent = (dayTotal - dayFull) + ' of ' + dayTotal + ' open';
+        });
+      }
+
+      if(APPS_SCRIPT_URL){
+        fetch(APPS_SCRIPT_URL)
+          .then(function(res){
+            if(!res.ok) throw new Error('Apps Script responded with ' + res.status);
+            return res.json();
+          })
+          .then(function(counts){
+            document.querySelectorAll('.slot-btn[data-slot-id]').forEach(function(btn){
+              var id = btn.getAttribute('data-slot-id');
+              var count = counts[id] || 0;
+              if(count >= CAPACITY_PER_SLOT){
+                btn.classList.add('full');
+                btn.disabled = true;
+                btn.setAttribute('aria-disabled', 'true');
+              }
+            });
+            updateDashboard();
+          })
+          .catch(function(){
+            // Fetch failed — leave every slot as available rather than block all bookings.
+            updateDashboard();
+          });
+      } else {
+        updateDashboard();
+      }
+
+      function openModal(slotBtn){
+        activeSlotBtn = slotBtn;
+        lastFocused = document.activeElement;
+        form.reset();
+        companionField.classList.add('hide');
+        companionNameInput.required = false;
+        dayInput.value = slotBtn.getAttribute('data-slot-day');
+        timeInput.value = slotBtn.getAttribute('data-slot-time');
+        localTimeInput.value = slotBtn.querySelector('.slot-time').textContent;
+        slotLabel.textContent = 'Selected time: ' + dayInput.value + ', ' + localTimeInput.value;
+        form.classList.remove('hide');
+        success.classList.remove('show');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        firstNameInput.focus();
+        document.addEventListener('keydown', onKeydown);
+      }
+
+      function closeModal(){
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onKeydown);
+        if(lastFocused) lastFocused.focus();
+      }
+
+      function onKeydown(e){
+        if(e.key === 'Escape'){
+          closeModal();
+          return;
+        }
+        if(e.key === 'Tab'){
+          var focusable = panel.querySelectorAll('button, input, a[href]');
+          focusable = Array.prototype.filter.call(focusable, function(el){ return el.offsetParent !== null; });
+          if(focusable.length === 0) return;
+          var first = focusable[0];
+          var last = focusable[focusable.length - 1];
+          if(e.shiftKey && document.activeElement === first){
+            e.preventDefault();
+            last.focus();
+          } else if(!e.shiftKey && document.activeElement === last){
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+
+      document.querySelectorAll('.slot-btn[data-slot-id]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          if(btn.classList.contains('full')) return;
+          openModal(btn);
+        });
+      });
+      closeBtn.addEventListener('click', closeModal);
+      doneBtn.addEventListener('click', closeModal);
+      overlay.addEventListener('click', function(e){
+        if(e.target === overlay) closeModal();
+      });
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        if(!form.checkValidity()){
+          form.reportValidity();
+          return;
+        }
+
+        errorEl.classList.add('hide');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Booking…';
+
+        fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        }).then(function(res){
+          if(!res.ok) throw new Error('Formspree responded with ' + res.status);
+
+          if(activeSlotBtn) markSlotFull(activeSlotBtn);
+
+          if(APPS_SCRIPT_URL && activeSlotBtn){
+            fetch(APPS_SCRIPT_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ slot_id: activeSlotBtn.getAttribute('data-slot-id') })
+            }).catch(function(){ /* count sync failing shouldn't block a confirmed booking */ });
+          }
+
+          var firstName = firstNameInput.value.trim();
+          successText.textContent = 'Thank you, ' + firstName + ' — we look forward to meeting with you ' + dayInput.value + ' at ' + localTimeInput.value + '. Need to change your time or details? Just email us at truthunveiledministrieslive@gmail.com and we\'ll take care of it.';
+          form.classList.add('hide');
+          success.classList.add('show');
+          doneBtn.focus();
+        }).catch(function(){
+          errorEl.classList.remove('hide');
+        }).finally(function(){
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Confirm Booking';
+        });
+      });
+    })();
+
+    // First-time visitor welcome modal — shown once per browser (tracked via localStorage),
+    // after a short delay so it doesn't fight the page for the visitor's first glance.
+    (function(){
+      var STORAGE_KEY = 'tu_welcomed';
+      var alreadySeen;
+      try {
+        alreadySeen = localStorage.getItem(STORAGE_KEY);
+      } catch (e) {
+        alreadySeen = '1'; // storage unavailable (e.g. private browsing) — don't risk showing every load
+      }
+      if(alreadySeen) return;
+
+      var overlay = document.getElementById('welcome-modal-overlay');
+      var panel = document.getElementById('welcome-modal-panel');
+      var closeBtn = document.getElementById('welcome-modal-close');
+      var lastFocused = null;
+
+      function openModal(){
+        try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+        lastFocused = document.activeElement;
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+        document.addEventListener('keydown', onKeydown);
+      }
+
+      function closeModal(){
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onKeydown);
+        if(lastFocused) lastFocused.focus();
+      }
+
+      function onKeydown(e){
+        if(e.key === 'Escape'){
+          closeModal();
+          return;
+        }
+        if(e.key === 'Tab'){
+          var focusable = panel.querySelectorAll('button, a[href]');
+          focusable = Array.prototype.filter.call(focusable, function(el){ return el.offsetParent !== null; });
+          if(focusable.length === 0) return;
+          var first = focusable[0];
+          var last = focusable[focusable.length - 1];
+          if(e.shiftKey && document.activeElement === first){
+            e.preventDefault();
+            last.focus();
+          } else if(!e.shiftKey && document.activeElement === last){
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+
+      closeBtn.addEventListener('click', closeModal);
+      overlay.addEventListener('click', function(e){
+        if(e.target === overlay) closeModal();
+      });
+
+      setTimeout(openModal, 1200);
     })();
 
     // Verse of the day — 52 unique verses per weekday theme (364 total), so a verse
