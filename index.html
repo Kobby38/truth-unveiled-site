@@ -2276,7 +2276,7 @@
       <div class="zoom-link-box">
         <p class="zoom-link-instruction">Join meeting using this link:</p>
         <a class="zoom-link-url" href="https://us02web.zoom.us/j/89478115474" target="_blank" rel="noopener">https://us02web.zoom.us/j/89478115474</a>
-        <a class="btn btn-gold btn-block" href="https://us02web.zoom.us/j/89478115474" target="_blank" rel="noopener">Join Meeting Now</a>
+        <a class="btn btn-gold btn-block" id="booking-calendar-link" href="#" target="_blank" rel="noopener">Add to Google Calendar</a>
       </div>
       <button type="button" class="btn btn-outline btn-block" id="booking-modal-edit">Edit Details</button>
       <button type="button" class="btn btn-outline btn-block" id="booking-modal-done">Done</button>
@@ -2876,6 +2876,42 @@
         firstNameInput.focus();
       });
 
+      // Builds a Google Calendar link for the exact slot just booked, same weekday math as
+      // the "Monday · July 20, 2026" headers above — recomputed at booking time so it's
+      // always the upcoming occurrence, never a stale date.
+      function slotStartDate(dayName, timeText){
+        var weekdayMap = { 'Monday': 1, 'Wednesday': 3 };
+        var match = timeText.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+        var hour = parseInt(match[1], 10);
+        var minute = parseInt(match[2], 10);
+        var meridiem = match[3].toUpperCase();
+        if(meridiem === 'PM' && hour !== 12) hour += 12;
+        if(meridiem === 'AM' && hour === 12) hour = 0;
+
+        var now = new Date();
+        var utcNow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+        var daysUntil = (weekdayMap[dayName] - utcNow.getUTCDay() + 7) % 7;
+        utcNow.setUTCDate(utcNow.getUTCDate() + daysUntil);
+        utcNow.setUTCHours(hour, minute, 0, 0);
+        return utcNow;
+      }
+      function formatGCalDate(date){
+        return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      }
+      function buildGoogleCalendarLink(dayName, timeText){
+        var start = slotStartDate(dayName, timeText);
+        var durationMinutes = dayName === 'Monday' ? 30 : 20;
+        var end = new Date(start.getTime() + durationMinutes * 60000);
+        var params = new URLSearchParams({
+          action: 'TEMPLATE',
+          text: 'Personal Prayer & Prophetic Session — Truth Unveiled Ministries',
+          dates: formatGCalDate(start) + '/' + formatGCalDate(end),
+          details: 'Join via Zoom: https://us02web.zoom.us/j/89478115474',
+          location: 'https://us02web.zoom.us/j/89478115474'
+        });
+        return 'https://calendar.google.com/calendar/render?' + params.toString();
+      }
+
       form.addEventListener('submit', function(e){
         e.preventDefault();
         if(!form.checkValidity()){
@@ -2906,6 +2942,10 @@
 
           var firstName = firstNameInput.value.trim();
           successText.textContent = 'Thank you, ' + firstName + ' — we look forward to meeting with you ' + dayInput.value + ' at ' + localTimeInput.value + '. Need to change your time or details? Just email us at truthunveiledministrieslive@gmail.com and we\'ll take care of it.';
+          var calendarLink = document.getElementById('booking-calendar-link');
+          if(calendarLink && activeSlotBtn){
+            calendarLink.href = buildGoogleCalendarLink(activeSlotBtn.getAttribute('data-slot-day'), activeSlotBtn.getAttribute('data-slot-time'));
+          }
           form.classList.add('hide');
           success.classList.add('show');
           doneBtn.focus();
