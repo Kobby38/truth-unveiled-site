@@ -546,6 +546,49 @@
   .section-head .eyebrow{ color:var(--purple); }
   .section-head h2{ color:var(--charcoal); font-size:clamp(1.9rem, 3.4vw, 2.6rem); }
 
+  /* Real photo paired beside a section's intro text — reused on About, Prayer Room, Events */
+  .section-photo-intro{
+    display:grid;
+    grid-template-columns:minmax(260px, 380px) 1fr;
+    gap:40px;
+    align-items:center;
+    margin-bottom:48px;
+  }
+  .section-photo-intro .section-head{ margin-bottom:0; max-width:none; }
+  .section-photo{
+    position:relative;
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:var(--shadow-soft);
+    line-height:0;
+  }
+  .section-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .section-photo::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    box-shadow:inset 0 0 50px 14px rgba(10,10,12,0.45);
+    pointer-events:none;
+  }
+  .section-photo.photo-glow{
+    animation:sectionPhotoGlow 4s ease-in-out infinite;
+  }
+  @keyframes sectionPhotoGlow{
+    0%, 100% { box-shadow:0 0 14px 0 rgba(212,165,55,0.35); }
+    50% { box-shadow:0 0 34px 6px rgba(212,165,55,0.6); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .section-photo.photo-glow{ animation:none; box-shadow:0 0 20px 2px rgba(212,165,55,0.4); }
+  }
+  @media (max-width:760px){
+    .section-photo-intro{ grid-template-columns:1fr; }
+  }
+
   .card-grid-2{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -1670,11 +1713,16 @@
   <!-- ===================== About ===================== -->
   <section class="about" id="about" aria-labelledby="about-heading">
     <div class="container">
-      <div class="section-head">
-        <span class="est-badge">Established 2026</span>
-        <p class="eyebrow">Who We Are</p>
-        <h2 id="about-heading">Rooted in Scripture, led by the Spirit</h2>
-        <p>Truth Unveiled Ministries was founded on a simple conviction: when God's Word is faithfully taught and His presence is genuinely sought, lives are changed.</p>
+      <div class="section-photo-intro">
+        <div class="section-photo photo-glow" style="aspect-ratio:4/5;">
+          <img src="assets/founder-preaching.jpg" alt="The founder of Truth Unveiled Ministries preaching from the pulpit" loading="lazy">
+        </div>
+        <div class="section-head">
+          <span class="est-badge">Established 2026</span>
+          <p class="eyebrow">Who We Are</p>
+          <h2 id="about-heading">Rooted in Scripture, led by the Spirit</h2>
+          <p>Truth Unveiled Ministries was founded on a simple conviction: when God's Word is faithfully taught and His presence is genuinely sought, lives are changed.</p>
+        </div>
       </div>
 
       <div class="card-grid-2">
@@ -1851,10 +1899,15 @@
   <!-- ===================== Prayer Room ===================== -->
   <section class="prayer-room" id="prayer-room" aria-labelledby="prayer-room-heading">
     <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Gather With Us</p>
-        <h2 id="prayer-room-heading">Prayer Room</h2>
-        <p>The Prayer Room is Truth Unveiled Ministries' ongoing prayer fellowship — a consistent, open gathering where we seek God's presence together, intercede for our community, and grow in a life of prayer.</p>
+      <div class="section-photo-intro">
+        <div class="section-photo" style="aspect-ratio:4/5;">
+          <img src="assets/worship-red.jpg" alt="A worshipper with hands raised during a Truth Unveiled Ministries gathering" loading="lazy">
+        </div>
+        <div class="section-head">
+          <p class="eyebrow">Gather With Us</p>
+          <h2 id="prayer-room-heading">Prayer Room</h2>
+          <p>The Prayer Room is Truth Unveiled Ministries' ongoing prayer fellowship — a consistent, open gathering where we seek God's presence together, intercede for our community, and grow in a life of prayer.</p>
+        </div>
       </div>
 
       <div class="pr-grid">
@@ -1935,10 +1988,15 @@
   <!-- ===================== Events ===================== -->
   <section class="gatherings" id="events" aria-labelledby="events-heading">
     <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Save the Date</p>
-        <h2 id="events-heading">Events</h2>
-        <p>Conferences, services, and special gatherings — join us in person or online.</p>
+      <div class="section-photo-intro">
+        <div class="section-photo" style="aspect-ratio:3/2;">
+          <img src="assets/worship-moment.jpg" alt="Congregants worshipping together at a Truth Unveiled Ministries gathering" loading="lazy">
+        </div>
+        <div class="section-head">
+          <p class="eyebrow">Save the Date</p>
+          <h2 id="events-heading">Events</h2>
+          <p>Conferences, services, and special gatherings — join us in person or online.</p>
+        </div>
       </div>
 
       <!-- TEMPLATE ROW: duplicate this .gathering-row block for each new event.
