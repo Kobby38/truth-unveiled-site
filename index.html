@@ -516,6 +516,17 @@
     display:block;
     margin:0 auto;
   }
+  .cross-pulse-red{
+    opacity:0;
+    animation:crossColorPulse 6s ease-in-out infinite;
+  }
+  @keyframes crossColorPulse{
+    0%, 100% { opacity:0; }
+    50% { opacity:1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .cross-pulse-red{ animation:none; opacity:0; }
+  }
   .curtain-caption{
     margin-top:26px;
     font-family:var(--font-heading);
@@ -1638,7 +1649,7 @@
     <div class="hero-inner">
       <p class="eyebrow">Established 2026</p>
       <h1>Truth <em>Unveiled</em><br>a light that draws the veil back</h1>
-      <p class="lead">Truth Unveiled Ministries exists to unveil the truth of God's Word through sound biblical teaching, fervent prayer, and the ministry of the Holy Spirit, guiding all who seek Him into deeper intimacy with Christ.</p>
+      <p class="lead">Truth Unveiled Ministries exists to reveal the truth of God's Word through sound biblical teaching, fervent prayer, and the ministry of the Holy Spirit, guiding all who seek Him into deeper intimacy with Christ.</p>
       <div class="hero-ctas">
         <a class="btn btn-gold" href="#prayer-room" id="hero-prayer-cta"><span class="live-dot" id="hero-live-dot" aria-hidden="true" hidden></span><span id="hero-prayer-cta-text">Join the Prayer Room</span></a>
         <a class="btn btn-outline" href="#events">Upcoming Events</a>
@@ -1683,10 +1694,20 @@
             <stop offset="0%" stop-color="#F0D28C"/>
             <stop offset="100%" stop-color="#D4A537"/>
           </linearGradient>
+          <radialGradient id="crossGlowRed" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#E8756A" stop-opacity="0.9"/>
+            <stop offset="45%" stop-color="#B23A2E" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#B23A2E" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="crossRed" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#E8756A"/>
+            <stop offset="100%" stop-color="#B23A2E"/>
+          </linearGradient>
         </defs>
 
-        <!-- glow shining through the parted curtain -->
+        <!-- glow shining through the parted curtain — gold and red cross-fade in a slow pulse -->
         <circle cx="600" cy="120" r="130" fill="url(#crossGlow)"/>
+        <circle cx="600" cy="120" r="130" fill="url(#crossGlowRed)" class="cross-pulse-red"/>
 
         <!-- left curtain panel, drawn back and tied at the waist -->
         <path d="M0,0 L0,260 L480,260 C500,220 560,170 560,130 C560,90 500,40 460,0 Z" fill="url(#curtainGoldPurpleL)"/>
@@ -1700,9 +1721,11 @@
         <path d="M1200,60 C1000,90 940,110 940,130 C940,150 1000,170 1200,200" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="3"/>
         <path d="M1200,-10 C900,40 820,90 820,130 C820,170 900,220 1200,270" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="3"/>
 
-        <!-- the cross, revealed in the gap -->
+        <!-- the cross, revealed in the gap — gold and red cross-fade in a slow pulse -->
         <rect x="593" y="40" width="14" height="150" rx="2" fill="url(#crossGold)"/>
         <rect x="565" y="78" width="70" height="14" rx="2" fill="url(#crossGold)"/>
+        <rect x="593" y="40" width="14" height="150" rx="2" fill="url(#crossRed)" class="cross-pulse-red"/>
+        <rect x="565" y="78" width="70" height="14" rx="2" fill="url(#crossRed)" class="cross-pulse-red"/>
       </svg>
       <p class="curtain-caption">&ldquo;And, behold, the veil of the temple was rent in twain from the top to the bottom.&rdquo;
         <cite>Matthew 27:51 (KJV)</cite>
@@ -1732,7 +1755,7 @@
         </div>
         <div class="value-card purple-top">
           <h3>Mission Statement</h3>
-          <p>Truth Unveiled Ministries exists to unveil the truth of God's Word through sound biblical teaching, fervent prayer, and the ministry of the Holy Spirit; guiding all who seek Him into deeper intimacy with Christ.</p>
+          <p>Truth Unveiled Ministries exists to reveal the truth of God's Word through sound biblical teaching, fervent prayer, and the ministry of the Holy Spirit; guiding all who seek Him into deeper intimacy with Christ.</p>
         </div>
       </div>
     </div>
@@ -1906,7 +1929,7 @@
         <div class="section-head">
           <p class="eyebrow">Gather With Us</p>
           <h2 id="prayer-room-heading">Prayer Room</h2>
-          <p>The Prayer Room is Truth Unveiled Ministries' ongoing prayer fellowship — a consistent, open gathering where we seek God's presence together, intercede for our community, and grow in a life of prayer.</p>
+          <p>The Prayer Room is Truth Unveiled Ministries' ongoing prayer fellowship, a consistent, open gathering where we seek God's presence together, intercede for our community, and grow in a life of prayer.</p>
         </div>
       </div>
 
@@ -2044,7 +2067,7 @@
       <div class="section-head">
         <p class="eyebrow">Meet With Us</p>
         <h2 id="booking-heading">Personal Prayer &amp; Prophetic Session</h2>
-        <p>A private, one-on-one time of prayer and prophetic ministration. Pick an open slot below — sessions are limited to one person per slot, and the schedule refreshes every Friday at 12:00 AM GMT.</p>
+        <p>A private, one-on-one time of prayer and prophetic ministration. Pick an open slot below. Sessions are limited to one person per slot, and the schedule refreshes every Friday at 12:00 AM GMT.</p>
       </div>
 
       <div class="booking-dashboard">
