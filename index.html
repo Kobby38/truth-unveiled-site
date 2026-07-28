@@ -342,7 +342,31 @@
   @media (prefers-reduced-motion: reduce){
     .hero-video{ display:none; }
     .hero-video-overlay{ opacity:1; }
+    .smoke-pause-btn{ display:none; }
   }
+  .smoke-pause-btn{
+    position:absolute;
+    top:20px;
+    right:20px;
+    z-index:4;
+    width:34px;
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    border:1px solid rgba(240,210,140,0.4);
+    background:rgba(10,10,12,0.55);
+    color:var(--gold-light);
+    cursor:pointer;
+    backdrop-filter:blur(2px);
+    transition:background var(--transition), border-color var(--transition), transform var(--transition);
+  }
+  .smoke-pause-btn:hover{ background:rgba(10,10,12,0.75); border-color:var(--gold-light); transform:scale(1.06); }
+  .smoke-pause-btn svg{ width:15px; height:15px; }
+  .smoke-pause-btn .fire-icon-play{ display:none; }
+  .smoke-pause-btn[aria-pressed="true"] .fire-icon-pause{ display:none; }
+  .smoke-pause-btn[aria-pressed="true"] .fire-icon-play{ display:block; }
   .hero-inner{
     max-width:var(--max-w);
     margin:0 auto;
@@ -703,11 +727,46 @@
     text-transform:uppercase;
   }
 
+  .faith-jumpnav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:48px;
+  }
+  .faith-jumpnav a{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    letter-spacing:0.03em;
+    text-decoration:none;
+    color:var(--purple-deep);
+    background:var(--cream);
+    border:1px solid rgba(90,63,166,0.25);
+    padding:8px 16px;
+    border-radius:999px;
+    transition:background var(--transition), color var(--transition), border-color var(--transition);
+  }
+  .faith-jumpnav a:hover{
+    background:var(--purple-deep);
+    color:var(--cream);
+    border-color:var(--purple-deep);
+  }
+
   .faith-list{
     list-style:none;
     margin:0;
     padding:0;
   }
+  .faith-group-heading{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--purple-deep);
+    margin:0;
+    padding:44px 0 14px;
+    scroll-margin-top:100px;
+  }
+  .faith-group-heading:first-of-type{ padding-top:0; }
   .faith-item{
     display:grid;
     grid-template-columns:48px 1fr;
@@ -716,8 +775,8 @@
     padding:26px 0;
     border-bottom:1px solid rgba(34,27,46,0.1);
   }
-  .faith-item:first-child{ padding-top:0; }
-  .faith-item:last-child{ border-bottom:none; padding-bottom:0; }
+  .faith-group-heading + .faith-item{ padding-top:0; }
+  .faith-item:last-of-type{ border-bottom:none; padding-bottom:0; }
   .faith-num{
     font-family:var(--font-mono);
     font-size:0.82rem;
@@ -935,6 +994,29 @@
     object-fit:cover;
     display:block;
   }
+
+  .fire-pause-btn{
+    position:absolute;
+    right:10px;
+    bottom:10px;
+    width:34px;
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    border:1px solid rgba(240,210,140,0.4);
+    background:rgba(10,10,12,0.55);
+    color:var(--gold-light);
+    cursor:pointer;
+    backdrop-filter:blur(2px);
+    transition:background var(--transition), border-color var(--transition), transform var(--transition);
+  }
+  .fire-pause-btn:hover{ background:rgba(10,10,12,0.75); border-color:var(--gold-light); transform:scale(1.06); }
+  .fire-pause-btn svg{ width:15px; height:15px; }
+  .fire-icon-play{ display:none; }
+  .fire-pause-btn[aria-pressed="true"] .fire-icon-pause{ display:none; }
+  .fire-pause-btn[aria-pressed="true"] .fire-icon-play{ display:block; }
 
   .fire-caption{
     position:relative;
@@ -1620,6 +1702,10 @@
     color:#ff9b8a;
     margin:-6px 0 14px;
   }
+  .modal-error a{
+    color:inherit;
+    text-decoration:underline;
+  }
   .modal-error.hide{
     display:none;
   }
@@ -1817,10 +1903,19 @@
   <section class="hero" id="top" aria-label="Welcome">
     <!-- Drifting smoke, purely decorative and muted — source: Pexels, free license.
          EDITABLE: swap assets/smoke-loop.mp4 for a different clip if you'd like. -->
-    <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/smoke-poster.jpg" aria-hidden="true">
+    <video class="hero-video" id="smoke-video" autoplay muted loop playsinline preload="auto" poster="assets/smoke-poster.jpg" aria-hidden="true">
       <source src="assets/smoke-loop.mp4" type="video/mp4">
     </video>
     <div class="hero-video-overlay" aria-hidden="true"></div>
+    <button type="button" class="smoke-pause-btn" id="smoke-pause-btn" aria-pressed="false" aria-label="Pause the smoke animation">
+      <svg class="fire-icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <rect x="6" y="5" width="4" height="14" rx="1"></rect>
+        <rect x="14" y="5" width="4" height="14" rx="1"></rect>
+      </svg>
+      <svg class="fire-icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M7 5.5v13l11-6.5-11-6.5z"></path>
+      </svg>
+    </button>
     <!-- Signature "veil drawing back" reveal — purely decorative, respects prefers-reduced-motion -->
     <div class="veil" aria-hidden="true">
       <div class="veil-panel left"></div>
@@ -1964,64 +2059,81 @@
         <cite>1 Timothy 3:15 (ESV)</cite>
       </p>
 
-      <ol class="faith-list">
-        <li class="faith-item">
+      <nav class="faith-jumpnav" aria-label="Jump to a section of the Statement of Faith">
+        <a href="#faith-group-god">Who God Is</a>
+        <a href="#faith-group-gospel">The Gospel of Christ</a>
+        <a href="#faith-group-church">The Church&rsquo;s Mission</a>
+        <a href="#faith-group-salvation">Salvation</a>
+        <a href="#faith-group-spirit">The Spirit &amp; The End</a>
+      </nav>
+
+      <div class="faith-list">
+        <h3 class="faith-group-heading" id="faith-group-god">Who God Is</h3>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">01</span>
           <p class="faith-text">We believe there is one true God, eternally existing in three Persons: Father, Son, and Holy Spirit.</p>
-        </li>
-        <li class="faith-item">
+        </div>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">02</span>
           <p class="faith-text">We believe in the absolute sovereignty of God over creation, revelation, redemption, and final judgment.</p>
-        </li>
-        <li class="faith-item">
+        </div>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">03</span>
           <p class="faith-text">We believe in the divine inspiration and full authority of the Holy Scriptures as the Word of God. The Bible stands supreme in all matters of faith and conduct.</p>
-        </li>
-        <li class="faith-item">
+        </div>
+
+        <h3 class="faith-group-heading" id="faith-group-gospel">The Gospel of Christ</h3>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">04</span>
           <p class="faith-text">We believe that the gospel is, first and foremost, God's gospel. Its authority and truth rest solely on Him. It is the power of God for the salvation of everyone who believes, with no distinction. <span class="faith-ref">(Mark 1:14; Romans 1:1, 16)</span></p>
-        </li>
-        <li class="faith-item">
+        </div>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">05</span>
           <p class="faith-text">We believe in the full deity of the Lord Jesus Christ, the incarnate Son of God — His perfect and sinless humanity, His earthly ministry, His atoning death on the cross, His bodily resurrection, His ascension into heaven, and His present reign as Lord over all.</p>
-        </li>
-        <li class="faith-item">
+        </div>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">06</span>
           <p class="faith-text">We believe that Jesus Christ is the only way of salvation and the sole mediator between God and humanity. <span class="faith-ref">(John 14:6; Acts 4:10-12; 1 Timothy 2:5)</span></p>
-        </li>
-        <li class="faith-item">
+        </div>
+
+        <h3 class="faith-group-heading" id="faith-group-church">The Church&rsquo;s Mission</h3>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">07</span>
           <p class="faith-text">We believe in the one holy, universal Church, which is the Body of Christ, composed of all true believers.</p>
-        </li>
-        <li class="faith-item">
+        </div>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">08</span>
           <p class="faith-text">We believe that the Church is under divine command and obligation to preach the gospel to every person. <span class="faith-ref">(Matthew 28:18-19; Luke 24:47)</span></p>
-        </li>
-        <li class="faith-item">
+        </div>
+
+        <h3 class="faith-group-heading" id="faith-group-salvation">Salvation</h3>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">09</span>
           <p class="faith-text">We believe that all human beings have sinned and fall short of the glory of God.</p>
-        </li>
-        <li class="faith-item">
+        </div>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">10</span>
           <p class="faith-text">We believe that personal faith in the Lord Jesus Christ — the divine Word, the eternal second Person of the Trinity, who is co-equal and co-eternal with the Father and the Holy Spirit — is essential to salvation. This faith includes a humble acknowledgment of our sin and utter need, together with wholehearted trust in Christ and His finished work.</p>
-        </li>
-        <li class="faith-item">
+        </div>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">11</span>
           <p class="faith-text">We believe that justification is God's gracious act of undeserved mercy, by which He pardons the sinner of all guilt and declares him righteous in His sight. This justification is received by faith alone.</p>
-        </li>
-        <li class="faith-item">
+        </div>
+
+        <h3 class="faith-group-heading" id="faith-group-spirit">The Spirit &amp; The End</h3>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">12</span>
           <p class="faith-text">We believe that the Holy Spirit applies the redeeming work of Christ to the believer. He convicts of sin, produces repentance toward God and faith in Jesus Christ, indwells the believer, progressively transforms the believer into the likeness of Christ, and empowers him or her for witness and service in the world.</p>
-        </li>
-        <li class="faith-item">
+        </div>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">13</span>
           <p class="faith-text">We believe that the Lord Jesus Christ will return personally and visibly to judge all mankind.</p>
-        </li>
-        <li class="faith-item">
+        </div>
+        <div class="faith-item">
           <span class="faith-num" aria-hidden="true">14</span>
           <p class="faith-text">We believe the true role of prophecy within the Church is to point the Body of Christ toward its ultimate goal: exalting Jesus Christ, edifying the community of believers, and actively preparing His followers for His literal return.</p>
-        </li>
-      </ol>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2186,10 +2298,19 @@
          Video: assets/fire-loop.mp4 (source: Pexels, free license). EDITABLE: swap the file if you'd like a different clip. -->
     <div class="altar-fire">
       <div class="fire-glow" aria-hidden="true"></div>
-      <div class="fire-video-wrap" aria-hidden="true">
-        <video class="fire-video" autoplay muted loop playsinline preload="auto" poster="assets/fire-poster.jpg">
+      <div class="fire-video-wrap">
+        <video class="fire-video" id="fire-video" autoplay muted loop playsinline preload="auto" poster="assets/fire-poster.jpg" aria-hidden="true">
           <source src="assets/fire-loop.mp4" type="video/mp4">
         </video>
+        <button type="button" class="fire-pause-btn" id="fire-pause-btn" aria-pressed="false" aria-label="Pause the fire animation">
+          <svg class="fire-icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="6" y="5" width="4" height="14" rx="1"></rect>
+            <rect x="14" y="5" width="4" height="14" rx="1"></rect>
+          </svg>
+          <svg class="fire-icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M7 5.5v13l11-6.5-11-6.5z"></path>
+          </svg>
+        </button>
       </div>
       <p class="fire-caption">&ldquo;The fire shall ever be burning upon the altar; it shall never go out.&rdquo;
         <cite>Leviticus 6:13 (KJV)</cite>
@@ -2227,6 +2348,41 @@
         </div>
       </div>
       <!-- END TEMPLATE ROW -->
+
+      <!-- Future events — RSVP intentionally not open yet; registration is only open for the
+           Oct 2026 conference for now. Add an RSVP button/modal for these closer to each date. -->
+      <div class="gathering-row">
+        <div class="gathering-date">Feb 6, 2027</div>
+        <div class="gathering-body">
+          <h3>In-Person Conference</h3>
+          <p>A one-day in-person gathering of prophetic ministry, worship, and impartation. Venue to be announced.</p>
+        </div>
+        <div class="gathering-actions">
+          <span class="tag tag-inperson">In-Person</span>
+        </div>
+      </div>
+
+      <div class="gathering-row">
+        <div class="gathering-date">May 29, 2027</div>
+        <div class="gathering-body">
+          <h3>In-Person Conference</h3>
+          <p>A one-day in-person gathering of prophetic ministry, worship, and impartation. Venue to be announced.</p>
+        </div>
+        <div class="gathering-actions">
+          <span class="tag tag-inperson">In-Person</span>
+        </div>
+      </div>
+
+      <div class="gathering-row">
+        <div class="gathering-date">Sept 25, 2027</div>
+        <div class="gathering-body">
+          <h3>In-Person Conference</h3>
+          <p>A one-day in-person gathering of prophetic ministry, worship, and impartation. Venue to be announced.</p>
+        </div>
+        <div class="gathering-actions">
+          <span class="tag tag-inperson">In-Person</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2551,7 +2707,7 @@
         <input type="number" id="rsvp-children-count" name="childrenCount" min="1" placeholder="e.g. 2">
       </div>
 
-      <p class="modal-error hide" id="rsvp-modal-error">Something went wrong sending your RSVP — please try again, or reach out to us directly.</p>
+      <p class="modal-error hide" id="rsvp-modal-error">Your RSVP didn't go through. Please check your connection and hit submit again — or email us directly at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we'll add you to the list.</p>
 
       <button type="submit" class="btn btn-gold btn-block" id="rsvp-modal-submit">Submit RSVP</button>
     </form>
@@ -2595,7 +2751,7 @@
         <textarea id="prayer-request-text" name="request" rows="4" placeholder="Share what's on your heart…" required></textarea>
       </div>
 
-      <p class="modal-error hide" id="prayer-request-modal-error">Something went wrong sending your request — please try again, or reach out to us directly.</p>
+      <p class="modal-error hide" id="prayer-request-modal-error">Your request didn't go through. Please check your connection and hit submit again — or email us directly at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we'll make sure the prayer team sees it.</p>
 
       <button type="submit" class="btn btn-gold btn-block" id="prayer-request-submit">Send Prayer Request</button>
     </form>
@@ -2625,7 +2781,7 @@
         <textarea id="testimony-text" name="testimony" rows="5" placeholder="Share what God has done…" required></textarea>
       </div>
 
-      <p class="modal-error hide" id="testimony-modal-error">Something went wrong sending your testimony — please try again, or reach out to us directly.</p>
+      <p class="modal-error hide" id="testimony-modal-error">Your testimony didn't go through. Please check your connection and hit submit again — or email us directly at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we'll add it for you.</p>
 
       <button type="submit" class="btn btn-gold btn-block" id="testimony-submit">Send Testimony</button>
     </form>
@@ -2688,7 +2844,7 @@
         <textarea id="booking-prayer-request" name="prayerRequest" rows="3" placeholder="Anything you'd like us to be praying about ahead of your session…"></textarea>
       </div>
 
-      <p class="modal-error hide" id="booking-modal-error">Something went wrong booking your session — please try again, or reach out to us directly.</p>
+      <p class="modal-error hide" id="booking-modal-error">Your booking didn't go through. Please check your connection and hit submit again — or email us directly at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> to schedule your session.</p>
 
       <button type="submit" class="btn btn-gold btn-block" id="booking-submit">Confirm Booking</button>
     </form>
@@ -2777,14 +2933,34 @@
 
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Pause the altar-fire video under reduced motion — it just shows the poster frame instead.
-    (function(){
-      var fireVideo = document.querySelector('.fire-video');
-      if(fireVideo && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-        fireVideo.removeAttribute('autoplay');
-        fireVideo.pause();
+    // Decorative background videos (altar fire, hero smoke): play by default, but
+    // visitors can pause them (WCAG 2.2.2). Also auto-paused under reduced motion.
+    function setupVideoPauseToggle(videoId, btnId, label){
+      var video = document.getElementById(videoId);
+      var pauseBtn = document.getElementById(btnId);
+      if(!video || !pauseBtn) return;
+
+      function setPaused(paused){
+        pauseBtn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+        pauseBtn.setAttribute('aria-label', paused ? ('Play the ' + label + ' animation') : ('Pause the ' + label + ' animation'));
+        if(paused){
+          video.removeAttribute('autoplay');
+          video.pause();
+        } else {
+          video.play();
+        }
       }
-    })();
+
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        setPaused(true);
+      }
+
+      pauseBtn.addEventListener('click', function(){
+        setPaused(pauseBtn.getAttribute('aria-pressed') !== 'true');
+      });
+    }
+    setupVideoPauseToggle('fire-video', 'fire-pause-btn', 'fire');
+    setupVideoPauseToggle('smoke-video', 'smoke-pause-btn', 'smoke');
 
     // Prayer Room "live now" indicator — turns the join buttons red while the
     // Saturday 6:00–9:00 AM GMT meeting is in session. GMT has no DST, so this
