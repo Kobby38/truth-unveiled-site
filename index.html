@@ -1335,7 +1335,7 @@
     font-weight:600;
     font-size:0.9rem;
   }
-  .slot-est{
+  .slot-local{
     font-family:var(--font-mono);
     font-size:0.7rem;
     color:rgba(251,247,238,0.55);
@@ -2412,7 +2412,7 @@
       <div class="section-head">
         <p class="eyebrow">Meet With Us</p>
         <h2 id="booking-heading">Personal Prayer &amp; Prophetic Session</h2>
-        <p>A private, one-on-one time of prayer and prophetic ministration. Pick an open slot below. Sessions are limited to one person per slot, and the schedule refreshes every Friday at 12:00 AM GMT.</p>
+        <p>A private, one-on-one time of prayer and prophetic ministration. Pick an open slot below. Sessions are limited to one person per slot, and the schedule refreshes every Thursday at 12:00 AM GMT.</p>
       </div>
 
       <div class="booking-dashboard">
@@ -2438,18 +2438,23 @@
         <div class="slot-grid" data-day="Monday">
           <button type="button" class="slot-btn" data-slot-id="mon-1400" data-slot-day="Monday" data-slot-time="2:00 PM GMT">
             <span class="slot-time">2:00 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="mon-1430" data-slot-day="Monday" data-slot-time="2:30 PM GMT">
             <span class="slot-time">2:30 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="mon-1500" data-slot-day="Monday" data-slot-time="3:00 PM GMT">
             <span class="slot-time">3:00 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="mon-1530" data-slot-day="Monday" data-slot-time="3:30 PM GMT">
             <span class="slot-time">3:30 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="mon-1600" data-slot-day="Monday" data-slot-time="4:00 PM GMT">
             <span class="slot-time">4:00 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
         </div>
       </div>
@@ -2460,38 +2465,48 @@
         <div class="slot-grid" data-day="Wednesday">
           <button type="button" class="slot-btn" data-slot-id="wed-1200" data-slot-day="Wednesday" data-slot-time="12:00 PM GMT">
             <span class="slot-time">12:00 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="wed-1220" data-slot-day="Wednesday" data-slot-time="12:20 PM GMT">
             <span class="slot-time">12:20 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="wed-1240" data-slot-day="Wednesday" data-slot-time="12:40 PM GMT">
             <span class="slot-time">12:40 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="wed-1300" data-slot-day="Wednesday" data-slot-time="1:00 PM GMT">
             <span class="slot-time">1:00 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="wed-1320" data-slot-day="Wednesday" data-slot-time="1:20 PM GMT">
             <span class="slot-time">1:20 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="wed-1340" data-slot-day="Wednesday" data-slot-time="1:40 PM GMT">
             <span class="slot-time">1:40 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="wed-1400" data-slot-day="Wednesday" data-slot-time="2:00 PM GMT">
             <span class="slot-time">2:00 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="wed-1420" data-slot-day="Wednesday" data-slot-time="2:20 PM GMT">
             <span class="slot-time">2:20 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="wed-1440" data-slot-day="Wednesday" data-slot-time="2:40 PM GMT">
             <span class="slot-time">2:40 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
           <button type="button" class="slot-btn" data-slot-id="wed-1500" data-slot-day="Wednesday" data-slot-time="3:00 PM GMT">
             <span class="slot-time">3:00 PM GMT</span>
+            <span class="slot-local"></span>
           </button>
         </div>
       </div>
 
-      <p class="booking-note">Times shown are in GMT. A grayed-out slot means it's already booked for this week.</p>
+      <p class="booking-note">Times shown are in GMT, with your local time underneath. A grayed-out slot means it's already booked for this week.</p>
     </div>
   </section>
 
@@ -3393,7 +3408,7 @@
     // Personal Prayer & Prophetic Session booking. Two moving parts:
     //  1. A Google Apps Script Web App (APPS_SCRIPT_URL) is the live "how full is each slot"
     //     source — GET returns this week's counts as JSON, POST increments one slot by 1. The
-    //     script itself resets the count weekly (since last Friday 12:00 AM GMT), so nobody
+    //     script itself resets the count weekly (since last Thursday 12:00 AM GMT), so nobody
     //     ever needs to open the underlying Sheet — it's a silent backend, not a dashboard.
     //  2. Formspree (FORMSPREE_ENDPOINT) captures the actual booking details (name, contact,
     //     email) exactly like the RSVP and Prayer Request forms — that's what the ministry
@@ -3422,6 +3437,45 @@
         var wedEl = document.getElementById('booking-date-wednesday');
         if(monEl) monEl.textContent = '· ' + nextDateFor(1); // 1 = Monday
         if(wedEl) wedEl.textContent = '· ' + nextDateFor(3); // 3 = Wednesday
+      })();
+
+      // Shows each visitor's own local-time equivalent under the GMT slot time (e.g. someone
+      // in Pennsylvania sees "9:00 AM EST" under "2:00 PM GMT") — computed from their device's
+      // timezone via Intl, so it updates itself and never needs manual maintenance. Skipped for
+      // visitors whose local timezone already matches GMT (e.g. Ghana), since it would just
+      // repeat the time already shown.
+      (function(){
+        if(new Date().getTimezoneOffset() === 0) return;
+
+        function parseSlotTime(timeStr){
+          var m = /^(\d{1,2}):(\d{2})\s*(AM|PM)/i.exec(timeStr);
+          if(!m) return null;
+          var hour = parseInt(m[1], 10) % 12;
+          if(/PM/i.test(m[3])) hour += 12;
+          return { hour: hour, minute: parseInt(m[2], 10) };
+        }
+
+        var fmt;
+        try {
+          fmt = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+        } catch(e){
+          return;
+        }
+
+        document.querySelectorAll('.slot-btn[data-slot-id]').forEach(function(btn){
+          var localEl = btn.querySelector('.slot-local');
+          var time = parseSlotTime(btn.getAttribute('data-slot-time'));
+          if(!localEl || !time) return;
+
+          var targetWeekday = btn.getAttribute('data-slot-day') === 'Monday' ? 1 : 3;
+          var now = new Date();
+          var utcNow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+          var daysUntil = (targetWeekday - utcNow.getUTCDay() + 7) % 7;
+          utcNow.setUTCDate(utcNow.getUTCDate() + daysUntil);
+          var slotDate = new Date(Date.UTC(utcNow.getUTCFullYear(), utcNow.getUTCMonth(), utcNow.getUTCDate(), time.hour, time.minute));
+
+          localEl.textContent = fmt.format(slotDate) + ' your time';
+        });
       })();
 
       var overlay = document.getElementById('booking-modal-overlay');
@@ -3530,10 +3584,12 @@
         form.reset();
         companionField.classList.add('hide');
         companionNameInput.required = false;
+        var localEl = slotBtn.querySelector('.slot-local');
+        var localTimeText = localEl ? localEl.textContent : '';
         dayInput.value = slotBtn.getAttribute('data-slot-day');
         timeInput.value = slotBtn.getAttribute('data-slot-time');
-        localTimeInput.value = slotBtn.querySelector('.slot-time').textContent;
-        slotLabel.textContent = 'Selected time: ' + dayInput.value + ', ' + localTimeInput.value;
+        localTimeInput.value = localTimeText || timeInput.value;
+        slotLabel.textContent = 'Selected time: ' + dayInput.value + ', ' + timeInput.value + (localTimeText ? ' (' + localTimeText + ')' : '');
         form.classList.remove('hide');
         success.classList.remove('show');
         overlay.classList.add('open');
@@ -3658,7 +3714,8 @@
           }
 
           var firstName = firstNameInput.value.trim();
-          successText.textContent = 'Thank you, ' + firstName + ' — we look forward to meeting with you ' + dayInput.value + ' at ' + localTimeInput.value + '. Need to change your time or details? Just email us at truthunveiledministrieslive@gmail.com and we\'ll take care of it.';
+          var localSuffix = (localTimeInput.value && localTimeInput.value !== timeInput.value) ? ' (' + localTimeInput.value + ')' : '';
+          successText.textContent = 'Thank you, ' + firstName + ' — we look forward to meeting with you ' + dayInput.value + ' at ' + timeInput.value + localSuffix + '. Need to change your time or details? Just email us at truthunveiledministrieslive@gmail.com and we\'ll take care of it.';
           var calendarLink = document.getElementById('booking-calendar-link');
           if(calendarLink && activeSlotBtn){
             calendarLink.href = buildGoogleCalendarLink(activeSlotBtn.getAttribute('data-slot-day'), activeSlotBtn.getAttribute('data-slot-time'));
