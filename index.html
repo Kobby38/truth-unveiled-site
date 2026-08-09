@@ -3415,19 +3415,33 @@
       // so attendees always know exactly which date they're booking — computed fresh from
       // today's date (GMT) every time the page loads, so this stays correct every week
       // through the rest of the year with no manual updates ever needed.
+      //
+      // Dates are anchored to the current booking WEEK (Thursday 12:00 AM GMT to the next),
+      // the same boundary the Apps Script backend uses to reset slot counts — NOT to "the next
+      // calendar occurrence of that weekday." This matters because from Tuesday through
+      // Wednesday night, "next Monday" has already technically arrived calendar-wise, but the
+      // slots shown are still THIS week's (they don't reset until Thursday) — showing next
+      // Monday's date under this week's booking data would make the upcoming Monday look
+      // pre-booked. Keeping both the date label and the fullness reset on the same Thursday
+      // boundary avoids that mismatch.
       (function(){
         var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        function nextDateFor(targetWeekday){
+        function currentBookingWeekThursday(){
           var now = new Date();
           var utcNow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-          var daysUntil = (targetWeekday - utcNow.getUTCDay() + 7) % 7;
-          utcNow.setUTCDate(utcNow.getUTCDate() + daysUntil);
-          return MONTHS[utcNow.getUTCMonth()] + ' ' + utcNow.getUTCDate() + ', ' + utcNow.getUTCFullYear();
+          var daysSinceThursday = (utcNow.getUTCDay() + 3) % 7;
+          utcNow.setUTCDate(utcNow.getUTCDate() - daysSinceThursday);
+          return utcNow;
+        }
+        function dateOffsetFromThursday(offsetDays){
+          var d = new Date(currentBookingWeekThursday().getTime());
+          d.setUTCDate(d.getUTCDate() + offsetDays);
+          return MONTHS[d.getUTCMonth()] + ' ' + d.getUTCDate() + ', ' + d.getUTCFullYear();
         }
         var monEl = document.getElementById('booking-date-monday');
         var wedEl = document.getElementById('booking-date-wednesday');
-        if(monEl) monEl.textContent = '· ' + nextDateFor(1); // 1 = Monday
-        if(wedEl) wedEl.textContent = '· ' + nextDateFor(3); // 3 = Wednesday
+        if(monEl) monEl.textContent = '· ' + dateOffsetFromThursday(4); // Thursday + 4 days = this week's Monday
+        if(wedEl) wedEl.textContent = '· ' + dateOffsetFromThursday(6); // Thursday + 6 days = this week's Wednesday
       })();
 
       // Shows each visitor's own local-time equivalent under the GMT slot time (e.g. someone
