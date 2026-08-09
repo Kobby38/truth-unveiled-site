@@ -3478,6 +3478,7 @@
       var success = document.getElementById('booking-modal-success');
       var successText = document.getElementById('booking-success-text');
       var errorEl = document.getElementById('booking-modal-error');
+      var DEFAULT_ERROR_HTML = errorEl.innerHTML;
       var submitBtn = document.getElementById('booking-submit');
       var firstNameInput = document.getElementById('booking-first-name');
       var slotLabel = document.getElementById('booking-modal-slot-label');
@@ -3543,7 +3544,17 @@
         });
       }
 
-      if(APPS_SCRIPT_URL){
+      // Pulls the live slot counts and re-marks every button accordingly. Called on page load,
+      // on a background timer (so the grid catches up on its own while a visitor has the page
+      // open, instead of only refreshing on a manual reload), and right after this device's own
+      // booking attempt gets turned away as already-full. A slot already marked full client-side
+      // never gets un-greyed by this — it only ever adds new full slots, never removes them,
+      // since the authoritative "is it actually free" check happens server-side at submit time.
+      function refreshSlotAvailability(){
+        if(!APPS_SCRIPT_URL){
+          updateDashboard();
+          return;
+        }
         fetch(APPS_SCRIPT_URL)
           .then(function(res){
             if(!res.ok) throw new Error('Apps Script responded with ' + res.status);
@@ -3565,9 +3576,10 @@
             // Fetch failed — leave every slot as available rather than block all bookings.
             updateDashboard();
           });
-      } else {
-        updateDashboard();
       }
+
+      refreshSlotAvailability();
+      setInterval(refreshSlotAvailability, 20000);
 
       function openModal(slotBtn){
         activeSlotBtn = slotBtn;
@@ -3676,6 +3688,27 @@
         return 'https://calendar.google.com/calendar/render?' + params.toString();
       }
 
+      // Reserves the slot with the Apps Script backend BEFORE anything else. The backend does an
+      // atomic check-and-increment (guarded by a lock), so this is the one place that actually
+      // prevents two people from booking the same slot — not just a client-side display check.
+      // Always resolves (never rejects): a network hiccup here fails OPEN (treated as reserved)
+      // rather than blocking a real booking over a flaky connection — only an explicit "already
+      // full" answer from the backend counts as a rejection.
+      function reserveSlotIfNeeded(){
+        if(!APPS_SCRIPT_URL || !activeSlotBtn) return Promise.resolve({ reserved: true });
+        return fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ slot_id: activeSlotBtn.getAttribute('data-slot-id') })
+        }).then(function(res){
+          return res.json();
+        }).then(function(data){
+          return { reserved: !(data && data.full) };
+        }).catch(function(){
+          return { reserved: true };
+        });
+      }
+
       form.addEventListener('submit', function(e){
         e.preventDefault();
         if(!form.checkValidity()){
@@ -3683,42 +3716,48 @@
           return;
         }
 
+        errorEl.innerHTML = DEFAULT_ERROR_HTML;
         errorEl.classList.add('hide');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Booking…';
 
-        fetch(FORMSPREE_ENDPOINT, {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { 'Accept': 'application/json' }
-        }).then(function(res){
-          if(!res.ok) throw new Error('Formspree responded with ' + res.status);
-
-          if(activeSlotBtn) markSlotFull(activeSlotBtn);
-
-          if(APPS_SCRIPT_URL && activeSlotBtn){
-            fetch(APPS_SCRIPT_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({ slot_id: activeSlotBtn.getAttribute('data-slot-id') })
-            }).catch(function(){ /* count sync failing shouldn't block a confirmed booking */ });
+        reserveSlotIfNeeded().then(function(result){
+          if(!result.reserved){
+            if(activeSlotBtn) markSlotFull(activeSlotBtn);
+            refreshSlotAvailability();
+            errorEl.textContent = 'Sorry — this time slot was just booked by someone else. Please choose a different time.';
+            errorEl.classList.remove('hide');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Confirm Booking';
+            return;
           }
 
-          var firstName = firstNameInput.value.trim();
-          var localSuffix = (localTimeInput.value && localTimeInput.value !== timeInput.value) ? ' (' + localTimeInput.value + ')' : '';
-          successText.textContent = 'Thank you, ' + firstName + ' — we look forward to meeting with you ' + dayInput.value + ' at ' + timeInput.value + localSuffix + '. Need to change your time or details? Just email us at truthunveiledministrieslive@gmail.com and we\'ll take care of it.';
-          var calendarLink = document.getElementById('booking-calendar-link');
-          if(calendarLink && activeSlotBtn){
-            calendarLink.href = buildGoogleCalendarLink(activeSlotBtn.getAttribute('data-slot-day'), activeSlotBtn.getAttribute('data-slot-time'));
-          }
-          form.classList.add('hide');
-          success.classList.add('show');
-          doneBtn.focus();
-        }).catch(function(){
-          errorEl.classList.remove('hide');
-        }).finally(function(){
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Confirm Booking';
+          fetch(FORMSPREE_ENDPOINT, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+          }).then(function(res){
+            if(!res.ok) throw new Error('Formspree responded with ' + res.status);
+
+            if(activeSlotBtn) markSlotFull(activeSlotBtn);
+
+            var firstName = firstNameInput.value.trim();
+            var localSuffix = (localTimeInput.value && localTimeInput.value !== timeInput.value) ? ' (' + localTimeInput.value + ')' : '';
+            successText.textContent = 'Thank you, ' + firstName + ' — we look forward to meeting with you ' + dayInput.value + ' at ' + timeInput.value + localSuffix + '. Need to change your time or details? Just email us at truthunveiledministrieslive@gmail.com and we\'ll take care of it.';
+            var calendarLink = document.getElementById('booking-calendar-link');
+            if(calendarLink && activeSlotBtn){
+              calendarLink.href = buildGoogleCalendarLink(activeSlotBtn.getAttribute('data-slot-day'), activeSlotBtn.getAttribute('data-slot-time'));
+            }
+            form.classList.add('hide');
+            success.classList.add('show');
+            doneBtn.focus();
+          }).catch(function(){
+            errorEl.innerHTML = DEFAULT_ERROR_HTML;
+            errorEl.classList.remove('hide');
+          }).finally(function(){
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Confirm Booking';
+          });
         });
       });
     })();
