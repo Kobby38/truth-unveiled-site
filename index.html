@@ -382,6 +382,7 @@
 
   .hero h1{
     font-size:clamp(2.4rem, 5.4vw, 4.2rem);
+    font-variation-settings:"opsz" 30;
     max-width:16ch;
     margin-top:0.5em;
     color:var(--cream);
@@ -399,23 +400,10 @@
   }
   .hero h1 em{
     font-style:italic;
-    background:linear-gradient(90deg, var(--purple) 0%, var(--gold) 50%, var(--purple) 100%);
-    background-size:200% 100%;
+    background:linear-gradient(135deg, var(--gold-light), var(--gold));
     -webkit-background-clip:text;
     background-clip:text;
     color:transparent;
-    animation:unveiledShimmer 5s linear infinite, unveiledGlow 5s ease-in-out infinite;
-  }
-  @keyframes unveiledShimmer{
-    0%{ background-position:0% 0; }
-    100%{ background-position:100% 0; }
-  }
-  @keyframes unveiledGlow{
-    0%, 100%{ filter:drop-shadow(0 0 12px rgba(90,63,166,0.75)); }
-    50%{ filter:drop-shadow(0 0 14px rgba(212,165,55,0.8)); }
-  }
-  @media (prefers-reduced-motion: reduce){
-    .hero h1 em{ animation:none; background-position:33% 0; filter:drop-shadow(0 0 6px rgba(212,165,55,0.5)); }
   }
   .hero p.lead{
     max-width:52ch;
