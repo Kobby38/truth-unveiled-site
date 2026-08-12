@@ -500,39 +500,6 @@
 
   /* Nav transition veil: two curtain panels sweep in to cover the page, the
      target section jumps into place underneath, then the panels part again. */
-  .nav-transition-veil{
-    position:fixed;
-    inset:0;
-    z-index:2000;
-    display:none;
-    pointer-events:none;
-  }
-  .nav-transition-veil.active{ display:flex; }
-  .nav-transition-veil .nav-veil-panel{
-    flex:1;
-    background:linear-gradient(180deg, var(--black) 0%, var(--purple-deep) 100%);
-    position:relative;
-    transition:transform 420ms cubic-bezier(.77,0,.18,1);
-  }
-  .nav-transition-veil .nav-veil-panel::after{
-    content:"";
-    position:absolute;
-    top:0; bottom:0;
-    width:2px;
-    background:linear-gradient(180deg, transparent, var(--gold-light), transparent);
-    opacity:0.7;
-  }
-  .nav-transition-veil .nav-veil-panel.left{ transform:translateX(-100%); }
-  .nav-transition-veil .nav-veil-panel.left::after{ right:0; }
-  .nav-transition-veil .nav-veil-panel.right{ transform:translateX(100%); }
-  .nav-transition-veil .nav-veil-panel.right::after{ left:0; }
-  .nav-transition-veil.covered .nav-veil-panel.left,
-  .nav-transition-veil.covered .nav-veil-panel.right{
-    transform:translateX(0);
-  }
-  @media (prefers-reduced-motion: reduce){
-    .nav-transition-veil{ display:none !important; }
-  }
 
   .hero-crest{
     position:absolute;
@@ -1872,12 +1839,6 @@
 
 <a class="skip-link" href="#main-content">Skip to main content</a>
 
-<!-- Nav transition veil: purely decorative, plays when navigating between sections -->
-<div class="nav-transition-veil" id="nav-transition-veil" aria-hidden="true">
-  <div class="nav-veil-panel left"></div>
-  <div class="nav-veil-panel right"></div>
-</div>
-
 <!-- ===================== Header ===================== -->
 <header class="site-header">
   <div class="header-inner">
@@ -2243,7 +2204,7 @@
         <!-- Join Live card -->
         <div class="pr-card">
           <h3>Join Live</h3>
-          <p style="color:rgba(251,247,238,0.75); font-size:0.92rem;">The Prayer Room meets weekly on Zoom. All are welcome — share your name to get the meeting link.</p>
+          <p style="color:rgba(251,247,238,0.75); font-size:0.92rem;">The Prayer Room meets weekly on Zoom. All are welcome. Share your name to get the meeting link.</p>
 
           <ul class="schedule-list">
             <!-- EDITABLE: update days/times below to match your actual Prayer Room schedule -->
@@ -2331,7 +2292,7 @@
         <div class="section-head">
           <p class="eyebrow">Save the Date</p>
           <h2 id="events-heading">Events</h2>
-          <p>Conferences, services, and special gatherings — join us in person or online.</p>
+          <p>Conferences, services, and special gatherings. Join us in person or online.</p>
         </div>
       </div>
 
@@ -2541,7 +2502,7 @@
       <div class="section-head">
         <p class="eyebrow">Follow Along</p>
         <h2 id="socials-heading">Socials</h2>
-        <p>Stay connected between gatherings — teachings, updates, and moments from the ministry.</p>
+        <p>Stay connected between gatherings: teachings, updates, and moments from the ministry.</p>
       </div>
 
       <div class="social-grid">
@@ -2906,35 +2867,11 @@
       }
     });
 
-    // Curtain-split transition: plays whenever an internal link (nav tabs, hero
-    // CTAs, footer links, etc.) navigates to another section on this page —
-    // the veil sweeps closed, the page jumps to the target underneath it, then
-    // the veil parts again to reveal it. Skipped entirely under reduced motion.
+    // Internal link navigation: jumps straight to the target section, no transition effect.
     (function(){
-      var veil = document.getElementById('nav-transition-veil');
-      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var COVER_MS = 420;
-
       function goToSection(targetEl, hash){
-        if(reduceMotion){
-          targetEl.scrollIntoView();
-          history.pushState(null, '', '#' + hash);
-          return;
-        }
-        veil.classList.add('active');
-        requestAnimationFrame(function(){
-          requestAnimationFrame(function(){
-            veil.classList.add('covered');
-          });
-        });
-        setTimeout(function(){
-          targetEl.scrollIntoView({ behavior: 'auto', block: 'start' });
-          history.pushState(null, '', '#' + hash);
-          veil.classList.remove('covered');
-          setTimeout(function(){
-            veil.classList.remove('active');
-          }, COVER_MS + 60);
-        }, COVER_MS);
+        targetEl.scrollIntoView({ block: 'start' });
+        history.pushState(null, '', '#' + hash);
       }
 
       document.querySelectorAll('a[href^="#"]').forEach(function(link){
