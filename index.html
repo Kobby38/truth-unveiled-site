@@ -2401,7 +2401,7 @@
       <div class="section-head">
         <p class="eyebrow" data-i18n="booking.eyebrow">Meet With Us</p>
         <h2 id="booking-heading" data-i18n="booking.h2">Personal Prayer &amp; Prophetic Session</h2>
-        <p data-i18n="booking.intro">A private, one-on-one time of prayer and prophetic ministration. Pick an open slot below. Sessions are limited to one person per slot, and the schedule refreshes every Thursday at 12:00 AM GMT.</p>
+        <p data-i18n="booking.intro">A private, one-on-one time of prayer and prophetic ministration. Pick an open slot below. Sessions are limited to one person per slot, and the schedule refreshes every two weeks on Thursday at 12:00 AM GMT.</p>
       </div>
 
       <div class="booking-dashboard">
@@ -2964,7 +2964,7 @@
       'preq.cardText': 'Share what\'s on your heart — only our prayer team sees what you submit.',
       'booking.eyebrow': 'Meet With Us',
       'booking.h2': 'Personal Prayer &amp; Prophetic Session',
-      'booking.intro': 'A private, one-on-one time of prayer and prophetic ministration. Pick an open slot below. Sessions are limited to one person per slot, and the schedule refreshes every Thursday at 12:00 AM GMT.',
+      'booking.intro': 'A private, one-on-one time of prayer and prophetic ministration. Pick an open slot below. Sessions are limited to one person per slot, and the schedule refreshes every two weeks on Thursday at 12:00 AM GMT.',
       'booking.gaugeCaptionPrefix': 'of',
       'booking.gaugeCaptionSuffix': 'slots open',
       'booking.monday': 'Monday:',
@@ -3160,7 +3160,7 @@
       'preq.cardText': 'Partagez ce qui pèse sur votre cœur — seule notre équipe de prière voit ce que vous soumettez.',
       'booking.eyebrow': 'Rencontrez-nous',
       'booking.h2': 'Séance Personnelle de Prière et Prophétique',
-      'booking.intro': 'Un moment privé, en tête-à-tête, de prière et de ministration prophétique. Choisissez un créneau disponible ci-dessous. Les séances sont limitées à une personne par créneau, et le calendrier se réinitialise chaque jeudi à 00h00 GMT.',
+      'booking.intro': 'Un moment privé, en tête-à-tête, de prière et de ministration prophétique. Choisissez un créneau disponible ci-dessous. Les séances sont limitées à une personne par créneau, et le calendrier se réinitialise toutes les deux semaines, le jeudi à 00h00 GMT.',
       'booking.gaugeCaptionPrefix': 'sur',
       'booking.gaugeCaptionSuffix': 'créneaux disponibles',
       'booking.monday': 'Lundi :',
@@ -3833,32 +3833,36 @@
       // today's date (GMT) every time the page loads, so this stays correct every week
       // through the rest of the year with no manual updates ever needed.
       //
-      // Dates are anchored to the current booking WEEK (Thursday 12:00 AM GMT to the next),
-      // the same boundary the Apps Script backend uses to reset slot counts — NOT to "the next
-      // calendar occurrence of that weekday." This matters because from Tuesday through
-      // Wednesday night, "next Monday" has already technically arrived calendar-wise, but the
-      // slots shown are still THIS week's (they don't reset until Thursday) — showing next
-      // Monday's date under this week's booking data would make the upcoming Monday look
-      // pre-booked. Keeping both the date label and the fullness reset on the same Thursday
-      // boundary avoids that mismatch.
+      // Dates are anchored to the current 2-WEEK booking PERIOD (Thursday 12:00 AM GMT to the
+      // Thursday two weeks later), the same boundary the Apps Script backend uses to reset slot
+      // counts — NOT to "the next calendar occurrence of that weekday." This matters because
+      // between periods, "next Monday" has already technically arrived calendar-wise, but the
+      // slots shown are still the CURRENT period's (they don't reset until the period's Thursday)
+      // — showing the wrong Monday's date under this period's booking data would make an
+      // available Monday look pre-booked. Keeping both the date label and the fullness reset on
+      // the same anchor avoids that mismatch.
+      // ANCHOR is the start of the first 2-week period — August 20, 2026, a Thursday. EDITABLE:
+      // if you ever need to realign the cycle, change this AND the matching ANCHOR in the Apps
+      // Script's getCurrentWeekStart() to the same new Thursday — they must always match.
       (function(){
         var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        function currentBookingWeekThursday(){
+        var ANCHOR_MS = Date.UTC(2026, 7, 20);
+        function currentPeriodStartThursday(){
           var now = new Date();
-          var utcNow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-          var daysSinceThursday = (utcNow.getUTCDay() + 3) % 7;
-          utcNow.setUTCDate(utcNow.getUTCDate() - daysSinceThursday);
-          return utcNow;
+          var utcNowMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+          var daysSinceAnchor = Math.round((utcNowMs - ANCHOR_MS) / 86400000);
+          var daysSincePeriodStart = ((daysSinceAnchor % 14) + 14) % 14;
+          return new Date(utcNowMs - daysSincePeriodStart * 86400000);
         }
         function dateOffsetFromThursday(offsetDays){
-          var d = new Date(currentBookingWeekThursday().getTime());
+          var d = new Date(currentPeriodStartThursday().getTime());
           d.setUTCDate(d.getUTCDate() + offsetDays);
           return MONTHS[d.getUTCMonth()] + ' ' + d.getUTCDate() + ', ' + d.getUTCFullYear();
         }
         var monEl = document.getElementById('booking-date-monday');
         var wedEl = document.getElementById('booking-date-wednesday');
-        if(monEl) monEl.textContent = '· ' + dateOffsetFromThursday(4); // Thursday + 4 days = this week's Monday
-        if(wedEl) wedEl.textContent = '· ' + dateOffsetFromThursday(6); // Thursday + 6 days = this week's Wednesday
+        if(monEl) monEl.textContent = '· ' + dateOffsetFromThursday(4); // Thursday + 4 days = this period's Monday
+        if(wedEl) wedEl.textContent = '· ' + dateOffsetFromThursday(6); // Thursday + 6 days = this period's Wednesday
       })();
 
       // Shows each visitor's own local-time equivalent under the GMT slot time (e.g. someone
