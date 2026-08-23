@@ -1052,7 +1052,7 @@
   /* ===================== Events ===================== */
   .gatherings{ background:var(--linen); }
   .rsvp-dashboard{
-    background:var(--panel-dark);
+    background:var(--purple-deep);
     border:1px solid rgba(212,165,55,0.25);
     border-radius:var(--radius);
     padding:24px;
@@ -1066,9 +1066,9 @@
     position:relative;
     width:150px;
     max-width:100%;
-    padding-bottom:14px;
+    padding-bottom:30px;
   }
-  .rsvp-gauge-svg{ width:100%; height:auto; display:block; }
+  .rsvp-gauge-svg{ width:100%; height:auto; display:block; overflow:visible; }
   .rsvp-gauge-track{
     fill:none;
     stroke:rgba(251,247,238,0.12);
@@ -1082,12 +1082,12 @@
     stroke-linecap:round;
     stroke-dasharray:251.33;
     stroke-dashoffset:0;
-    filter:drop-shadow(0 0 3px var(--rsvp-glow, var(--terracotta)));
+    filter:drop-shadow(0 0 2px var(--rsvp-glow, var(--terracotta)));
     animation:rsvpGaugeGlow 2.6s ease-in-out infinite;
   }
   @keyframes rsvpGaugeGlow{
-    0%, 100% { filter:drop-shadow(0 0 2px var(--rsvp-glow, var(--terracotta))); }
-    50% { filter:drop-shadow(0 0 6px var(--rsvp-glow, var(--terracotta))); }
+    0%, 100% { filter:drop-shadow(0 0 0px var(--rsvp-glow, var(--terracotta))); opacity:0.45; }
+    50% { filter:drop-shadow(0 0 10px var(--rsvp-glow, var(--terracotta))); opacity:1; }
   }
   @media (prefers-reduced-motion: reduce){
     .rsvp-gauge-fill{ animation:none; }
@@ -2331,12 +2331,20 @@
             <!-- TEMPLATE BLOCK: duplicate this <li> for each recording, then replace title, date, and href -->
             <li class="recording-item">
               <div class="recording-meta">
+                <div class="recording-title">Prayer Room: Testimony Saturday</div>
+                <div class="recording-date">August 22, 2026</div>
+              </div>
+              <a class="watch-link" href="https://www.youtube.com/live/KoB6i6f9RN8" target="_blank" rel="noopener">Watch</a>
+            </li>
+            <!-- END TEMPLATE BLOCK -->
+
+            <li class="recording-item">
+              <div class="recording-meta">
                 <div class="recording-title">Prayer Room: Worthy is the Lamb (Revelation 5:8-14)</div>
                 <div class="recording-date">August 15, 2026</div>
               </div>
               <a class="watch-link" href="https://www.youtube.com/watch?v=hGe426akkeU" target="_blank" rel="noopener">Watch</a>
             </li>
-            <!-- END TEMPLATE BLOCK -->
 
             <li class="recording-item">
               <div class="recording-meta">
@@ -2344,14 +2352,6 @@
                 <div class="recording-date">August 8, 2026</div>
               </div>
               <a class="watch-link" href="https://www.youtube.com/watch?v=eNjwIjz1LOA" target="_blank" rel="noopener">Watch</a>
-            </li>
-
-            <li class="recording-item">
-              <div class="recording-meta">
-                <div class="recording-title">Prayer Room: Changing the Rule for Your Sake</div>
-                <div class="recording-date">July 25, 2026</div>
-              </div>
-              <a class="watch-link" href="https://www.youtube.com/watch?v=FNgL5XizQ5U" target="_blank" rel="noopener">Watch</a>
             </li>
             <!-- Only add more <li> blocks here as new videos appear under the channel's YouTube
                  "Live" tab specifically (youtube.com/@kwabenaopoku4/streams) — not the regular
@@ -2421,7 +2421,7 @@
         <div class="rsvp-gauge-wrap">
           <svg class="rsvp-gauge-svg" viewBox="0 0 200 110" aria-hidden="true">
             <path class="rsvp-gauge-track" d="M20 100 A80 80 0 0 1 180 100"></path>
-            <path class="rsvp-gauge-fill" id="rsvp-children-fill" style="--rsvp-glow:var(--skyblue);" d="M20 100 A80 80 0 0 1 180 100"></path>
+            <path class="rsvp-gauge-fill" id="rsvp-children-fill" style="--rsvp-glow:var(--gold);" d="M20 100 A80 80 0 0 1 180 100"></path>
           </svg>
           <div class="rsvp-gauge-label">
             <span class="rsvp-gauge-number" id="rsvp-children-count">0</span>
