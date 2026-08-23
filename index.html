@@ -1048,6 +1048,70 @@
 
   /* ===================== Events ===================== */
   .gatherings{ background:var(--linen); }
+  .rsvp-dashboard{
+    background:var(--cream);
+    border:1px solid rgba(90,63,166,0.2);
+    border-radius:var(--radius);
+    padding:24px;
+    margin-bottom:28px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:20px;
+  }
+  .rsvp-gauge-wrap{
+    position:relative;
+    width:150px;
+    max-width:100%;
+  }
+  .rsvp-gauge-svg{ width:100%; height:auto; display:block; }
+  .rsvp-gauge-track{
+    fill:none;
+    stroke:rgba(90,63,166,0.14);
+    stroke-width:14;
+    stroke-linecap:round;
+  }
+  .rsvp-gauge-fill{
+    fill:none;
+    stroke:var(--gold);
+    stroke-width:14;
+    stroke-linecap:round;
+    stroke-dasharray:251.33;
+    stroke-dashoffset:0;
+    filter:drop-shadow(0 0 4px rgba(212,165,55,0.5));
+    animation:rsvpGaugeGlow 2.6s ease-in-out infinite;
+  }
+  @keyframes rsvpGaugeGlow{
+    0%, 100% { filter:drop-shadow(0 0 3px rgba(212,165,55,0.4)); }
+    50% { filter:drop-shadow(0 0 12px rgba(212,165,55,0.75)); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .rsvp-gauge-fill{ animation:none; }
+  }
+  .rsvp-gauge-label{
+    position:absolute;
+    left:0; right:0;
+    bottom:2px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .rsvp-gauge-number{
+    font-family:var(--font-heading);
+    font-size:2.2rem;
+    font-weight:600;
+    line-height:1;
+    color:var(--purple-deep);
+  }
+  .rsvp-gauge-caption{
+    font-family:var(--font-mono);
+    font-size:0.7rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:#5c5468;
+    margin-top:4px;
+  }
   .gathering-row{
     display:grid;
     grid-template-columns:150px 1fr auto;
@@ -2333,6 +2397,45 @@
         </div>
       </div>
 
+      <!-- RSVP count dashboard for the Oct 31 conference — live count is read from the same
+           Apps Script Web App the booking slots use (see APPS_SCRIPT_URL below), just under a
+           different query type. Until that count loads, shows 0 rather than nothing. Three
+           gauges — adults, children, and total — each fills toward its own soft, invisible
+           target (RSVP_SOFT_CAPACITY in the script below) so none of them ever looks maxed out
+           unless it genuinely gets close. -->
+      <div class="rsvp-dashboard" id="rsvp-dashboard">
+        <div class="rsvp-gauge-wrap">
+          <svg class="rsvp-gauge-svg" viewBox="0 0 200 110" aria-hidden="true">
+            <path class="rsvp-gauge-track" d="M20 100 A80 80 0 0 1 180 100"></path>
+            <path class="rsvp-gauge-fill" id="rsvp-adults-fill" d="M20 100 A80 80 0 0 1 180 100"></path>
+          </svg>
+          <div class="rsvp-gauge-label">
+            <span class="rsvp-gauge-number" id="rsvp-adults-count">0</span>
+            <span class="rsvp-gauge-caption" data-i18n="events.adultsLabel">adults registered</span>
+          </div>
+        </div>
+        <div class="rsvp-gauge-wrap">
+          <svg class="rsvp-gauge-svg" viewBox="0 0 200 110" aria-hidden="true">
+            <path class="rsvp-gauge-track" d="M20 100 A80 80 0 0 1 180 100"></path>
+            <path class="rsvp-gauge-fill" id="rsvp-children-fill" d="M20 100 A80 80 0 0 1 180 100"></path>
+          </svg>
+          <div class="rsvp-gauge-label">
+            <span class="rsvp-gauge-number" id="rsvp-children-count">0</span>
+            <span class="rsvp-gauge-caption" data-i18n="events.childrenLabel">children</span>
+          </div>
+        </div>
+        <div class="rsvp-gauge-wrap">
+          <svg class="rsvp-gauge-svg" viewBox="0 0 200 110" aria-hidden="true">
+            <path class="rsvp-gauge-track" d="M20 100 A80 80 0 0 1 180 100"></path>
+            <path class="rsvp-gauge-fill" id="rsvp-total-fill" d="M20 100 A80 80 0 0 1 180 100"></path>
+          </svg>
+          <div class="rsvp-gauge-label">
+            <span class="rsvp-gauge-number" id="rsvp-total-count">0</span>
+            <span class="rsvp-gauge-caption" data-i18n="events.totalLabel">total attending</span>
+          </div>
+        </div>
+      </div>
+
       <!-- TEMPLATE ROW: duplicate this .gathering-row block for each new event.
            EDITABLE: exact date, description, and venue below are placeholders. -->
       <div class="gathering-row">
@@ -2977,6 +3080,9 @@
       'events.confDesc': 'A one-day in-person gathering of prophetic ministry, worship, and impartation. Venue to be announced.',
       'events.confDescOct31': 'A one-day in-person gathering of prophetic ministry, worship, and impartation. Venue: Camp Elim Africa, North Legon.',
       'events.getDirections': 'Get Directions',
+      'events.adultsLabel': 'adults registered',
+      'events.childrenLabel': 'children',
+      'events.totalLabel': 'total attending',
       'events.tagInPerson': 'In-Person',
       'events.rsvpBtn': 'RSVP',
       'preq.eyebrow': 'We\'re Praying With You',
@@ -3175,6 +3281,9 @@
       'events.confDesc': 'Un rassemblement en présentiel d\'une journée autour du ministère prophétique, de l\'adoration et de l\'impartition. Lieu à annoncer.',
       'events.confDescOct31': 'Un rassemblement en présentiel d\'une journée autour du ministère prophétique, de l\'adoration et de l\'impartition. Lieu : Camp Elim Africa, North Legon.',
       'events.getDirections': 'Obtenir l\'Itinéraire',
+      'events.adultsLabel': 'adultes inscrits',
+      'events.childrenLabel': 'enfants',
+      'events.totalLabel': 'total des participants',
       'events.tagInPerson': 'En Présentiel',
       'events.rsvpBtn': 'Confirmer sa Présence',
       'preq.eyebrow': 'Nous Prions Avec Vous',
@@ -3630,6 +3739,17 @@
           form.classList.add('hide');
           success.classList.add('show');
           doneBtn.focus();
+
+          if(RSVP_APPS_SCRIPT_URL){
+            var childrenForCount = childrenYes.checked ? (parseInt(childrenCountInput.value, 10) || 0) : 0;
+            fetch(RSVP_APPS_SCRIPT_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ type: 'rsvp', children_count: childrenForCount })
+            }).then(function(){
+              refreshRsvpCount();
+            }).catch(function(){ /* count sync failing shouldn't block a confirmed RSVP */ });
+          }
         }).catch(function(){
           errorEl.classList.remove('hide');
         }).finally(function(){
@@ -3638,6 +3758,44 @@
         });
       });
     })();
+
+    // RSVP count dashboard — reads the live count from the same Apps Script backend the booking
+    // slots use, just under a different query type (?type=rsvp), so it needs no separate backend
+    // to set up. Refreshes on load and again right after a visitor's own RSVP goes through.
+    //
+    // The arc's fill is based on RSVP_SOFT_CAPACITY, a round target that's never shown as text —
+    // only the raw count is displayed. It exists purely so the gauge can visually communicate
+    // "there's still room" instead of always drawing itself as completely full. EDITABLE: raise
+    // this if registrations get close to it and it's not an actual capacity limit.
+    var RSVP_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzE0cd18u4HWqH8i3VryIL6xBp7t6Ri7bNVnupZbR15Esxznqdlp_HmlWg4YpU5Hc1o/exec';
+    var RSVP_SOFT_CAPACITY = 100;
+    var RSVP_GAUGE_ARC_LENGTH = 251.33; // path length of the semicircle gauge (pi * radius 80)
+    function setRsvpGauge(numberId, fillId, value){
+      var numberEl = document.getElementById(numberId);
+      var fillPath = document.getElementById(fillId);
+      if(numberEl) numberEl.textContent = value;
+      if(fillPath){
+        var pct = Math.min(value / RSVP_SOFT_CAPACITY, 1);
+        fillPath.style.strokeDashoffset = RSVP_GAUGE_ARC_LENGTH * (1 - pct);
+      }
+    }
+    function refreshRsvpCount(){
+      if(!RSVP_APPS_SCRIPT_URL) return;
+      fetch(RSVP_APPS_SCRIPT_URL + '?type=rsvp')
+        .then(function(res){
+          if(!res.ok) throw new Error('Apps Script responded with ' + res.status);
+          return res.json();
+        })
+        .then(function(data){
+          var adults = data.adults || 0;
+          var children = data.children || 0;
+          setRsvpGauge('rsvp-adults-count', 'rsvp-adults-fill', adults);
+          setRsvpGauge('rsvp-children-count', 'rsvp-children-fill', children);
+          setRsvpGauge('rsvp-total-count', 'rsvp-total-fill', adults + children);
+        })
+        .catch(function(){ /* leave the last-known counts showing rather than blank them out */ });
+    }
+    refreshRsvpCount();
 
     // Prayer Request modal — submits to Formspree (separate form from RSVP, so submissions
     // don't mix) and shows an instant on-page confirmation. Formspree emails the ministry's
