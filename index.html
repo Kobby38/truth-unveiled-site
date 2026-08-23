@@ -43,6 +43,9 @@
     --gold-light:#F0D28C;
     --purple:#5A3FA6;
     --purple-deep:#2E1F5E;
+    --green:#3E8E5B;
+    --terracotta:#E8722F;
+    --skyblue:#4A7FD6;
     --cream:#FBF7EE;
     --linen:#F5EFE2;
     --charcoal:#221B2E;
@@ -1049,8 +1052,8 @@
   /* ===================== Events ===================== */
   .gatherings{ background:var(--linen); }
   .rsvp-dashboard{
-    background:var(--cream);
-    border:1px solid rgba(90,63,166,0.2);
+    background:var(--panel-dark);
+    border:1px solid rgba(212,165,55,0.25);
     border-radius:var(--radius);
     padding:24px;
     margin-bottom:28px;
@@ -1063,27 +1066,28 @@
     position:relative;
     width:150px;
     max-width:100%;
+    padding-bottom:14px;
   }
   .rsvp-gauge-svg{ width:100%; height:auto; display:block; }
   .rsvp-gauge-track{
     fill:none;
-    stroke:rgba(90,63,166,0.14);
+    stroke:rgba(251,247,238,0.12);
     stroke-width:14;
     stroke-linecap:round;
   }
   .rsvp-gauge-fill{
     fill:none;
-    stroke:var(--gold);
+    stroke:var(--rsvp-glow, var(--terracotta));
     stroke-width:14;
     stroke-linecap:round;
     stroke-dasharray:251.33;
     stroke-dashoffset:0;
-    filter:drop-shadow(0 0 4px rgba(212,165,55,0.5));
+    filter:drop-shadow(0 0 3px var(--rsvp-glow, var(--terracotta)));
     animation:rsvpGaugeGlow 2.6s ease-in-out infinite;
   }
   @keyframes rsvpGaugeGlow{
-    0%, 100% { filter:drop-shadow(0 0 3px rgba(212,165,55,0.4)); }
-    50% { filter:drop-shadow(0 0 12px rgba(212,165,55,0.75)); }
+    0%, 100% { filter:drop-shadow(0 0 2px var(--rsvp-glow, var(--terracotta))); }
+    50% { filter:drop-shadow(0 0 6px var(--rsvp-glow, var(--terracotta))); }
   }
   @media (prefers-reduced-motion: reduce){
     .rsvp-gauge-fill{ animation:none; }
@@ -1102,14 +1106,14 @@
     font-size:2.2rem;
     font-weight:600;
     line-height:1;
-    color:var(--purple-deep);
+    color:var(--cream);
   }
   .rsvp-gauge-caption{
     font-family:var(--font-mono);
     font-size:0.7rem;
     letter-spacing:0.04em;
     text-transform:uppercase;
-    color:#5c5468;
+    color:rgba(251,247,238,0.6);
     margin-top:4px;
   }
   .gathering-row{
@@ -2417,7 +2421,7 @@
         <div class="rsvp-gauge-wrap">
           <svg class="rsvp-gauge-svg" viewBox="0 0 200 110" aria-hidden="true">
             <path class="rsvp-gauge-track" d="M20 100 A80 80 0 0 1 180 100"></path>
-            <path class="rsvp-gauge-fill" id="rsvp-children-fill" d="M20 100 A80 80 0 0 1 180 100"></path>
+            <path class="rsvp-gauge-fill" id="rsvp-children-fill" style="--rsvp-glow:var(--skyblue);" d="M20 100 A80 80 0 0 1 180 100"></path>
           </svg>
           <div class="rsvp-gauge-label">
             <span class="rsvp-gauge-number" id="rsvp-children-count">0</span>
@@ -2427,7 +2431,7 @@
         <div class="rsvp-gauge-wrap">
           <svg class="rsvp-gauge-svg" viewBox="0 0 200 110" aria-hidden="true">
             <path class="rsvp-gauge-track" d="M20 100 A80 80 0 0 1 180 100"></path>
-            <path class="rsvp-gauge-fill" id="rsvp-total-fill" d="M20 100 A80 80 0 0 1 180 100"></path>
+            <path class="rsvp-gauge-fill" id="rsvp-total-fill" style="--rsvp-glow:var(--green);" d="M20 100 A80 80 0 0 1 180 100"></path>
           </svg>
           <div class="rsvp-gauge-label">
             <span class="rsvp-gauge-number" id="rsvp-total-count">0</span>
