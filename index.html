@@ -1081,6 +1081,18 @@
     color:#4a4155;
     margin-bottom:0;
   }
+  .gathering-directions{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    margin-top:8px;
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--purple);
+    text-decoration:none;
+  }
+  .gathering-directions svg{ width:14px; height:14px; flex-shrink:0; }
+  .gathering-directions:hover{ text-decoration:underline; }
   .gathering-actions{
     display:flex;
     flex-direction:column;
@@ -2327,7 +2339,11 @@
         <div class="gathering-date">Oct 31, 2026</div>
         <div class="gathering-body">
           <h3 data-i18n="events.confTitle">In-Person Prophetic Conference</h3>
-          <p data-i18n="events.confDesc">A one-day in-person gathering of prophetic ministry, worship, and impartation. Venue to be announced.</p>
+          <p data-i18n="events.confDescOct31">A one-day in-person gathering of prophetic ministry, worship, and impartation. Venue: Camp Elim Africa, North Legon.</p>
+          <a class="gathering-directions" href="https://maps.app.goo.gl/ufwWJP9BqyMoTfS97?g_st=ac" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span data-i18n="events.getDirections">Get Directions</span>
+          </a>
         </div>
         <div class="gathering-actions">
           <span class="tag tag-inperson" data-i18n="events.tagInPerson">In-Person</span>
@@ -2679,7 +2695,11 @@
 
     <form class="modal-form" id="rsvp-modal-form">
       <h3 id="rsvp-modal-title" data-i18n="rsvp.title">RSVP: In-Person Prophetic Conference</h3>
-      <p data-i18n="rsvp.text">Let us know you're coming — we'll be in touch with venue and event details.</p>
+      <p data-i18n="rsvp.text">Let us know you're coming. The conference will be held at Camp Elim Africa, North Legon.</p>
+      <a class="gathering-directions" href="https://maps.app.goo.gl/ufwWJP9BqyMoTfS97?g_st=ac" target="_blank" rel="noopener" style="margin-bottom:1.4em;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        <span data-i18n="events.getDirections">Get Directions</span>
+      </a>
 
       <div class="modal-field">
         <label for="rsvp-first-name" data-i18n="form.firstName">First name</label>
@@ -2955,6 +2975,8 @@
       'events.confTitle': 'In-Person Prophetic Conference',
       'events.confTitleGeneric': 'In-Person Conference',
       'events.confDesc': 'A one-day in-person gathering of prophetic ministry, worship, and impartation. Venue to be announced.',
+      'events.confDescOct31': 'A one-day in-person gathering of prophetic ministry, worship, and impartation. Venue: Camp Elim Africa, North Legon.',
+      'events.getDirections': 'Get Directions',
       'events.tagInPerson': 'In-Person',
       'events.rsvpBtn': 'RSVP',
       'preq.eyebrow': 'We\'re Praying With You',
@@ -3022,7 +3044,7 @@
       'pmodal.joinNow': 'Join Meeting Now',
       'pmodal.successMsg': 'Thanks, {first} {last}! We\'re glad you\'re joining us.',
       'rsvp.title': 'RSVP: In-Person Prophetic Conference',
-      'rsvp.text': 'Let us know you\'re coming — we\'ll be in touch with venue and event details.',
+      'rsvp.text': 'Let us know you\'re coming. The conference will be held at Camp Elim Africa, North Legon.',
       'rsvp.surname': 'Surname',
       'rsvp.phone': 'Phone number (WhatsApp)',
       'rsvp.childrenLegend': 'Will you be coming with children?',
@@ -3151,6 +3173,8 @@
       'events.confTitle': 'Conférence Prophétique en Présentiel',
       'events.confTitleGeneric': 'Conférence en Présentiel',
       'events.confDesc': 'Un rassemblement en présentiel d\'une journée autour du ministère prophétique, de l\'adoration et de l\'impartition. Lieu à annoncer.',
+      'events.confDescOct31': 'Un rassemblement en présentiel d\'une journée autour du ministère prophétique, de l\'adoration et de l\'impartition. Lieu : Camp Elim Africa, North Legon.',
+      'events.getDirections': 'Obtenir l\'Itinéraire',
       'events.tagInPerson': 'En Présentiel',
       'events.rsvpBtn': 'Confirmer sa Présence',
       'preq.eyebrow': 'Nous Prions Avec Vous',
@@ -3218,7 +3242,7 @@
       'pmodal.joinNow': 'Rejoindre la Réunion Maintenant',
       'pmodal.successMsg': 'Merci, {first} {last} ! Nous sommes heureux que vous nous rejoigniez.',
       'rsvp.title': 'Confirmation : Conférence Prophétique en Présentiel',
-      'rsvp.text': 'Faites-nous savoir que vous venez — nous vous communiquerons le lieu et les détails de l\'événement.',
+      'rsvp.text': 'Faites-nous savoir que vous venez. La conférence se tiendra à Camp Elim Africa, North Legon.',
       'rsvp.surname': 'Nom de famille',
       'rsvp.phone': 'Numéro de téléphone (WhatsApp)',
       'rsvp.childrenLegend': 'Viendrez-vous avec des enfants ?',
