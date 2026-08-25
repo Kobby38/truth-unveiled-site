@@ -3885,7 +3885,6 @@
     // and submits them to Formspree, which emails on every submission and keeps a
     // retrievable, exportable-to-CSV log of every response in its dashboard.
     (function(){
-      var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xaqrebnd';
       var openBtn = document.getElementById('open-rsvp-modal');
       var overlay = document.getElementById('rsvp-modal-overlay');
       var panel = document.getElementById('rsvp-modal-panel');
@@ -3897,33 +3896,14 @@
       var errorEl = document.getElementById('rsvp-modal-error');
       var submitBtn = document.getElementById('rsvp-modal-submit');
       var firstNameInput = document.getElementById('rsvp-first-name');
+      var surnameInput = document.getElementById('rsvp-surname');
+      var phoneInput = document.getElementById('rsvp-phone');
+      var emailInput = document.getElementById('rsvp-email');
       var childrenYes = document.getElementById('rsvp-children-yes');
       var childrenNo = document.getElementById('rsvp-children-no');
       var childrenCountField = document.getElementById('rsvp-children-count-field');
       var childrenCountInput = document.getElementById('rsvp-children-count');
       var lastFocused = null;
-
-      // Retries the actual Formspree submission once before giving up — covers the case where
-      // the POST reaches Formspree fine (it's saved there) but the response never makes it back
-      // to the browser (e.g. a flaky connection), which otherwise shows a false "didn't go
-      // through" error even though the RSVP was actually recorded.
-      function submitToFormspree(attempt){
-        attempt = attempt || 1;
-        return fetch(FORMSPREE_ENDPOINT, {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { 'Accept': 'application/json' }
-        }).then(function(res){
-          if(!res.ok) throw new Error('Formspree responded with ' + res.status);
-          return res;
-        }).catch(function(err){
-          if(attempt < 2){
-            return new Promise(function(resolve){ setTimeout(resolve, 1500); })
-              .then(function(){ return submitToFormspree(attempt + 1); });
-          }
-          throw err;
-        });
-      }
 
       function openModal(){
         lastFocused = document.activeElement;
@@ -3993,9 +3973,20 @@
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting…';
 
-        submitToFormspree().then(function(res){
-          if(!res.ok) throw new Error('Formspree responded with ' + res.status);
-          var firstName = firstNameInput.value.trim();
+        var firstName = firstNameInput.value.trim();
+        var childrenForCount = childrenYes.checked ? (parseInt(childrenCountInput.value, 10) || 0) : 0;
+
+        // Submits straight to the Apps Script/Sheet backend — no third-party form service in
+        // the middle. Recording the RSVP and updating the dashboard counts happen in the same
+        // request, so there's no separate step that can silently fail after the fact.
+        postRsvpCount({
+          type: 'rsvp',
+          first_name: firstName,
+          surname: surnameInput.value.trim(),
+          phone: phoneInput.value.trim(),
+          email: emailInput.value.trim(),
+          children_count: childrenForCount
+        }).then(function(){
           var msg = tFormat('rsvp.successMsg', { name: firstName });
           if(childrenYes.checked){
             var count = childrenCountInput.value.trim();
@@ -4005,13 +3996,7 @@
           form.classList.add('hide');
           success.classList.add('show');
           doneBtn.focus();
-
-          if(RSVP_APPS_SCRIPT_URL){
-            var childrenForCount = childrenYes.checked ? (parseInt(childrenCountInput.value, 10) || 0) : 0;
-            postRsvpCount({ type: 'rsvp', children_count: childrenForCount, first_name: firstName })
-              .then(function(){ refreshRsvpCount(); })
-              .catch(function(){ /* count sync failing after retries shouldn't block a confirmed RSVP */ });
-          }
+          refreshRsvpCount();
         }).catch(function(){
           errorEl.classList.remove('hide');
         }).finally(function(){
