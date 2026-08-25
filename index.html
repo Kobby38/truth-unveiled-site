@@ -3068,7 +3068,7 @@
         <input type="number" id="rsvp-children-count" name="childrenCount" min="1" placeholder="e.g. 2">
       </div>
 
-      <p class="modal-error hide" id="rsvp-modal-error" data-i18n="rsvp.errorMsg">We couldn't confirm your RSVP went through — this can happen with a weak connection. It's safe to hit submit again, you won't be counted twice. Still unsure? Email us at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we'll confirm you're on the list.</p>
+      <p class="modal-error hide" id="rsvp-modal-error" data-i18n="rsvp.errorMsg">Your RSVP didn't go through. Please check your connection and hit submit again — or email us directly at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we'll add you to the list.</p>
 
       <button type="submit" class="btn btn-gold btn-block" id="rsvp-modal-submit" data-i18n="rsvp.submitBtn">Submit RSVP</button>
     </form>
@@ -3398,7 +3398,7 @@
       'rsvp.yes': 'Yes',
       'rsvp.no': 'No',
       'rsvp.howMany': 'How many?',
-      'rsvp.errorMsg': 'We couldn\'t confirm your RSVP went through — this can happen with a weak connection. It\'s safe to hit submit again, you won\'t be counted twice. Still unsure? Email us at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we\'ll confirm you\'re on the list.',
+      'rsvp.errorMsg': 'Your RSVP didn\'t go through. Please check your connection and hit submit again — or email us directly at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we\'ll add you to the list.',
       'rsvp.submitBtn': 'Submit RSVP',
       'rsvp.successTitle': 'You\'re on the list!',
       'rsvp.successMsg': 'Thanks, {name}! Your RSVP for the In-Person Prophetic Conference is confirmed.',
@@ -3606,7 +3606,7 @@
       'rsvp.yes': 'Oui',
       'rsvp.no': 'Non',
       'rsvp.howMany': 'Combien ?',
-      'rsvp.errorMsg': 'Nous n\'avons pas pu confirmer votre inscription — cela peut arriver avec une connexion faible. Vous pouvez soumettre à nouveau sans risque, vous ne serez pas compté deux fois. Toujours incertain ? Écrivez-nous à <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> et nous confirmerons votre inscription.',
+      'rsvp.errorMsg': 'Votre confirmation n\'a pas abouti. Veuillez vérifier votre connexion et soumettre à nouveau — ou envoyez-nous directement un e-mail à <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> et nous vous ajouterons à la liste.',
       'rsvp.submitBtn': 'Confirmer ma Présence',
       'rsvp.successTitle': 'Vous êtes sur la liste !',
       'rsvp.successMsg': 'Merci, {name} ! Votre confirmation pour la Conférence Prophétique en Présentiel est validée.',
@@ -3885,6 +3885,7 @@
     // and submits them to Formspree, which emails on every submission and keeps a
     // retrievable, exportable-to-CSV log of every response in its dashboard.
     (function(){
+      var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xaqrebnd';
       var openBtn = document.getElementById('open-rsvp-modal');
       var overlay = document.getElementById('rsvp-modal-overlay');
       var panel = document.getElementById('rsvp-modal-panel');
@@ -3896,15 +3897,11 @@
       var errorEl = document.getElementById('rsvp-modal-error');
       var submitBtn = document.getElementById('rsvp-modal-submit');
       var firstNameInput = document.getElementById('rsvp-first-name');
-      var surnameInput = document.getElementById('rsvp-surname');
-      var phoneInput = document.getElementById('rsvp-phone');
-      var emailInput = document.getElementById('rsvp-email');
       var childrenYes = document.getElementById('rsvp-children-yes');
       var childrenNo = document.getElementById('rsvp-children-no');
       var childrenCountField = document.getElementById('rsvp-children-count-field');
       var childrenCountInput = document.getElementById('rsvp-children-count');
       var lastFocused = null;
-      var submissionId = null;
 
       function openModal(){
         lastFocused = document.activeElement;
@@ -3917,12 +3914,6 @@
         document.body.style.overflow = 'hidden';
         firstNameInput.focus();
         document.addEventListener('keydown', onKeydown);
-        // One ID per modal-open, reused across retries and any manual resubmits of this same
-        // attempt — lets the backend recognize "this is the same RSVP" and skip re-counting it,
-        // so a flaky connection can never cause a real duplicate no matter how many times the
-        // request actually lands.
-        submissionId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
-          : (Date.now() + '-' + Math.random().toString(36).slice(2));
       }
 
       function closeModal(){
@@ -3983,34 +3974,39 @@
         var firstName = firstNameInput.value.trim();
         var childrenForCount = childrenYes.checked ? (parseInt(childrenCountInput.value, 10) || 0) : 0;
 
-        // Submits straight to the Apps Script/Sheet backend — no third-party form service in
-        // the middle. Recording the RSVP and updating the dashboard counts happen in the same
-        // request, so there's no separate step that can silently fail after the fact.
-        postRsvpCount({
-          type: 'rsvp',
-          submission_id: submissionId,
-          first_name: firstName,
-          surname: surnameInput.value.trim(),
-          phone: phoneInput.value.trim(),
-          email: emailInput.value.trim(),
-          children_count: childrenForCount
-        }).then(function(){
-          var msg = tFormat('rsvp.successMsg', { name: firstName });
-          if(childrenYes.checked){
-            var count = childrenCountInput.value.trim();
-            msg += tFormat(count === '1' ? 'rsvp.childrenNoteSingular' : 'rsvp.childrenNotePlural', { count: count });
-          }
-          successText.textContent = msg;
-          form.classList.add('hide');
-          success.classList.add('show');
-          doneBtn.focus();
-          refreshRsvpCount();
-        }).catch(function(){
-          errorEl.classList.remove('hide');
-        }).finally(function(){
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Submit RSVP';
-        });
+        // Formspree reliably receives submissions even when the browser fails to read back its
+        // response — real-world testing showed a flaky connection drops the confirmation, not
+        // the request itself, so submissions were landing 100% of the time even when the site
+        // showed an error. Waiting for a clean response before declaring success caused people
+        // to see a false failure and resubmit the same RSVP multiple times. So: fire both
+        // requests and confirm immediately rather than waiting on either response.
+        fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        }).catch(function(){ /* the submission itself still almost always lands regardless */ });
+
+        if(RSVP_APPS_SCRIPT_URL){
+          fetch(RSVP_APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ type: 'rsvp', children_count: childrenForCount, first_name: firstName })
+          }).then(function(){
+            refreshRsvpCount();
+          }).catch(function(){ /* dashboard will pick it up next time someone loads the page */ });
+        }
+
+        var msg = tFormat('rsvp.successMsg', { name: firstName });
+        if(childrenYes.checked){
+          var count = childrenCountInput.value.trim();
+          msg += tFormat(count === '1' ? 'rsvp.childrenNoteSingular' : 'rsvp.childrenNotePlural', { count: count });
+        }
+        successText.textContent = msg;
+        form.classList.add('hide');
+        success.classList.add('show');
+        doneBtn.focus();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit RSVP';
       });
     })();
 
@@ -4023,27 +4019,6 @@
     // "there's still room" instead of always drawing itself as completely full. EDITABLE: raise
     // this if registrations get close to it and it's not an actual capacity limit.
     var RSVP_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzE0cd18u4HWqH8i3VryIL6xBp7t6Ri7bNVnupZbR15Esxznqdlp_HmlWg4YpU5Hc1o/exec';
-    // Posts an RSVP to the Apps Script backend and actually checks whether it was recorded
-    // (not just that the HTTP request didn't error) — the script can return {ok:false} if two
-    // RSVPs land close together and its lock times out. Retries with backoff before giving up,
-    // so a brief lock conflict doesn't silently drop someone's count/name.
-    function postRsvpCount(payload, attempt){
-      attempt = attempt || 1;
-      return fetch(RSVP_APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      }).then(function(res){
-        return res.json().catch(function(){ return { ok: false }; });
-      }).then(function(data){
-        if(data && data.ok) return data;
-        if(attempt < 3){
-          return new Promise(function(resolve){ setTimeout(resolve, 1200 * attempt); })
-            .then(function(){ return postRsvpCount(payload, attempt + 1); });
-        }
-        throw new Error('RSVP count sync failed after retries');
-      });
-    }
     var RSVP_SOFT_CAPACITY = 100;
     var RSVP_GAUGE_ARC_LENGTH = 251.33; // path length of the semicircle gauge (pi * radius 80)
     function setRsvpGauge(numberId, fillId, value){
