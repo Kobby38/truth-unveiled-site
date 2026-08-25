@@ -3068,7 +3068,7 @@
         <input type="number" id="rsvp-children-count" name="childrenCount" min="1" placeholder="e.g. 2">
       </div>
 
-      <p class="modal-error hide" id="rsvp-modal-error" data-i18n="rsvp.errorMsg">Your RSVP didn't go through. Please check your connection and hit submit again — or email us directly at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we'll add you to the list.</p>
+      <p class="modal-error hide" id="rsvp-modal-error" data-i18n="rsvp.errorMsg">We couldn't confirm your RSVP went through — this can happen with a weak connection. It's safe to hit submit again, you won't be counted twice. Still unsure? Email us at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we'll confirm you're on the list.</p>
 
       <button type="submit" class="btn btn-gold btn-block" id="rsvp-modal-submit" data-i18n="rsvp.submitBtn">Submit RSVP</button>
     </form>
@@ -3398,7 +3398,7 @@
       'rsvp.yes': 'Yes',
       'rsvp.no': 'No',
       'rsvp.howMany': 'How many?',
-      'rsvp.errorMsg': 'Your RSVP didn\'t go through. Please check your connection and hit submit again — or email us directly at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we\'ll add you to the list.',
+      'rsvp.errorMsg': 'We couldn\'t confirm your RSVP went through — this can happen with a weak connection. It\'s safe to hit submit again, you won\'t be counted twice. Still unsure? Email us at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we\'ll confirm you\'re on the list.',
       'rsvp.submitBtn': 'Submit RSVP',
       'rsvp.successTitle': 'You\'re on the list!',
       'rsvp.successMsg': 'Thanks, {name}! Your RSVP for the In-Person Prophetic Conference is confirmed.',
@@ -3606,7 +3606,7 @@
       'rsvp.yes': 'Oui',
       'rsvp.no': 'Non',
       'rsvp.howMany': 'Combien ?',
-      'rsvp.errorMsg': 'Votre confirmation n\'a pas abouti. Veuillez vérifier votre connexion et soumettre à nouveau — ou envoyez-nous directement un e-mail à <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> et nous vous ajouterons à la liste.',
+      'rsvp.errorMsg': 'Nous n\'avons pas pu confirmer votre inscription — cela peut arriver avec une connexion faible. Vous pouvez soumettre à nouveau sans risque, vous ne serez pas compté deux fois. Toujours incertain ? Écrivez-nous à <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> et nous confirmerons votre inscription.',
       'rsvp.submitBtn': 'Confirmer ma Présence',
       'rsvp.successTitle': 'Vous êtes sur la liste !',
       'rsvp.successMsg': 'Merci, {name} ! Votre confirmation pour la Conférence Prophétique en Présentiel est validée.',
@@ -3904,6 +3904,7 @@
       var childrenCountField = document.getElementById('rsvp-children-count-field');
       var childrenCountInput = document.getElementById('rsvp-children-count');
       var lastFocused = null;
+      var submissionId = null;
 
       function openModal(){
         lastFocused = document.activeElement;
@@ -3916,6 +3917,12 @@
         document.body.style.overflow = 'hidden';
         firstNameInput.focus();
         document.addEventListener('keydown', onKeydown);
+        // One ID per modal-open, reused across retries and any manual resubmits of this same
+        // attempt — lets the backend recognize "this is the same RSVP" and skip re-counting it,
+        // so a flaky connection can never cause a real duplicate no matter how many times the
+        // request actually lands.
+        submissionId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+          : (Date.now() + '-' + Math.random().toString(36).slice(2));
       }
 
       function closeModal(){
@@ -3981,6 +3988,7 @@
         // request, so there's no separate step that can silently fail after the fact.
         postRsvpCount({
           type: 'rsvp',
+          submission_id: submissionId,
           first_name: firstName,
           surname: surnameInput.value.trim(),
           phone: phoneInput.value.trim(),
