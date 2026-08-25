@@ -3064,8 +3064,8 @@
       </fieldset>
 
       <div class="modal-field hide" id="rsvp-children-count-field">
-        <label for="rsvp-children-count" data-i18n="rsvp.howMany">How many?</label>
-        <input type="number" id="rsvp-children-count" name="childrenCount" min="1" placeholder="e.g. 2">
+        <label for="rsvp-children-count-input" data-i18n="rsvp.howMany">How many?</label>
+        <input type="number" id="rsvp-children-count-input" name="childrenCount" min="1" placeholder="e.g. 2">
       </div>
 
       <p class="modal-error hide" id="rsvp-modal-error" data-i18n="rsvp.errorMsg">Your RSVP didn't go through. Please check your connection and hit submit again — or email us directly at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we'll add you to the list.</p>
@@ -3901,7 +3901,7 @@
       var childrenYes = document.getElementById('rsvp-children-yes');
       var childrenNo = document.getElementById('rsvp-children-no');
       var childrenCountField = document.getElementById('rsvp-children-count-field');
-      var childrenCountInput = document.getElementById('rsvp-children-count');
+      var childrenCountInput = document.getElementById('rsvp-children-count-input');
       var lastFocused = null;
 
       function openModal(){
