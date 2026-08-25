@@ -3990,13 +3990,9 @@
 
           if(RSVP_APPS_SCRIPT_URL){
             var childrenForCount = childrenYes.checked ? (parseInt(childrenCountInput.value, 10) || 0) : 0;
-            fetch(RSVP_APPS_SCRIPT_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({ type: 'rsvp', children_count: childrenForCount, first_name: firstName })
-            }).then(function(){
-              refreshRsvpCount();
-            }).catch(function(){ /* count sync failing shouldn't block a confirmed RSVP */ });
+            postRsvpCount({ type: 'rsvp', children_count: childrenForCount, first_name: firstName })
+              .then(function(){ refreshRsvpCount(); })
+              .catch(function(){ /* count sync failing after retries shouldn't block a confirmed RSVP */ });
           }
         }).catch(function(){
           errorEl.classList.remove('hide');
@@ -4016,6 +4012,27 @@
     // "there's still room" instead of always drawing itself as completely full. EDITABLE: raise
     // this if registrations get close to it and it's not an actual capacity limit.
     var RSVP_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzE0cd18u4HWqH8i3VryIL6xBp7t6Ri7bNVnupZbR15Esxznqdlp_HmlWg4YpU5Hc1o/exec';
+    // Posts an RSVP to the Apps Script backend and actually checks whether it was recorded
+    // (not just that the HTTP request didn't error) — the script can return {ok:false} if two
+    // RSVPs land close together and its lock times out. Retries with backoff before giving up,
+    // so a brief lock conflict doesn't silently drop someone's count/name.
+    function postRsvpCount(payload, attempt){
+      attempt = attempt || 1;
+      return fetch(RSVP_APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      }).then(function(res){
+        return res.json().catch(function(){ return { ok: false }; });
+      }).then(function(data){
+        if(data && data.ok) return data;
+        if(attempt < 3){
+          return new Promise(function(resolve){ setTimeout(resolve, 1200 * attempt); })
+            .then(function(){ return postRsvpCount(payload, attempt + 1); });
+        }
+        throw new Error('RSVP count sync failed after retries');
+      });
+    }
     var RSVP_SOFT_CAPACITY = 100;
     var RSVP_GAUGE_ARC_LENGTH = 251.33; // path length of the semicircle gauge (pi * radius 80)
     function setRsvpGauge(numberId, fillId, value){
