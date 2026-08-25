@@ -3971,40 +3971,48 @@
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting…';
 
-        var firstName = firstNameInput.value.trim();
-        var childrenForCount = childrenYes.checked ? (parseInt(childrenCountInput.value, 10) || 0) : 0;
+        // Everything below is wrapped in a try/catch as a safety net — some browsers (Safari in
+        // particular) have had quirks with fetch() against redirecting endpoints like Apps
+        // Script's. Whatever happens, the button must never stay stuck on "Submitting…": either
+        // we reach success, or we fall back to the error state, but we always resolve.
+        try {
+          var firstName = firstNameInput.value.trim();
+          var childrenForCount = childrenYes.checked ? (parseInt(childrenCountInput.value, 10) || 0) : 0;
 
-        // Formspree reliably receives submissions even when the browser fails to read back its
-        // response — real-world testing showed a flaky connection drops the confirmation, not
-        // the request itself, so submissions were landing 100% of the time even when the site
-        // showed an error. Waiting for a clean response before declaring success caused people
-        // to see a false failure and resubmit the same RSVP multiple times. So: fire both
-        // requests and confirm immediately rather than waiting on either response.
-        fetch(FORMSPREE_ENDPOINT, {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { 'Accept': 'application/json' }
-        }).catch(function(){ /* the submission itself still almost always lands regardless */ });
-
-        if(RSVP_APPS_SCRIPT_URL){
-          fetch(RSVP_APPS_SCRIPT_URL, {
+          // Formspree reliably receives submissions even when the browser fails to read back its
+          // response — real-world testing showed a flaky connection drops the confirmation, not
+          // the request itself, so submissions were landing 100% of the time even when the site
+          // showed an error. Waiting for a clean response before declaring success caused people
+          // to see a false failure and resubmit the same RSVP multiple times. So: fire both
+          // requests and confirm immediately rather than waiting on either response.
+          fetch(FORMSPREE_ENDPOINT, {
             method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ type: 'rsvp', children_count: childrenForCount, first_name: firstName })
-          }).then(function(){
-            refreshRsvpCount();
-          }).catch(function(){ /* dashboard will pick it up next time someone loads the page */ });
-        }
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+          }).catch(function(){ /* the submission itself still almost always lands regardless */ });
 
-        var msg = tFormat('rsvp.successMsg', { name: firstName });
-        if(childrenYes.checked){
-          var count = childrenCountInput.value.trim();
-          msg += tFormat(count === '1' ? 'rsvp.childrenNoteSingular' : 'rsvp.childrenNotePlural', { count: count });
+          if(RSVP_APPS_SCRIPT_URL){
+            fetch(RSVP_APPS_SCRIPT_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ type: 'rsvp', children_count: childrenForCount, first_name: firstName })
+            }).then(function(){
+              refreshRsvpCount();
+            }).catch(function(){ /* dashboard will pick it up next time someone loads the page */ });
+          }
+
+          var msg = tFormat('rsvp.successMsg', { name: firstName });
+          if(childrenYes.checked){
+            var count = childrenCountInput.value.trim();
+            msg += tFormat(count === '1' ? 'rsvp.childrenNoteSingular' : 'rsvp.childrenNotePlural', { count: count });
+          }
+          successText.textContent = msg;
+          form.classList.add('hide');
+          success.classList.add('show');
+          doneBtn.focus();
+        } catch(err) {
+          errorEl.classList.remove('hide');
         }
-        successText.textContent = msg;
-        form.classList.add('hide');
-        success.classList.add('show');
-        doneBtn.focus();
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit RSVP';
       });
