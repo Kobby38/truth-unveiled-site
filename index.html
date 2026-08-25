@@ -3069,6 +3069,7 @@
       </div>
 
       <p class="modal-error hide" id="rsvp-modal-error" data-i18n="rsvp.errorMsg">Your RSVP didn't go through. Please check your connection and hit submit again — or email us directly at <a href="mailto:truthunveiledministrieslive@gmail.com">truthunveiledministrieslive@gmail.com</a> and we'll add you to the list.</p>
+      <p style="font-size:0.72rem;opacity:0.65;margin-top:6px;" id="rsvp-modal-error-debug"></p>
 
       <button type="submit" class="btn btn-gold btn-block" id="rsvp-modal-submit" data-i18n="rsvp.submitBtn">Submit RSVP</button>
     </form>
@@ -4012,6 +4013,8 @@
           doneBtn.focus();
         } catch(err) {
           errorEl.classList.remove('hide');
+          var debugNote = document.getElementById('rsvp-modal-error-debug');
+          if(debugNote) debugNote.textContent = 'Debug info (please share with us): ' + (err && err.message ? err.message : String(err));
         }
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit RSVP';
