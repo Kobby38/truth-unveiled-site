@@ -3903,6 +3903,28 @@
       var childrenCountInput = document.getElementById('rsvp-children-count');
       var lastFocused = null;
 
+      // Retries the actual Formspree submission once before giving up — covers the case where
+      // the POST reaches Formspree fine (it's saved there) but the response never makes it back
+      // to the browser (e.g. a flaky connection), which otherwise shows a false "didn't go
+      // through" error even though the RSVP was actually recorded.
+      function submitToFormspree(attempt){
+        attempt = attempt || 1;
+        return fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        }).then(function(res){
+          if(!res.ok) throw new Error('Formspree responded with ' + res.status);
+          return res;
+        }).catch(function(err){
+          if(attempt < 2){
+            return new Promise(function(resolve){ setTimeout(resolve, 1500); })
+              .then(function(){ return submitToFormspree(attempt + 1); });
+          }
+          throw err;
+        });
+      }
+
       function openModal(){
         lastFocused = document.activeElement;
         form.reset();
@@ -3971,11 +3993,7 @@
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting…';
 
-        fetch(FORMSPREE_ENDPOINT, {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { 'Accept': 'application/json' }
-        }).then(function(res){
+        submitToFormspree().then(function(res){
           if(!res.ok) throw new Error('Formspree responded with ' + res.status);
           var firstName = firstNameInput.value.trim();
           var msg = tFormat('rsvp.successMsg', { name: firstName });
