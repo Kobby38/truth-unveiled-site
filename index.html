@@ -1013,6 +1013,7 @@
   .schedule-list li:last-child{ border-bottom:none; }
   .schedule-list .day{ font-weight:600; color:var(--cream); }
   .schedule-list .time{ font-family:var(--font-mono); font-size:0.85rem; color:rgba(251,247,238,0.7); }
+  .pr-time-local{ font-family:var(--font-mono); font-size:0.7rem; color:rgba(251,247,238,0.55); margin-top:4px; }
 
   .recording-list{
     list-style:none;
@@ -2524,7 +2525,13 @@
 
           <ul class="schedule-list">
             <!-- EDITABLE: update days/times below to match your actual Prayer Room schedule -->
-            <li><span class="day" data-i18n="pr.day">Saturdays</span><span class="time" data-i18n="pr.time">6:00 AM – 9:00 AM GMT</span></li>
+            <li>
+              <div>
+                <span class="day" data-i18n="pr.day">Saturdays</span>
+                <div class="pr-time-local" id="pr-time-local"></div>
+              </div>
+              <span class="time" data-i18n="pr.time">6:00 AM – 9:00 AM GMT</span>
+            </li>
           </ul>
 
           <button type="button" class="btn btn-gold btn-block" id="open-prayer-modal">
@@ -3805,6 +3812,37 @@
       updateLiveState();
       setInterval(updateLiveState, 60000);
       document.addEventListener('tu:langchange', updateLiveState);
+    })();
+
+    // Shows the Prayer Room's next Saturday 6–9 AM GMT session converted to the
+    // visitor's own local time/timezone, right under "Saturdays" on the Join Live card.
+    // Skipped for visitors already on GMT (offset 0) since it'd just repeat the GMT line.
+    (function(){
+      if(new Date().getTimezoneOffset() === 0) return;
+
+      var el = document.getElementById('pr-time-local');
+      if(!el) return;
+
+      var now = new Date();
+      var utcNow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      var daysUntilSat = (6 - utcNow.getUTCDay() + 7) % 7;
+      utcNow.setUTCDate(utcNow.getUTCDate() + daysUntilSat);
+      var start = new Date(Date.UTC(utcNow.getUTCFullYear(), utcNow.getUTCMonth(), utcNow.getUTCDate(), 6, 0));
+      var end = new Date(Date.UTC(utcNow.getUTCFullYear(), utcNow.getUTCMonth(), utcNow.getUTCDate(), 9, 0));
+
+      var dayFmt, timeFmt;
+      try {
+        dayFmt = new Intl.DateTimeFormat(undefined, { weekday: 'short' });
+        timeFmt = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+      } catch(e){ return; }
+
+      var startDay = dayFmt.format(start);
+      var endDay = dayFmt.format(end);
+      var text = startDay === endDay
+        ? timeFmt.format(start) + ' – ' + timeFmt.format(end)
+        : startDay + ' ' + timeFmt.format(start) + ' – ' + endDay + ' ' + timeFmt.format(end);
+
+      el.textContent = text + ' your time';
     })();
 
     // Prayer Room join modal — collects first name + last name, then reveals the Zoom link.
