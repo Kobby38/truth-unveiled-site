@@ -2549,12 +2549,20 @@
             <!-- TEMPLATE BLOCK: duplicate this <li> for each recording, then replace title, date, and href -->
             <li class="recording-item">
               <div class="recording-meta">
+                <div class="recording-title">Prayer Room: The Four Horsemen of the Apocalypse (Revelation 6:1-4)</div>
+                <div class="recording-date">August 29, 2026</div>
+              </div>
+              <a class="watch-link" href="https://www.youtube.com/watch?v=Qj4EuO2688Y" target="_blank" rel="noopener">Watch</a>
+            </li>
+            <!-- END TEMPLATE BLOCK -->
+
+            <li class="recording-item">
+              <div class="recording-meta">
                 <div class="recording-title">Prayer Room: Testimony Saturday</div>
                 <div class="recording-date">August 22, 2026</div>
               </div>
               <a class="watch-link" href="https://www.youtube.com/live/KoB6i6f9RN8" target="_blank" rel="noopener">Watch</a>
             </li>
-            <!-- END TEMPLATE BLOCK -->
 
             <li class="recording-item">
               <div class="recording-meta">
@@ -2562,14 +2570,6 @@
                 <div class="recording-date">August 15, 2026</div>
               </div>
               <a class="watch-link" href="https://www.youtube.com/watch?v=hGe426akkeU" target="_blank" rel="noopener">Watch</a>
-            </li>
-
-            <li class="recording-item">
-              <div class="recording-meta">
-                <div class="recording-title">Prayer Room: The Lamb that was Slain (Revelation 5)</div>
-                <div class="recording-date">August 8, 2026</div>
-              </div>
-              <a class="watch-link" href="https://www.youtube.com/watch?v=eNjwIjz1LOA" target="_blank" rel="noopener">Watch</a>
             </li>
             <!-- Only add more <li> blocks here as new videos appear under the channel's YouTube
                  "Live" tab specifically (youtube.com/@kwabenaopoku4/streams) — not the regular
@@ -4470,6 +4470,7 @@
       var DEFAULT_ERROR_HTML = errorEl.innerHTML;
       var submitBtn = document.getElementById('booking-submit');
       var firstNameInput = document.getElementById('booking-first-name');
+      var emailInput = document.getElementById('booking-email');
       var slotLabel = document.getElementById('booking-modal-slot-label');
       var dayInput = document.getElementById('booking-day');
       var timeInput = document.getElementById('booking-time');
@@ -4688,7 +4689,13 @@
         return fetch(APPS_SCRIPT_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ slot_id: activeSlotBtn.getAttribute('data-slot-id') })
+          body: JSON.stringify({
+            slot_id: activeSlotBtn.getAttribute('data-slot-id'),
+            email: emailInput.value.trim(),
+            first_name: firstNameInput.value.trim(),
+            day: activeSlotBtn.getAttribute('data-slot-day'),
+            time: activeSlotBtn.getAttribute('data-slot-time')
+          })
         }).then(function(res){
           return res.json();
         }).then(function(data){
