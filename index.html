@@ -4470,7 +4470,6 @@
       var DEFAULT_ERROR_HTML = errorEl.innerHTML;
       var submitBtn = document.getElementById('booking-submit');
       var firstNameInput = document.getElementById('booking-first-name');
-      var emailInput = document.getElementById('booking-email');
       var slotLabel = document.getElementById('booking-modal-slot-label');
       var dayInput = document.getElementById('booking-day');
       var timeInput = document.getElementById('booking-time');
@@ -4689,13 +4688,7 @@
         return fetch(APPS_SCRIPT_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            slot_id: activeSlotBtn.getAttribute('data-slot-id'),
-            email: emailInput.value.trim(),
-            first_name: firstNameInput.value.trim(),
-            day: activeSlotBtn.getAttribute('data-slot-day'),
-            time: activeSlotBtn.getAttribute('data-slot-time')
-          })
+          body: JSON.stringify({ slot_id: activeSlotBtn.getAttribute('data-slot-id') })
         }).then(function(res){
           return res.json();
         }).then(function(data){
