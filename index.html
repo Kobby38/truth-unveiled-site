@@ -1530,6 +1530,34 @@
     margin-bottom:1.6em;
   }
 
+  .testimony-list{
+    max-width:720px;
+    margin:0 auto 40px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  .testimony-item{
+    background:var(--linen);
+    border-left:3px solid var(--purple);
+    border-radius:var(--radius);
+    padding:28px 32px;
+    box-shadow:var(--shadow-soft);
+  }
+  .testimony-item p{
+    color:#4a4155;
+    font-style:italic;
+    white-space:pre-line;
+    margin-bottom:1em;
+  }
+  .testimony-item .testimony-author{
+    color:var(--charcoal);
+    font-weight:600;
+    font-style:normal;
+    text-align:right;
+    margin-bottom:0;
+  }
+
   /* ===================== One-on-One Booking ===================== */
   .booking{ background:var(--charcoal); color:var(--cream); }
   .booking .section-head .eyebrow{ color:var(--gold-light); }
@@ -2853,6 +2881,21 @@
         <cite>Revelation 12:11 (KJV)</cite>
       </blockquote>
 
+      <p class="eyebrow" style="color:var(--purple); text-align:center; margin-bottom:16px;" data-i18n="test.wallLabel">Testimony Wall</p>
+      <div class="testimony-list">
+        <!-- TEMPLATE BLOCK: duplicate this .testimony-item for each new testimony, newest first.
+             Give the <p> a unique data-i18n key (e.g. test.wall.<name>.text) and add matching EN
+             + FR entries in both I18N dictionaries below so it translates like this one does. The
+             author name on the line below is left untranslated on purpose (names aren't translated). -->
+        <div class="testimony-item">
+          <p data-i18n="test.wall.agnes.text">I give all glory to Jesus for His faithfulness and miraculous power! My father suffered a stroke, but Jesus completely restored him. His strength and speech returned, and the effects of the stroke were reversed.
+
+I also experienced God&rsquo;s intervention when I suddenly became weak with severe back and leg pain. As I listened to my audio Bible, the pain and weakness disappeared, and I received strength to get home safely. Jesus is truly our Healer, Protector, and ever-present Help. To Him alone be all the glory!</p>
+          <p class="testimony-author">&mdash; Agnes</p>
+        </div>
+        <!-- END TEMPLATE BLOCK -->
+      </div>
+
       <div class="testimony-cta">
         <h3 data-i18n="test.ctaTitle">Have a testimony to share?</h3>
         <p data-i18n="test.ctaText">We'd love to hear what God has done. Your testimony stays completely private, seen only by our prayer team.</p>
@@ -3353,6 +3396,8 @@
       'booking.editDetails': 'Edit Details',
       'modal.done': 'Done',
       'test.eyebrow': 'God At Work',
+      'test.wallLabel': 'Testimony Wall',
+      'test.wall.agnes.text': 'I give all glory to Jesus for His faithfulness and miraculous power! My father suffered a stroke, but Jesus completely restored him. His strength and speech returned, and the effects of the stroke were reversed.\n\nI also experienced God’s intervention when I suddenly became weak with severe back and leg pain. As I listened to my audio Bible, the pain and weakness disappeared, and I received strength to get home safely. Jesus is truly our Healer, Protector, and ever-present Help. To Him alone be all the glory!',
       'test.h2': 'Testimonies',
       'test.intro': 'Real stories from people who\'ve encountered God through this ministry: prophetic words fulfilled, prayers answered, lives changed.',
       'test.epigraph': '&ldquo;And they overcame him by the blood of the Lamb, and by the word of their testimony.&rdquo;',
@@ -3564,6 +3609,8 @@
       'booking.editDetails': 'Modifier les Détails',
       'modal.done': 'Terminé',
       'test.eyebrow': 'Dieu à l\'Œuvre',
+      'test.wallLabel': 'Mur de Témoignages',
+      'test.wall.agnes.text': 'Je rends toute la gloire à Jésus pour Sa fidélité et Sa puissance miraculeuse ! Mon père a été victime d’un AVC, mais Jésus l’a complètement rétabli. Sa force et sa parole sont revenues, et les effets de l’AVC ont été inversés.\n\nJ’ai aussi connu l’intervention de Dieu quand j’ai soudainement ressenti une grande faiblesse avec de fortes douleurs au dos et aux jambes. Pendant que j’écoutais ma Bible audio, la douleur et la faiblesse ont disparu, et j’ai reçu la force de rentrer chez moi en sécurité. Jésus est vraiment notre Guérisseur, notre Protecteur et notre Secours toujours présent. À Lui seul soit toute la gloire !',
       'test.h2': 'Témoignages',
       'test.intro': 'Des histoires vraies de personnes qui ont rencontré Dieu à travers ce ministère : des paroles prophétiques accomplies, des prières exaucées, des vies transformées.',
       'test.epigraph': '&ldquo;Ils l\'ont vaincu à cause du sang de l\'agneau et à cause de la parole de leur témoignage.&rdquo;',
