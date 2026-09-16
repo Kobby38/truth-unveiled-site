@@ -5896,6 +5896,26 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       });
     }
 
+    // YouTube's search.list endpoint (used above for the live check) has a known indexing lag
+    // that can leave it missing the channel's most recent upload for days — confirmed directly
+    // against the API. The channel's own "uploads" playlist doesn't have this problem and always
+    // reflects the true latest upload immediately, so it's used here instead of search.list for
+    // the "not live right now" fallback. A channel's uploads playlist ID is always its channel ID
+    // with the "UC" prefix swapped for "UU" — no extra lookup call needed.
+    var YT_UPLOADS_PLAYLIST_ID = 'UU' + YT_CHANNEL_ID.slice(2);
+    function ytLatestUpload(){
+      var url = 'https://www.googleapis.com/youtube/v3/playlistItems?' + new URLSearchParams({
+        key: YT_API_KEY,
+        playlistId: YT_UPLOADS_PLAYLIST_ID,
+        part: 'snippet',
+        maxResults: '1'
+      }).toString();
+      return fetch(url).then(function(res){
+        if(!res.ok) throw new Error('YouTube API responded with ' + res.status);
+        return res.json();
+      });
+    }
+
     function itemToData(item, isLive){
       var snippet = item.snippet;
       var thumb = snippet.thumbnails.medium || snippet.thumbnails.default;
@@ -5904,6 +5924,19 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
         title: snippet.title,
         thumbnail: thumb.url,
         isLive: isLive
+      };
+    }
+
+    // playlistItems.list responses shape the video ID differently than search.list does
+    // (snippet.resourceId.videoId instead of id.videoId) — see ytLatestUpload() above.
+    function playlistItemToData(item){
+      var snippet = item.snippet;
+      var thumb = snippet.thumbnails.medium || snippet.thumbnails.default;
+      return {
+        videoId: snippet.resourceId.videoId,
+        title: snippet.title,
+        thumbnail: thumb.url,
+        isLive: false
       };
     }
 
@@ -5917,9 +5950,9 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
         render(data);
         return;
       }
-      return ytSearch({ order: 'date' }).then(function(latestData){
+      return ytLatestUpload().then(function(latestData){
         if(latestData.items && latestData.items.length > 0){
-          var data = itemToData(latestData.items[0], false);
+          var data = playlistItemToData(latestData.items[0]);
           writeCache(data);
           render(data);
         } else if(!cached){
