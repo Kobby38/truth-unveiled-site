@@ -2612,7 +2612,8 @@
           <p class="recording-date" style="margin:-0.5em 0 0.8em;" data-i18n="pr.declarationsDate">From Saturday, September 12, 2026</p>
           <p style="color:rgba(251,247,238,0.75); font-size:0.92rem;" data-i18n="pr.declarationsText">Nineteen prayer points and declarations for the month. Download the full booklet to pray along at home.</p>
 
-          <a class="btn btn-outline btn-block" href="assets/september-prayer-declarations.pdf" download data-i18n="pr.declarationsBtn">Download PDF</a>
+          <a class="btn btn-outline btn-block pdf-download-link" href="assets/september-prayer-declarations.pdf" data-pdf-id="september-prayer-declarations" download data-i18n="pr.declarationsBtn">Download PDF</a>
+          <p class="recording-date" style="text-align:center; margin:0.6em 0 0;" id="pdf-count-september-prayer-declarations"></p>
         </div>
 
       </div>
@@ -3361,6 +3362,8 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pr.declarationsDate': 'From Saturday, September 12, 2026',
       'pr.declarationsText': 'Nineteen prayer points and declarations for the month. Download the full booklet to pray along at home.',
       'pr.declarationsBtn': 'Download PDF',
+      'pdf.downloadCountSingular': '{count} download',
+      'pdf.downloadCountPlural': '{count} downloads',
       'events.eyebrow': 'Save the Date',
       'events.h2': 'Events',
       'events.intro': 'Conferences, services, and special gatherings. Join us in person or online.',
@@ -3579,6 +3582,8 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pr.declarationsDate': 'Du samedi 12 septembre 2026',
       'pr.declarationsText': 'Dix-neuf points de prière et déclarations pour le mois. Téléchargez le livret complet pour prier chez vous.',
       'pr.declarationsBtn': 'Télécharger le PDF',
+      'pdf.downloadCountSingular': '{count} téléchargement',
+      'pdf.downloadCountPlural': '{count} téléchargements',
       'events.eyebrow': 'Réservez la Date',
       'events.h2': 'Événements',
       'events.intro': 'Conférences, cultes et rassemblements spéciaux. Rejoignez-nous en personne ou en ligne.',
@@ -5961,6 +5966,53 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       });
     }).catch(function(){
       /* leave the last cached card showing (if any) rather than breaking anything */
+    });
+  })();
+</script>
+
+<script>
+  // PDF download counter — a new, fully separate function on the same Apps Script Web App
+  // already used for RSVP/booking. Doesn't touch or depend on any existing counting logic
+  // there. Fails silently (just leaves the count blank) if anything goes wrong; the actual
+  // download always works via the link's own href regardless of this script's outcome.
+  (function(){
+    var PDF_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwmT40RZ1VzxmHPHFkDN1n76hbWvJ0MwIQVOhtc-oKqthUFqsPqEf14E_i85Pw9xN8/exec';
+
+    function formatCount(n){
+      return tFormat(n === 1 ? 'pdf.downloadCountSingular' : 'pdf.downloadCountPlural', { count: n });
+    }
+
+    document.querySelectorAll('.pdf-download-link[data-pdf-id]').forEach(function(link){
+      var pdfId = link.getAttribute('data-pdf-id');
+      var countEl = document.getElementById('pdf-count-' + pdfId);
+      if(!countEl) return;
+
+      fetch(PDF_APPS_SCRIPT_URL + '?type=pdf_downloads&pdf_id=' + encodeURIComponent(pdfId))
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          if(typeof data.count === 'number') countEl.textContent = formatCount(data.count);
+        })
+        .catch(function(){ /* leave it blank — the download link still works fine */ });
+
+      link.addEventListener('click', function(){
+        var current = parseInt(countEl.textContent, 10);
+        if(!isNaN(current)) countEl.textContent = formatCount(current + 1);
+        fetch(PDF_APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ type: 'pdf_download', pdf_id: pdfId })
+        }).catch(function(){ /* the download itself already succeeded via the link's href */ });
+      });
+    });
+
+    document.addEventListener('tu:langchange', function(){
+      document.querySelectorAll('.pdf-download-link[data-pdf-id]').forEach(function(link){
+        var pdfId = link.getAttribute('data-pdf-id');
+        var countEl = document.getElementById('pdf-count-' + pdfId);
+        if(!countEl) return;
+        var current = parseInt(countEl.textContent, 10);
+        if(!isNaN(current)) countEl.textContent = formatCount(current);
+      });
     });
   })();
 </script>
