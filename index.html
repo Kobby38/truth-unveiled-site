@@ -3372,6 +3372,8 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pr.recordingsTitle': 'Recent Recordings',
       'pr.recordingsText': 'Missed a session? Catch up with recent Prayer Room recordings below.',
       'pr.watchLink': 'Watch',
+      'pr.viewsSingular': '{count} view',
+      'pr.viewsPlural': '{count} views',
       'pr.declarationsTitle': 'Prayer &amp; Declarations',
       'pr.declarationsDate': 'From Saturday, September 12, 2026',
       'pr.declarationsText': 'Nineteen prayer points and declarations for the month. Download the full booklet to pray along at home.',
@@ -3593,6 +3595,8 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pr.recordingsTitle': 'Enregistrements Récents',
       'pr.recordingsText': 'Vous avez manqué une session ? Rattrapez-vous avec les enregistrements récents du Prayer Room ci-dessous.',
       'pr.watchLink': 'Regarder',
+      'pr.viewsSingular': '{count} vue',
+      'pr.viewsPlural': '{count} vues',
       'pr.declarationsTitle': 'Prière et Déclarations',
       'pr.declarationsDate': 'Du samedi 12 septembre 2026',
       'pr.declarationsText': 'Dix-neuf points de prière et déclarations pour le mois. Téléchargez le livret complet pour prier chez vous.',
@@ -6039,6 +6043,12 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       return d.toLocaleDateString(locale, { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' });
     }
 
+    function formatViews(n){
+      var locale = document.documentElement.lang === 'fr' ? 'fr-FR' : 'en-US';
+      var formatted = n.toLocaleString(locale);
+      return tFormat(n === 1 ? 'pr.viewsSingular' : 'pr.viewsPlural', { count: formatted });
+    }
+
     function render(items){
       listEl.innerHTML = '';
       items.forEach(function(item){
@@ -6059,7 +6069,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
         titleEl.textContent = cleanTitle(item.title);
         var dateEl = document.createElement('div');
         dateEl.className = 'recording-date';
-        dateEl.textContent = formatDate(item.publishedAt);
+        dateEl.textContent = formatDate(item.publishedAt) + (typeof item.viewCount === 'number' ? ' · ' + formatViews(item.viewCount) : '');
         meta.appendChild(titleEl);
         meta.appendChild(dateEl);
         var link = document.createElement('a');
@@ -6091,15 +6101,20 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       });
       if(candidates.length === 0) return;
       var videosUrl = 'https://www.googleapis.com/youtube/v3/videos?' + new URLSearchParams({
-        key: YT_API_KEY, id: candidates.map(function(c){ return c.videoId; }).join(','), part: 'liveStreamingDetails'
+        key: YT_API_KEY, id: candidates.map(function(c){ return c.videoId; }).join(','), part: 'liveStreamingDetails,statistics'
       }).toString();
       return fetch(videosUrl).then(function(res2){
         if(!res2.ok) throw new Error('YouTube API responded with ' + res2.status);
         return res2.json();
       }).then(function(vdata){
         var liveIds = {};
-        (vdata.items || []).forEach(function(v){ if(v.liveStreamingDetails) liveIds[v.id] = true; });
+        var viewCounts = {};
+        (vdata.items || []).forEach(function(v){
+          if(v.liveStreamingDetails) liveIds[v.id] = true;
+          if(v.statistics && v.statistics.viewCount) viewCounts[v.id] = parseInt(v.statistics.viewCount, 10);
+        });
         var liveOnly = candidates.filter(function(c){ return liveIds[c.videoId]; }).slice(0, RECORDINGS_COUNT);
+        liveOnly.forEach(function(c){ c.viewCount = viewCounts[c.videoId]; });
         if(liveOnly.length === 0) return;
         writeCache(liveOnly);
         render(liveOnly);
