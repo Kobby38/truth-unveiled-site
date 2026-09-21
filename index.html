@@ -2572,7 +2572,7 @@
           <h3 data-i18n="pr.recordingsTitle">Recent Recordings</h3>
           <p style="color:rgba(251,247,238,0.75); font-size:0.92rem;" data-i18n="pr.recordingsText">Missed a session? Catch up with recent Prayer Room recordings below.</p>
 
-          <ul class="recording-list">
+          <ul class="recording-list" id="recording-list">
 
             <!-- TEMPLATE BLOCK: duplicate this <li> for each recording, then replace title, date, and href -->
             <li class="recording-item">
@@ -3358,6 +3358,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pr.time': '6:00 AM – 9:00 AM GMT',
       'pr.recordingsTitle': 'Recent Recordings',
       'pr.recordingsText': 'Missed a session? Catch up with recent Prayer Room recordings below.',
+      'pr.watchLink': 'Watch',
       'pr.declarationsTitle': 'Prayer &amp; Declarations',
       'pr.declarationsDate': 'From Saturday, September 12, 2026',
       'pr.declarationsText': 'Nineteen prayer points and declarations for the month. Download the full booklet to pray along at home.',
@@ -3578,6 +3579,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pr.time': '6h00 – 9h00 GMT',
       'pr.recordingsTitle': 'Enregistrements Récents',
       'pr.recordingsText': 'Vous avez manqué une session ? Rattrapez-vous avec les enregistrements récents du Prayer Room ci-dessous.',
+      'pr.watchLink': 'Regarder',
       'pr.declarationsTitle': 'Prière et Déclarations',
       'pr.declarationsDate': 'Du samedi 12 septembre 2026',
       'pr.declarationsText': 'Dix-neuf points de prière et déclarations pour le mois. Téléchargez le livret complet pour prier chez vous.',
@@ -5966,6 +5968,126 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       });
     }).catch(function(){
       /* leave the last cached card showing (if any) rather than breaking anything */
+    });
+  })();
+</script>
+
+<script>
+  // Recent Recordings — auto-updates itself from the channel's uploads, same self-updating
+  // idea as the "Latest from our channel" feed above, so this list never needs a manual edit
+  // again. Uses the uploads playlist (not search.list) for the same staleness reasons as the
+  // feed above — playlistItems reflects a new upload immediately, search.list has a real
+  // multi-day indexing lag that was confirmed directly against the API. Since search.list is
+  // also how a "Live tab only" filter would normally be done, liveStreamingDetails is checked
+  // per-video instead (present only for genuine live broadcasts) to keep that same standing
+  // rule — never show a plain uploaded video that wasn't actually streamed live — without
+  // paying search.list's lag. Static HTML in the list above stays as a pre-JS fallback and is
+  // only replaced once this succeeds.
+  (function(){
+    var YT_API_KEY = 'AIzaSyDvzAdzL2tuyjGHZs-QparKqPA5Hriz6Qk';
+    var YT_UPLOADS_PLAYLIST_ID = 'UUjG923-Z5RxfICCxSZ5424A';
+    var RECORDINGS_CACHE_KEY = 'tu_recordings_cache_v1';
+    var RECORDINGS_CACHE_TTL_MS = 5 * 60 * 1000;
+    var RECORDINGS_COUNT = 3;
+
+    if(!YT_API_KEY) return;
+    var listEl = document.getElementById('recording-list');
+    if(!listEl) return;
+
+    function readCache(){
+      try {
+        var raw = localStorage.getItem(RECORDINGS_CACHE_KEY);
+        if(!raw) return null;
+        var parsed = JSON.parse(raw);
+        if(!parsed || (Date.now() - parsed.savedAt) > RECORDINGS_CACHE_TTL_MS) return null;
+        return parsed.data;
+      } catch(err) { return null; }
+    }
+    function writeCache(data){
+      try { localStorage.setItem(RECORDINGS_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), data: data })); }
+      catch(err) { /* localStorage unavailable — just skip caching */ }
+    }
+
+    // Cleans "| Title | Extra Bit | 12 September 2026 |" down to "Title — Extra Bit", dropping
+    // the trailing embedded date (the real date comes from the API's publishedAt instead, which
+    // is always reliable, unlike parsing a human-typed date out of a title).
+    var DATE_SEGMENT_RE = /^\d{1,2}(st|nd|rd|th)?\s+\w+\s+\d{4}$/i;
+    function cleanTitle(raw){
+      var segments = raw.split('|').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+      if(segments.length > 1 && DATE_SEGMENT_RE.test(segments[segments.length - 1])){
+        segments.pop();
+      }
+      return 'Prayer Room: ' + segments.join(' — ');
+    }
+
+    function formatDate(iso){
+      var d = new Date(iso);
+      return d.toLocaleDateString(undefined, { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function render(items){
+      listEl.innerHTML = '';
+      items.forEach(function(item){
+        var li = document.createElement('li');
+        li.className = 'recording-item';
+        var meta = document.createElement('div');
+        meta.className = 'recording-meta';
+        var titleEl = document.createElement('div');
+        titleEl.className = 'recording-title';
+        titleEl.textContent = cleanTitle(item.title);
+        var dateEl = document.createElement('div');
+        dateEl.className = 'recording-date';
+        dateEl.textContent = formatDate(item.publishedAt);
+        meta.appendChild(titleEl);
+        meta.appendChild(dateEl);
+        var link = document.createElement('a');
+        link.className = 'watch-link';
+        link.href = 'https://www.youtube.com/watch?v=' + item.videoId;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = t('pr.watchLink');
+        li.appendChild(meta);
+        li.appendChild(link);
+        listEl.appendChild(li);
+      });
+    }
+
+    var cached = readCache();
+    if(cached) render(cached);
+
+    var uploadsUrl = 'https://www.googleapis.com/youtube/v3/playlistItems?' + new URLSearchParams({
+      key: YT_API_KEY, playlistId: YT_UPLOADS_PLAYLIST_ID, part: 'snippet', maxResults: '10'
+    }).toString();
+
+    fetch(uploadsUrl).then(function(res){
+      if(!res.ok) throw new Error('YouTube API responded with ' + res.status);
+      return res.json();
+    }).then(function(data){
+      var candidates = (data.items || []).map(function(i){
+        return { videoId: i.snippet.resourceId.videoId, title: i.snippet.title, publishedAt: i.snippet.publishedAt };
+      });
+      if(candidates.length === 0) return;
+      var videosUrl = 'https://www.googleapis.com/youtube/v3/videos?' + new URLSearchParams({
+        key: YT_API_KEY, id: candidates.map(function(c){ return c.videoId; }).join(','), part: 'liveStreamingDetails'
+      }).toString();
+      return fetch(videosUrl).then(function(res2){
+        if(!res2.ok) throw new Error('YouTube API responded with ' + res2.status);
+        return res2.json();
+      }).then(function(vdata){
+        var liveIds = {};
+        (vdata.items || []).forEach(function(v){ if(v.liveStreamingDetails) liveIds[v.id] = true; });
+        var liveOnly = candidates.filter(function(c){ return liveIds[c.videoId]; }).slice(0, RECORDINGS_COUNT);
+        if(liveOnly.length === 0) return;
+        writeCache(liveOnly);
+        render(liveOnly);
+      });
+    }).catch(function(){
+      /* leave the static/last-cached list showing rather than breaking anything */
+    });
+
+    document.addEventListener('tu:langchange', function(){
+      var current = readCache();
+      if(current) render(current);
     });
   })();
 </script>
