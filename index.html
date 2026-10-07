@@ -338,7 +338,8 @@
       color:var(--cream);
     }
     .nav-toggle{ display:inline-flex; }
-    .header-actions .btn-gold{ padding:10px 18px; font-size:0.85rem; }
+    .header-actions{ gap:10px; }
+    .header-actions .btn-gold{ padding:8px 14px; font-size:0.82rem; }
   }
 
   /* ===================== Hero ===================== */
@@ -1517,22 +1518,24 @@
 
 
 
-  .give-card{ margin-top:24px; text-align:center; }
-  .give-card .give-label{
+  .header-give-btn{ padding:9px 20px; font-size:0.88rem; }
+  .give-modal .give-label{
     font-family:var(--font-mono);
     font-size:0.72rem;
     text-transform:uppercase;
     letter-spacing:0.06em;
-    color:#5c5468;
-    margin:20px 0 4px;
+    color:rgba(251,247,238,0.65);
+    margin:22px 0 4px;
+    text-align:center;
   }
-  .give-card .give-number{
+  .give-modal .give-number{
     font-family:var(--font-mono);
-    font-size:1.5rem;
+    font-size:1.6rem;
     font-weight:700;
     letter-spacing:0.04em;
-    color:var(--purple-deep);
-    margin:0 0 18px;
+    color:var(--gold-light);
+    margin:0 0 20px;
+    text-align:center;
   }
 
   .contact-email{
@@ -2231,6 +2234,7 @@
     </nav>
 
     <div class="header-actions">
+      <button type="button" class="btn btn-gold header-give-btn" id="header-give-btn" aria-haspopup="dialog" data-i18n="nav.give">Give</button>
       <div class="lang-switcher" id="lang-switcher" role="group" aria-label="Choose language">
         <button type="button" class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" class="lang-btn" data-lang="fr" aria-pressed="false">FR</button>
@@ -3060,13 +3064,6 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
           </ul>
         </div>
 
-        <div class="info-card give-card" id="give">
-          <h3 data-i18n="give.title">Give</h3>
-          <p data-i18n="give.text">Partner with us to support the work of the ministry. Thank you for your generosity.</p>
-          <p class="give-label" data-i18n="give.momoLabel">MTN Mobile Money</p>
-          <p class="give-number" id="give-number">0246 094 020</p>
-          <button type="button" class="btn btn-gold btn-block" id="give-copy-btn" data-i18n="give.copyBtn">Copy Number</button>
-        </div>
       </div>
     </div>
   </section>
@@ -3101,7 +3098,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
             <li><a href="#events" data-i18n="nav.events">Events</a></li>
             <li><a href="#socials" data-i18n="nav.socials">Socials</a></li>
             <li><a href="#connect" data-i18n="nav.connect">Connect</a></li>
-            <li><a href="#give" data-i18n="nav.give">Give</a></li>
+            <li><a href="#give" class="open-give" data-i18n="nav.give">Give</a></li>
             <li><a href="#prayer-requests" data-i18n="nav.prayerRequests">Prayer Requests</a></li>
             <li><a href="#booking" data-i18n="nav.prayerSession">O3</a></li>
             <li><a href="#testimonies" data-i18n="nav.testimonies">Testimonies</a></li>
@@ -3116,6 +3113,18 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
     </div>
   </div>
 </footer>
+
+<!-- Give modal: opened from the header Give button and the footer Give link -->
+<div class="modal-overlay" id="give-modal-overlay">
+  <div class="modal-panel give-modal" role="dialog" aria-modal="true" aria-labelledby="give-modal-title" id="give-modal-panel">
+    <button type="button" class="modal-close" id="give-modal-close" aria-label="Close">&times;</button>
+    <h3 id="give-modal-title" data-i18n="give.title">Give</h3>
+    <p data-i18n="give.text">Partner with us to support the work of the ministry. Thank you for your generosity.</p>
+    <p class="give-label" data-i18n="give.momoLabel">MTN Mobile Money</p>
+    <p class="give-number" id="give-number">0246 094 020</p>
+    <button type="button" class="btn btn-gold btn-block" id="give-copy-btn" data-i18n="give.copyBtn">Copy Number</button>
+  </div>
+</div>
 
 <!-- Prayer Room join modal: collects first + last name, then reveals the Zoom link -->
 <div class="modal-overlay" id="prayer-modal-overlay">
@@ -6240,11 +6249,38 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
 </script>
 
 <script>
-  // Give card: copies the MoMo number so it can be pasted into the phone's MoMo menu.
+  // Give modal: opened by the header Give button and the footer Give link; copies the MoMo
+  // number so it can be pasted into the phone's MoMo menu.
   (function(){
+    var overlay = document.getElementById('give-modal-overlay');
+    var closeBtn = document.getElementById('give-modal-close');
     var btn = document.getElementById('give-copy-btn');
     var numEl = document.getElementById('give-number');
-    if(!btn || !numEl) return;
+    var openers = document.querySelectorAll('#header-give-btn, .open-give');
+    if(!overlay || !btn || !numEl) return;
+    var lastFocus = null;
+
+    function onKeydown(e){ if(e.key === 'Escape') close(); }
+    function open(){
+      lastFocus = document.activeElement;
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', onKeydown);
+      btn.focus();
+    }
+    function close(){
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKeydown);
+      if(lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    openers.forEach(function(el){
+      el.addEventListener('click', function(e){ e.preventDefault(); open(); });
+    });
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function(e){ if(e.target === overlay) close(); });
+
     btn.addEventListener('click', function(){
       var digits = numEl.textContent.replace(/\s+/g, '');
       var done = function(){
