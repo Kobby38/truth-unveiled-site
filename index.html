@@ -1517,6 +1517,24 @@
 
 
 
+  .give-card{ margin-top:24px; text-align:center; }
+  .give-card .give-label{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:#5c5468;
+    margin:20px 0 4px;
+  }
+  .give-card .give-number{
+    font-family:var(--font-mono);
+    font-size:1.5rem;
+    font-weight:700;
+    letter-spacing:0.04em;
+    color:var(--purple-deep);
+    margin:0 0 18px;
+  }
+
   .contact-email{
     font-family:var(--font-mono);
     font-size:0.98rem;
@@ -3041,6 +3059,14 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
             <li><span class="label" data-i18n="nav.events">Events</span><span data-i18n="connect.eventLabel">In-Person Prophetic Conference, Oct 2026</span></li>
           </ul>
         </div>
+
+        <div class="info-card give-card" id="give">
+          <h3 data-i18n="give.title">Give</h3>
+          <p data-i18n="give.text">Partner with us to support the work of the ministry. Thank you for your generosity.</p>
+          <p class="give-label" data-i18n="give.momoLabel">MTN Mobile Money</p>
+          <p class="give-number" id="give-number">0246 094 020</p>
+          <button type="button" class="btn btn-gold btn-block" id="give-copy-btn" data-i18n="give.copyBtn">Copy Number</button>
+        </div>
       </div>
     </div>
   </section>
@@ -3075,6 +3101,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
             <li><a href="#events" data-i18n="nav.events">Events</a></li>
             <li><a href="#socials" data-i18n="nav.socials">Socials</a></li>
             <li><a href="#connect" data-i18n="nav.connect">Connect</a></li>
+            <li><a href="#give" data-i18n="nav.give">Give</a></li>
             <li><a href="#prayer-requests" data-i18n="nav.prayerRequests">Prayer Requests</a></li>
             <li><a href="#booking" data-i18n="nav.prayerSession">O3</a></li>
             <li><a href="#testimonies" data-i18n="nav.testimonies">Testimonies</a></li>
@@ -3494,6 +3521,12 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'socials.watchSermons': 'Watch Full Sermons',
       'connect.eyebrow': 'Stay Connected',
       'connect.h2': 'Connect',
+      'nav.give': 'Give',
+      'give.title': 'Give',
+      'give.text': 'Partner with us to support the work of the ministry. Thank you for your generosity.',
+      'give.momoLabel': 'MTN Mobile Money',
+      'give.copyBtn': 'Copy Number',
+      'give.copied': 'Copied!',
       'connect.cardTitle': 'Connect With Us',
       'connect.cardText': 'Have a question, a prayer request, or want to get involved? Reach out any time.',
       'connect.prSchedule': 'Saturdays, 6–9 AM GMT',
@@ -3721,6 +3754,12 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'socials.watchSermons': 'Regardez les Prédications Complètes',
       'connect.eyebrow': 'Restons en Contact',
       'connect.h2': 'Contact',
+      'nav.give': 'Donner',
+      'give.title': 'Donner',
+      'give.text': "Soutenez l'œuvre du ministère en vous associant à nous. Merci pour votre générosité.",
+      'give.momoLabel': 'MTN Mobile Money',
+      'give.copyBtn': 'Copier le numéro',
+      'give.copied': 'Copié !',
       'connect.cardTitle': 'Contactez-nous',
       'connect.cardText': 'Une question, une demande de prière, ou envie de vous impliquer ? Contactez-nous à tout moment.',
       'connect.prSchedule': 'Samedis, 6h–9h GMT',
@@ -6196,6 +6235,25 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
     document.addEventListener('tu:langchange', function(){
       var current = readCache();
       if(current) render(current);
+    });
+  })();
+</script>
+
+<script>
+  // Give card: copies the MoMo number so it can be pasted into the phone's MoMo menu.
+  (function(){
+    var btn = document.getElementById('give-copy-btn');
+    var numEl = document.getElementById('give-number');
+    if(!btn || !numEl) return;
+    btn.addEventListener('click', function(){
+      var digits = numEl.textContent.replace(/\s+/g, '');
+      var done = function(){
+        btn.textContent = t('give.copied');
+        setTimeout(function(){ btn.textContent = t('give.copyBtn'); }, 1800);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(digits).then(done).catch(function(){});
+      }
     });
   })();
 </script>
