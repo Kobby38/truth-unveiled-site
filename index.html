@@ -6410,23 +6410,42 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
 </script>
 
 <script>
-  // Prayer Room video: plays ONCE (the door opening) when it scrolls into view, then fades into a still
-  // photo of someone praying, instead of looping. The button pauses/resumes while playing and replays
-  // from the start once it has finished. Visitors who prefer reduced motion just get the still photo.
+  // Prayer Room video cycle: the door opens (video plays once), the photo of a man praying fades in and
+  // holds, then it fades back out and the whole thing starts again from the beginning. It starts when
+  // scrolled into view; the button pauses/resumes the cycle. Visitors who prefer reduced motion just
+  // get the still photo.
+  // EDITABLE: HOLD_MS is how long the praying photo stays up before the cycle restarts.
   (function(){
+    var HOLD_MS = 6000;
+    var FADE_MS = 1600;   // keep in step with the .photo-after transition in the CSS
     var v = document.getElementById('prayer-room-video');
     var btn = document.getElementById('prayer-room-pause-btn');
-    var box = document.getElementById('prayer-room-after') && document.getElementById('prayer-room-after').parentNode;
+    var after = document.getElementById('prayer-room-after');
+    var box = after && after.parentNode;
     if(!v || !btn || !box) return;
+
+    var timer = null;
+    var running = false;
     var started = false;
 
-    function setPressed(pressed, label){
-      btn.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-      btn.setAttribute('aria-label', label);
+    function setPressed(paused){
+      btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+      btn.setAttribute('aria-label', paused ? 'Play the Prayer Room video' : 'Pause the Prayer Room video');
     }
-    function play(){
+    function clearTimer(){ if(timer){ clearTimeout(timer); timer = null; } }
+    function playVideo(){
       var p = v.play();
       if(p && p.catch) p.catch(function(){});
+    }
+    function startCycle(){
+      clearTimer();
+      running = true;
+      setPressed(false);
+      box.classList.remove('show-after');
+      timer = setTimeout(function(){
+        v.currentTime = 0;
+        playVideo();
+      }, v.ended || v.currentTime > 0 ? FADE_MS : 0);
     }
 
     if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
@@ -6435,26 +6454,36 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       return;
     }
 
-    v.addEventListener('play', function(){ setPressed(false, 'Pause the Prayer Room video'); });
-    v.addEventListener('pause', function(){ if(!v.ended) setPressed(true, 'Play the Prayer Room video'); });
+    // Video finished (door open): bring in the photo, hold, then go round again.
     v.addEventListener('ended', function(){
+      if(!running) return;
       box.classList.add('show-after');
-      setPressed(true, 'Replay the Prayer Room video');
+      clearTimer();
+      timer = setTimeout(startCycle, HOLD_MS);
     });
 
     btn.addEventListener('click', function(){
-      if(v.ended){
-        box.classList.remove('show-after');
-        v.currentTime = 0;
-        play();
-      } else if(v.paused){
-        play();
-      } else {
+      if(running){
+        running = false;
+        clearTimer();
         v.pause();
+        setPressed(true);
+      } else if(v.ended || box.classList.contains('show-after')){
+        startCycle();
+      } else {
+        running = true;
+        setPressed(false);
+        playVideo();
       }
     });
 
-    function start(){ if(started) return; started = true; play(); }
+    function start(){
+      if(started) return;
+      started = true;
+      running = true;
+      setPressed(false);
+      playVideo();
+    }
     if('IntersectionObserver' in window){
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(en){
