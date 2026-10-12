@@ -730,7 +730,8 @@
     box-shadow:var(--shadow-soft);
     line-height:0;
   }
-  .section-photo img{
+  .section-photo img,
+  .section-photo video{
     width:100%;
     height:100%;
     object-fit:cover;
@@ -2645,7 +2646,9 @@
     <div class="container">
       <div class="section-photo-intro">
         <div class="section-photo" style="aspect-ratio:4/5;">
-          <img src="assets/worship-red.jpg" alt="A worshipper with hands raised during a Truth Unveiled Ministries gathering" loading="lazy">
+          <video class="section-photo-video" id="prayer-room-video" autoplay muted loop playsinline preload="metadata" poster="assets/prayer-room-poster.jpg" aria-hidden="true">
+            <source src="assets/prayer-room-loop.mp4" type="video/mp4">
+          </video>
         </div>
         <div class="section-head">
           <p class="eyebrow" data-i18n="pr.eyebrow">Gather With Us</p>
@@ -6382,6 +6385,18 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       var current = readCache();
       if(current) render(current);
     });
+  })();
+</script>
+
+<script>
+  // Prayer Room loop video: stay still (poster frame only) for visitors who prefer reduced motion.
+  (function(){
+    var v = document.getElementById('prayer-room-video');
+    if(!v || !window.matchMedia) return;
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      v.removeAttribute('autoplay');
+      v.pause();
+    }
   })();
 </script>
 
