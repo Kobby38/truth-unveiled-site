@@ -737,6 +737,15 @@
     object-fit:cover;
     display:block;
   }
+  .section-photo .photo-after{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    filter:brightness(0.72);
+    transition:opacity 1.6s ease;
+  }
+  .section-photo.show-after .photo-after{ opacity:1; }
+  @media (prefers-reduced-motion: reduce){ .section-photo .photo-after{ transition:none; } }
   .section-photo .photo-pause-btn{ top:12px; right:12px; z-index:4; line-height:0; }
   .section-photo::after{
     content:"";
@@ -2647,9 +2656,11 @@
     <div class="container">
       <div class="section-photo-intro">
         <div class="section-photo" style="aspect-ratio:4/5;">
-          <video class="section-photo-video" id="prayer-room-video" autoplay muted loop playsinline preload="metadata" poster="assets/prayer-room-poster.jpg" aria-hidden="true">
+          <video class="section-photo-video" id="prayer-room-video" muted playsinline preload="auto" poster="assets/prayer-room-poster.jpg" aria-hidden="true">
             <source src="assets/prayer-room-loop.mp4" type="video/mp4">
           </video>
+          <!-- Fades in after the door opens. EDITABLE: swap assets/prayer-room-man.jpg for another photo. -->
+          <img class="photo-after" id="prayer-room-after" src="assets/prayer-room-man.jpg" alt="A man praying with one hand raised during a Prayer Room gathering" loading="lazy">
           <button type="button" class="smoke-pause-btn photo-pause-btn" id="prayer-room-pause-btn" aria-pressed="false" aria-label="Pause the Prayer Room video">
             <svg class="fire-icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <rect x="6" y="5" width="4" height="14" rx="1"></rect>
@@ -6399,33 +6410,61 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
 </script>
 
 <script>
-  // Prayer Room loop video: pause/play button, and it starts paused (poster frame only) for
-  // visitors who prefer reduced motion.
+  // Prayer Room video: plays ONCE (the door opening) when it scrolls into view, then fades into a still
+  // photo of someone praying, instead of looping. The button pauses/resumes while playing and replays
+  // from the start once it has finished. Visitors who prefer reduced motion just get the still photo.
   (function(){
     var v = document.getElementById('prayer-room-video');
     var btn = document.getElementById('prayer-room-pause-btn');
-    if(!v || !btn) return;
+    var box = document.getElementById('prayer-room-after') && document.getElementById('prayer-room-after').parentNode;
+    if(!v || !btn || !box) return;
+    var started = false;
 
-    function setPaused(paused){
-      btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
-      btn.setAttribute('aria-label', paused ? 'Play the Prayer Room video' : 'Pause the Prayer Room video');
-      [v].forEach(function(el){
-        if(paused){
-          el.removeAttribute('autoplay');
-          el.pause();
-        } else {
-          var p = el.play();
-          if(p && p.catch) p.catch(function(){});
-        }
-      });
+    function setPressed(pressed, label){
+      btn.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+      btn.setAttribute('aria-label', label);
+    }
+    function play(){
+      var p = v.play();
+      if(p && p.catch) p.catch(function(){});
     }
 
     if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      setPaused(true);
+      box.classList.add('show-after');
+      btn.hidden = true;
+      return;
     }
-    btn.addEventListener('click', function(){
-      setPaused(btn.getAttribute('aria-pressed') !== 'true');
+
+    v.addEventListener('play', function(){ setPressed(false, 'Pause the Prayer Room video'); });
+    v.addEventListener('pause', function(){ if(!v.ended) setPressed(true, 'Play the Prayer Room video'); });
+    v.addEventListener('ended', function(){
+      box.classList.add('show-after');
+      setPressed(true, 'Replay the Prayer Room video');
     });
+
+    btn.addEventListener('click', function(){
+      if(v.ended){
+        box.classList.remove('show-after');
+        v.currentTime = 0;
+        play();
+      } else if(v.paused){
+        play();
+      } else {
+        v.pause();
+      }
+    });
+
+    function start(){ if(started) return; started = true; play(); }
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if(en.isIntersecting){ start(); io.disconnect(); }
+        });
+      }, { threshold: 0.5 });
+      io.observe(box);
+    } else {
+      start();
+    }
   })();
 </script>
 
