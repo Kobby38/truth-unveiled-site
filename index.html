@@ -3199,8 +3199,13 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
         <input type="text" id="prayer-last-name" name="lastName" placeholder="Doe" autocomplete="family-name" required>
       </div>
 
+      <div class="modal-field">
+        <label for="prayer-email" data-i18n="pmodal.emailLabel">Email (optional, for weekly reminders)</label>
+        <input type="email" id="prayer-email" name="email" placeholder="jane@example.com" autocomplete="email" maxlength="120">
+      </div>
+
       <button type="submit" class="btn btn-gold btn-block" data-i18n="pmodal.submitBtn">Get Meeting Link</button>
-      <p class="modal-note" data-i18n="pmodal.recorded">Your name is recorded for attendance.</p>
+      <p class="modal-note" data-i18n="pmodal.recorded">Your name is recorded for attendance. If you add an email, we use it only for Prayer Room reminders; you can unsubscribe any time.</p>
     </form>
 
     <div class="modal-success" id="prayer-modal-success">
@@ -3613,7 +3618,8 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pmodal.submitBtn': 'Get Meeting Link',
       'pmodal.successTitle': 'You\'re in!',
       'pmodal.joinNow': 'Join Meeting Now',
-      'pmodal.recorded': 'Your name is recorded for attendance.',
+      'pmodal.recorded': 'Your name is recorded for attendance. If you add an email, we use it only for Prayer Room reminders; you can unsubscribe any time.',
+      'pmodal.emailLabel': 'Email (optional, for weekly reminders)',
       'wa.joinBtn': 'Join our WhatsApp Channel',
       'wa.note': 'Get weekly Prayer Room reminders and updates:',
       'pmodal.successMsg': 'Thanks, {first} {last}! We\'re glad you\'re joining us.',
@@ -3852,7 +3858,8 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pmodal.submitBtn': 'Obtenir le Lien de la Réunion',
       'pmodal.successTitle': 'Vous y êtes !',
       'pmodal.joinNow': 'Rejoindre la Réunion Maintenant',
-      'pmodal.recorded': 'Votre nom est enregistré pour la présence.',
+      'pmodal.recorded': 'Votre nom est enregistré pour la présence. Si vous ajoutez un e-mail, il sert uniquement aux rappels de la Salle de Prière ; vous pouvez vous désabonner à tout moment.',
+      'pmodal.emailLabel': 'E-mail (facultatif, pour les rappels hebdomadaires)',
       'wa.joinBtn': 'Rejoignez notre chaîne WhatsApp',
       'wa.note': 'Recevez les rappels et actualités hebdomadaires de la Salle de Prière :',
       'pmodal.successMsg': 'Merci, {first} {last} ! Nous sommes heureux que vous nous rejoigniez.',
@@ -4109,11 +4116,22 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       var successText = document.getElementById('prayer-modal-success-text');
       var firstNameInput = document.getElementById('prayer-first-name');
       var lastNameInput = document.getElementById('prayer-last-name');
+      var emailInput = document.getElementById('prayer-email');
+      var SAVED_KEY = 'tu_prayer_join';
       var lastFocused = null;
 
       function openModal(){
         lastFocused = document.activeElement;
         form.reset();
+        // Returning visitors: pre-fill what they entered last time so joining is one tap.
+        try {
+          var saved = JSON.parse(localStorage.getItem(SAVED_KEY) || 'null');
+          if(saved){
+            firstNameInput.value = saved.first || '';
+            lastNameInput.value = saved.last || '';
+            emailInput.value = saved.email || '';
+          }
+        } catch(err) {}
         form.classList.remove('hide');
         success.classList.remove('show');
         overlay.classList.add('open');
@@ -4155,6 +4173,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       overlay.addEventListener('click', function(e){
         if(e.target === overlay) closeModal();
       });
+      if(/[?&]join(=|&|$)/.test(location.search)) openModal();
 
       form.addEventListener('submit', function(e){
         e.preventDefault();
@@ -4164,6 +4183,8 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
         }
         var firstName = firstNameInput.value.trim();
         var lastName = lastNameInput.value.trim();
+        var email = emailInput.value.trim();
+        try { localStorage.setItem(SAVED_KEY, JSON.stringify({ first: firstName, last: lastName, email: email })); } catch(err) {}
         successText.textContent = tFormat('pmodal.successMsg', { first: firstName, last: lastName });
         form.classList.add('hide');
         success.classList.add('show');
@@ -4176,7 +4197,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             keepalive: true,
-            body: JSON.stringify({ type: 'prayer_join', first_name: firstName.slice(0, 60), last_name: lastName.slice(0, 60) })
+            body: JSON.stringify({ type: 'prayer_join', first_name: firstName.slice(0, 60), last_name: lastName.slice(0, 60), email: email })
           }).catch(function(){});
         } catch(err) {}
       });
@@ -5017,6 +5038,9 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
     // after a short delay so it doesn't fight the page for the visitor's first glance.
     (function(){
       var STORAGE_KEY = 'tu_welcomed';
+      // Links shared as truthunveiledministries.org/?join open the Prayer Room join popup directly,
+      // so don't stack the welcome popup on top of it.
+      if(/[?&]join(=|&|$)/.test(location.search)) return;
       var alreadySeen;
       try {
         alreadySeen = localStorage.getItem(STORAGE_KEY);
