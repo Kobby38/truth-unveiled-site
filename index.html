@@ -1519,6 +1519,12 @@
 
 
   .header-give-btn{ padding:9px 20px; font-size:0.88rem; }
+  .modal-note{
+    margin:12px 0 0;
+    font-size:0.78rem;
+    text-align:center;
+    color:rgba(251,247,238,0.6);
+  }
   .give-modal .give-verse{
     margin:18px 0 0;
     padding:12px 0 0;
@@ -3176,6 +3182,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       </div>
 
       <button type="submit" class="btn btn-gold btn-block" data-i18n="pmodal.submitBtn">Get Meeting Link</button>
+      <p class="modal-note" data-i18n="pmodal.recorded">Your name is recorded for attendance.</p>
     </form>
 
     <div class="modal-success" id="prayer-modal-success">
@@ -3583,6 +3590,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pmodal.submitBtn': 'Get Meeting Link',
       'pmodal.successTitle': 'You\'re in!',
       'pmodal.joinNow': 'Join Meeting Now',
+      'pmodal.recorded': 'Your name is recorded for attendance.',
       'pmodal.successMsg': 'Thanks, {first} {last}! We\'re glad you\'re joining us.',
       'rsvp.title': 'RSVP: In-Person Prophetic Conference',
       'rsvp.text': 'Let us know you\'re coming. The conference will be held at Camp Elim Africa, North Legon.',
@@ -3819,6 +3827,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pmodal.submitBtn': 'Obtenir le Lien de la Réunion',
       'pmodal.successTitle': 'Vous y êtes !',
       'pmodal.joinNow': 'Rejoindre la Réunion Maintenant',
+      'pmodal.recorded': 'Votre nom est enregistré pour la présence.',
       'pmodal.successMsg': 'Merci, {first} {last} ! Nous sommes heureux que vous nous rejoigniez.',
       'rsvp.title': 'Confirmation : Conférence Prophétique en Présentiel',
       'rsvp.text': 'Faites-nous savoir que vous venez. La conférence se tiendra à Camp Elim Africa, North Legon.',
@@ -4063,6 +4072,7 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
     // No backend on this static site: the "submit" simply unlocks the link on-page.
     (function(){
       var ZOOM_LINK = 'https://us02web.zoom.us/j/89478115474';
+      var JOIN_LOG_URL = 'https://script.google.com/macros/s/AKfycbwmT40RZ1VzxmHPHFkDN1n76hbWvJ0MwIQVOhtc-oKqthUFqsPqEf14E_i85Pw9xN8/exec';
       var openBtn = document.getElementById('open-prayer-modal');
       var overlay = document.getElementById('prayer-modal-overlay');
       var panel = document.getElementById('prayer-modal-panel');
@@ -4131,6 +4141,17 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
         form.classList.add('hide');
         success.classList.add('show');
         document.getElementById('prayer-zoom-link').focus();
+
+        // Attendance log: fire-and-forget. The Zoom link is already showing, so a failure here
+        // must never get in the visitor's way.
+        try {
+          fetch(JOIN_LOG_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            keepalive: true,
+            body: JSON.stringify({ type: 'prayer_join', first_name: firstName.slice(0, 60), last_name: lastName.slice(0, 60) })
+          }).catch(function(){});
+        } catch(err) {}
       });
     })();
 
