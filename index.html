@@ -737,6 +737,7 @@
     object-fit:cover;
     display:block;
   }
+  .section-photo .photo-pause-btn{ top:12px; right:12px; z-index:4; line-height:0; }
   .section-photo::after{
     content:"";
     position:absolute;
@@ -2649,6 +2650,15 @@
           <video class="section-photo-video" id="prayer-room-video" autoplay muted loop playsinline preload="metadata" poster="assets/prayer-room-poster.jpg" aria-hidden="true">
             <source src="assets/prayer-room-loop.mp4" type="video/mp4">
           </video>
+          <button type="button" class="smoke-pause-btn photo-pause-btn" id="prayer-room-pause-btn" aria-pressed="false" aria-label="Pause the Prayer Room video">
+            <svg class="fire-icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <rect x="6" y="5" width="4" height="14" rx="1"></rect>
+              <rect x="14" y="5" width="4" height="14" rx="1"></rect>
+            </svg>
+            <svg class="fire-icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M7 5.5v13l11-6.5-11-6.5z"></path>
+            </svg>
+          </button>
         </div>
         <div class="section-head">
           <p class="eyebrow" data-i18n="pr.eyebrow">Gather With Us</p>
@@ -6389,14 +6399,33 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
 </script>
 
 <script>
-  // Prayer Room loop video: stay still (poster frame only) for visitors who prefer reduced motion.
+  // Prayer Room loop video: pause/play button, and it starts paused (poster frame only) for
+  // visitors who prefer reduced motion.
   (function(){
     var v = document.getElementById('prayer-room-video');
-    if(!v || !window.matchMedia) return;
-    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      v.removeAttribute('autoplay');
-      v.pause();
+    var btn = document.getElementById('prayer-room-pause-btn');
+    if(!v || !btn) return;
+
+    function setPaused(paused){
+      btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+      btn.setAttribute('aria-label', paused ? 'Play the Prayer Room video' : 'Pause the Prayer Room video');
+      [v].forEach(function(el){
+        if(paused){
+          el.removeAttribute('autoplay');
+          el.pause();
+        } else {
+          var p = el.play();
+          if(p && p.catch) p.catch(function(){});
+        }
+      });
     }
+
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      setPaused(true);
+    }
+    btn.addEventListener('click', function(){
+      setPaused(btn.getAttribute('aria-pressed') !== 'true');
+    });
   })();
 </script>
 
