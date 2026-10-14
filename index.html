@@ -1216,6 +1216,50 @@
 
   /* ===================== Events ===================== */
   .gatherings{ background:var(--linen); }
+  .event-countdown{
+    background:linear-gradient(135deg, var(--purple-deep), #1d1340);
+    border:1px solid rgba(212,165,55,0.4);
+    border-radius:var(--radius);
+    padding:26px 24px;
+    margin-bottom:20px;
+    text-align:center;
+    color:var(--cream);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+  }
+  .event-countdown[hidden]{ display:none; }
+  .event-countdown-label{
+    font-family:var(--font-mono);
+    font-size:0.74rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--gold-light);
+  }
+  .event-countdown-main{
+    display:flex;
+    align-items:baseline;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .event-countdown-number{
+    font-family:var(--font-heading);
+    font-size:clamp(3.4rem, 9vw, 5rem);
+    font-weight:600;
+    line-height:1;
+    color:var(--gold-light);
+  }
+  .event-countdown-caption{
+    font-family:var(--font-heading);
+    font-size:clamp(1.2rem, 3vw, 1.6rem);
+    color:var(--cream);
+  }
+  .event-countdown-date{
+    font-size:0.88rem;
+    color:rgba(251,247,238,0.7);
+  }
   .rsvp-dashboard{
     background:var(--purple-deep);
     border:1px solid rgba(212,165,55,0.25);
@@ -2806,6 +2850,17 @@
         </div>
       </div>
 
+      <!-- Countdown to the in-person conference — updates itself every day (see the script near the
+           Give modal; EDITABLE: EVENT_DATE_UTC there if the date moves). Hides itself after the event. -->
+      <div class="event-countdown" id="event-countdown" role="timer" aria-live="off" hidden>
+        <span class="event-countdown-label" data-i18n="events.cdLabel">In-Person Prophetic Conference</span>
+        <div class="event-countdown-main">
+          <span class="event-countdown-number" id="event-countdown-number">0</span>
+          <span class="event-countdown-caption" id="event-countdown-caption">days to go</span>
+        </div>
+        <span class="event-countdown-date" data-i18n="events.cdDate">Saturday, October 31, 2026 · 9 AM – 3 PM GMT</span>
+      </div>
+
       <!-- RSVP count dashboard for the Oct 31 conference — live count is read from the same
            Apps Script Web App the booking slots use (see APPS_SCRIPT_URL below), just under a
            different query type. Until that count loads, shows 0 rather than nothing. Three
@@ -3579,6 +3634,11 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pdf.downloadCountSingular': '{count} download',
       'pdf.downloadCountPlural': '{count} downloads',
       'events.eyebrow': 'Save the Date',
+      'events.cdLabel': 'In-Person Prophetic Conference',
+      'events.cdDate': 'Saturday, October 31, 2026 · 9 AM – 3 PM GMT',
+      'events.cdDays': 'days to go',
+      'events.cdDay': 'day to go',
+      'events.cdToday': 'Today is the day!',
       'events.h2': 'Events',
       'events.intro': 'Conferences, services, and special gatherings. Join us in person or online.',
       'events.confTitle': 'In-Person Prophetic Conference',
@@ -3824,6 +3884,11 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
       'pdf.downloadCountSingular': '{count} téléchargement',
       'pdf.downloadCountPlural': '{count} téléchargements',
       'events.eyebrow': 'Réservez la Date',
+      'events.cdLabel': 'Conférence Prophétique en Présentiel',
+      'events.cdDate': 'Samedi 31 octobre 2026 · 9 h – 15 h GMT',
+      'events.cdDays': 'jours restants',
+      'events.cdDay': 'jour restant',
+      'events.cdToday': "C'est aujourd'hui !",
       'events.h2': 'Événements',
       'events.intro': 'Conférences, cultes et rassemblements spéciaux. Rejoignez-nous en personne ou en ligne.',
       'events.confTitle': 'Conférence Prophétique en Présentiel',
@@ -6504,6 +6569,48 @@ I also experienced God&rsquo;s intervention when I suddenly became weak with sev
     } else {
       start();
     }
+  })();
+</script>
+
+<script>
+  // Conference countdown: whole days left until the event, counted by GMT calendar date (the same clock
+  // the rest of the site uses), so it ticks down once a day at midnight GMT. Shows "Today is the day!"
+  // on the day and hides itself afterwards.
+  // EDITABLE: EVENT_DATE_UTC is the conference date (month is 0-based: 9 = October).
+  (function(){
+    var EVENT_DATE_UTC = Date.UTC(2026, 9, 31);
+    var DAY_MS = 86400000;
+    var box = document.getElementById('event-countdown');
+    var numEl = document.getElementById('event-countdown-number');
+    var capEl = document.getElementById('event-countdown-caption');
+    if(!box || !numEl || !capEl) return;
+
+    function render(){
+      var now = new Date();
+      var todayUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+      var days = Math.round((EVENT_DATE_UTC - todayUtc) / DAY_MS);
+      if(days < 0){ box.hidden = true; return; }
+      if(days === 0){
+        numEl.hidden = true;
+        capEl.textContent = t('events.cdToday');
+      } else {
+        numEl.hidden = false;
+        numEl.textContent = String(days);
+        capEl.textContent = t(days === 1 ? 'events.cdDay' : 'events.cdDays');
+      }
+      box.hidden = false;
+    }
+
+    function scheduleNextMidnight(){
+      var now = new Date();
+      var next = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 5);
+      setTimeout(function(){ render(); scheduleNextMidnight(); }, Math.max(1000, next - now.getTime()));
+    }
+
+    render();
+    scheduleNextMidnight();
+    document.addEventListener('tu:langchange', render);
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden) render(); });
   })();
 </script>
 
