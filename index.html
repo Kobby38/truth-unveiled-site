@@ -1251,30 +1251,30 @@
     background:linear-gradient(90deg, transparent, rgba(240,210,140,0.35), transparent);
   }
   /* EDITABLE: --pace is one full there-and-back trip; --step is one footfall */
-  .event-countdown-stage{ --pace:36s; --step:1s; }
+  .event-countdown-stage{ --pace:36s; --step:1s; --man-w:32px; }
   .pacer{
     position:absolute;
     bottom:3px;
     left:0;
-    width:44px;
+    width:var(--man-w);
     animation:wPace var(--pace) linear infinite;
   }
   .pacer-flip{ animation:wFace var(--pace) steps(1, end) infinite; line-height:0; }
   .worship-svg{ width:100%; height:auto; display:block; overflow:visible; }
   .worship-svg .w-body{ animation:wBob var(--step) ease-in-out infinite; }
-  .worship-svg .w-leg{ transform-origin:80px 168px; animation:wStep var(--step) ease-in-out infinite; }
+  .worship-svg .w-leg{ transform-origin:60px 168px; animation:wStep var(--step) ease-in-out infinite; }
   .worship-svg .w-leg-b{ animation-delay:calc(var(--step) / -2); }
-  .worship-svg .w-raised{ transform-origin:54px 122px; animation:wRaise 2.6s ease-in-out infinite; }
-  .worship-svg .w-mouth{ transform-origin:80px 93px; animation:wSing 1.3s ease-in-out infinite; }
-  @keyframes wPace{ 0%{ left:0; } 50%{ left:calc(100% - 44px); } 100%{ left:0; } }
+  .worship-svg .w-raised{ transform-origin:58px 122px; animation:wRaise var(--step) ease-in-out infinite; }
+  .worship-svg .w-mouth{ transform-origin:79px 92px; animation:wSing 1.3s ease-in-out infinite; }
+  @keyframes wPace{ 0%{ left:0; } 50%{ left:calc(100% - var(--man-w)); } 100%{ left:0; } }
   @keyframes wFace{ 0%{ transform:scaleX(1); } 50%{ transform:scaleX(-1); } }
   @keyframes wBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-1.5px); } }
-  @keyframes wStep{ 0%,100%{ transform:rotate(-15deg); } 50%{ transform:rotate(15deg); } }
-  @keyframes wRaise{ 0%,100%{ transform:rotate(-3deg); } 50%{ transform:rotate(5deg); } }
+  @keyframes wStep{ 0%,100%{ transform:rotate(-24deg); } 50%{ transform:rotate(24deg); } }
+  @keyframes wRaise{ 0%,100%{ transform:rotate(14deg); } 50%{ transform:rotate(-14deg); } }
   @keyframes wSing{ 0%,100%{ transform:scaleY(0.55); } 50%{ transform:scaleY(1.1); } }
   @media (prefers-reduced-motion: reduce){
     .pacer, .pacer-flip, .worship-svg *{ animation:none !important; }
-    .pacer{ left:calc(50% - 22px); }
+    .pacer{ left:calc(50% - 16px); }
   }
   .event-countdown-label{
     font-family:var(--font-mono);
@@ -2910,59 +2910,55 @@
         <!-- Cartoon man pacing left and right across the box, singing with a microphone and one hand raised -->
         <div class="event-countdown-stage" aria-hidden="true">
           <div class="pacer"><div class="pacer-flip">
-            <svg class="worship-svg" viewBox="6 0 134 266" aria-hidden="true" focusable="false">
+            <svg class="worship-svg" viewBox="12 0 96 266" aria-hidden="true" focusable="false">
               <g class="w-body">
-                <!-- legs (swing alternately from the hip while pacing) -->
-                <g class="w-leg w-leg-a">
-                  <rect x="55" y="166" width="24" height="84" rx="9" fill="#B79A62"/>
-                  <ellipse cx="70" cy="254" rx="16" ry="7.5" fill="#17120E"/>
-                </g>
+                <!-- legs: swing front and back from the hip while walking (side view, facing right) -->
                 <g class="w-leg w-leg-b">
-                  <rect x="81" y="166" width="24" height="84" rx="9" fill="#A58A55"/>
-                  <ellipse cx="96" cy="254" rx="16" ry="7.5" fill="#17120E"/>
+                  <rect x="49.5" y="166" width="21" height="84" rx="9" fill="#8F7745"/>
+                  <ellipse cx="64" cy="254" rx="15" ry="7" fill="#0F0C09"/>
                 </g>
-                <!-- torso -->
-                <path d="M44 174 L44 134 Q44 112 66 108 L94 108 Q116 112 116 134 L116 174 Z" fill="#F3E9D2"/>
-                <path d="M80 112 L80 174" stroke="#D9CBA8" stroke-width="1.6"/>
-                <!-- neck + head -->
-                <rect x="72" y="94" width="16" height="18" rx="6" fill="#6E4129"/>
-                <ellipse cx="59.5" cy="79" rx="4" ry="6" fill="#7E4B2F"/>
-                <ellipse cx="100.5" cy="79" rx="4" ry="6" fill="#7E4B2F"/>
-                <ellipse cx="80" cy="77" rx="21" ry="25" fill="#8D5A3B"/>
-                <!-- hair -->
-                <path d="M58.5 74 Q58 50 80 50 Q102 50 101.5 74 Q97 61 80 61 Q63 61 58.5 74Z" fill="#17120E"/>
-                <!-- brows, closed eyes, mouth -->
-                <path d="M66 70 Q71 67 76 69" stroke="#17120E" stroke-width="2" fill="none" stroke-linecap="round"/>
-                <path d="M84 69 Q89 67 94 70" stroke="#17120E" stroke-width="2" fill="none" stroke-linecap="round"/>
-                <path d="M67 77 Q71.5 81 76 77" stroke="#17120E" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-                <path d="M84 77 Q88.5 81 93 77" stroke="#17120E" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-                <path d="M80 80 q-1.6 5 0 7" stroke="#6E4129" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-                <ellipse class="w-mouth" cx="80" cy="93" rx="5" ry="3.2" fill="#3A1D12"/>
-                <!-- beard shadow -->
-                <path d="M62 86 Q63 102 80 103 Q97 102 98 86 Q94 98 80 98 Q66 98 62 86Z" fill="#17120E" opacity="0.55"/>
-                <!-- arm holding the microphone -->
-                <path d="M108 120 L124 140" stroke="#F3E9D2" stroke-width="16" stroke-linecap="round" fill="none"/>
-                <path d="M124 140 L103 111" stroke="#8D5A3B" stroke-width="11" stroke-linecap="round" fill="none"/>
-                <!-- microphone -->
-                <path d="M102 114 L92 98" stroke="#25252B" stroke-width="6" stroke-linecap="round" fill="none"/>
-                <circle cx="90.5" cy="95.5" r="5.6" fill="#9A9AA6"/>
-                <circle cx="90.5" cy="95.5" r="5.6" fill="none" stroke="#25252B" stroke-width="1.2"/>
-                <circle cx="103" cy="112" r="6.2" fill="#8D5A3B"/>
-                <!-- raised arm, sways from the shoulder -->
+                <g class="w-leg w-leg-a">
+                  <rect x="49.5" y="166" width="21" height="84" rx="9" fill="#B79A62"/>
+                  <ellipse cx="64" cy="254" rx="15" ry="7" fill="#17120E"/>
+                </g>
+                <!-- torso (side) -->
+                <path d="M46 174 L46 132 Q46 112 62 108 L74 108 Q86 112 86 132 L86 174 Z" fill="#F3E9D2"/>
+                <path d="M66 112 Q70 140 66 174" stroke="#D9CBA8" stroke-width="1.6" fill="none"/>
+                <!-- arm carrying the Bible: hangs at his side and swings as he walks -->
                 <g class="w-raised">
-                  <path d="M54 122 L30 100" stroke="#F3E9D2" stroke-width="16" stroke-linecap="round" fill="none"/>
-                  <path d="M30 100 L25 60" stroke="#8D5A3B" stroke-width="11" stroke-linecap="round" fill="none"/>
-                  <!-- Bible held up in the raised hand -->
-                  <g transform="rotate(-7 24 40)">
-                    <rect x="10" y="5" width="28" height="43" rx="2.5" fill="#6B1B2A"/>
-                    <rect x="10" y="5" width="5" height="43" rx="2" fill="#4A1220"/>
-                    <rect x="36" y="7" width="2.6" height="39" fill="#F3E9D2"/>
-                    <rect x="22.2" y="12" width="3" height="19" rx="0.8" fill="#F0D28C"/>
-                    <rect x="16.5" y="17" width="14.4" height="3" rx="0.8" fill="#F0D28C"/>
+                  <path d="M58 122 L54 150" stroke="#F3E9D2" stroke-width="15" stroke-linecap="round" fill="none"/>
+                  <path d="M54 150 L52 170" stroke="#8D5A3B" stroke-width="10.5" stroke-linecap="round" fill="none"/>
+                  <g transform="rotate(5 52 170)">
+                    <rect x="41" y="170" width="23" height="36" rx="2.4" fill="#6B1B2A"/>
+                    <rect x="41" y="170" width="4.5" height="36" rx="1.8" fill="#4A1220"/>
+                    <rect x="62" y="172" width="2.2" height="32" fill="#F3E9D2"/>
+                    <rect x="51.4" y="176" width="2.6" height="16" rx="0.7" fill="#F0D28C"/>
+                    <rect x="46.8" y="180.6" width="11.8" height="2.6" rx="0.7" fill="#F0D28C"/>
                   </g>
-                  <ellipse cx="24.5" cy="52" rx="7.6" ry="8.2" fill="#8D5A3B"/>
-                  <ellipse cx="31.5" cy="45" rx="3" ry="5" fill="#8D5A3B" transform="rotate(-18 31.5 45)"/>
+                  <circle cx="52" cy="171" r="6.4" fill="#8D5A3B"/>
+                  <ellipse cx="57.6" cy="176" rx="2.6" ry="4" fill="#8D5A3B" transform="rotate(-12 57.6 176)"/>
                 </g>
+                <!-- neck -->
+                <rect x="57" y="94" width="15" height="18" rx="6" fill="#6E4129"/>
+                <!-- head in profile, facing right -->
+                <ellipse cx="64" cy="77" rx="19" ry="24" fill="#8D5A3B"/>
+                <ellipse cx="83" cy="80" rx="4.6" ry="4.2" fill="#8D5A3B"/>
+                <ellipse cx="57" cy="80" rx="3.8" ry="6" fill="#7E4B2F"/>
+                <!-- hair -->
+                <path d="M82 67 Q83 51 64 50.5 Q44 51 44.5 78 Q47 64 56 62 Q70 60 82 67Z" fill="#17120E"/>
+                <!-- brow, closed eye, mouth -->
+                <path d="M70 67 Q75 64 80 67" stroke="#17120E" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M70 73 Q74.5 77 79 73" stroke="#17120E" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+                <ellipse class="w-mouth" cx="79" cy="92" rx="3.6" ry="2.8" fill="#3A1D12"/>
+                <!-- beard -->
+                <path d="M52 84 Q54 102 70 100 Q80 99 82 94 Q74 97 64 94 Q56 91 52 84Z" fill="#17120E" opacity="0.6"/>
+                <!-- arm holding the microphone (near arm) -->
+                <path d="M64 120 L70 148" stroke="#F3E9D2" stroke-width="15" stroke-linecap="round" fill="none"/>
+                <path d="M70 148 L88 108" stroke="#8D5A3B" stroke-width="10.5" stroke-linecap="round" fill="none"/>
+                <path d="M88 108 L83 95" stroke="#25252B" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+                <circle cx="82" cy="92.5" r="5.2" fill="#9A9AA6"/>
+                <circle cx="82" cy="92.5" r="5.2" fill="none" stroke="#25252B" stroke-width="1.2"/>
+                <circle cx="88" cy="109" r="6" fill="#8D5A3B"/>
               </g>
             </svg>
           </div></div>
