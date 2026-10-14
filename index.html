@@ -1222,14 +1222,47 @@
     border-radius:var(--radius);
     padding:26px 24px;
     margin-bottom:20px;
-    text-align:center;
     color:var(--cream);
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     align-items:center;
-    gap:8px;
+    justify-content:center;
+    gap:28px;
   }
   .event-countdown[hidden]{ display:none; }
+  .event-countdown-body{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
+    text-align:left;
+  }
+  .event-countdown-art{ flex:0 0 auto; width:132px; line-height:0; }
+  .worship-svg{ width:100%; height:auto; overflow:visible; }
+  .worship-svg .w-body{ animation:wBob 2.6s ease-in-out infinite; }
+  .worship-svg .w-raised{ transform-origin:54px 122px; animation:wRaise 2.6s ease-in-out infinite; }
+  .worship-svg .w-mouth{ transform-origin:80px 93px; animation:wSing 1.3s ease-in-out infinite; }
+  .worship-svg .w-glow{ animation:wGlow 3.2s ease-in-out infinite; transform-origin:85px 100px; }
+  .worship-svg .w-twinkle{ transform-origin:center; transform-box:fill-box; animation:wTwinkle 2.4s ease-in-out infinite; }
+  .worship-svg .w-twinkle.t2{ animation-delay:.8s; }
+  .worship-svg .w-twinkle.t3{ animation-delay:1.5s; }
+  .worship-svg .w-note{ opacity:0; animation:wNote 3.6s ease-in infinite; }
+  .worship-svg .w-note.n2{ animation-delay:1.7s; }
+  @keyframes wBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2.5px); } }
+  @keyframes wRaise{ 0%,100%{ transform:rotate(-3deg); } 50%{ transform:rotate(5deg); } }
+  @keyframes wSing{ 0%,100%{ transform:scaleY(0.55); } 50%{ transform:scaleY(1.1); } }
+  @keyframes wGlow{ 0%,100%{ opacity:0.7; transform:scale(0.96); } 50%{ opacity:1; transform:scale(1.04); } }
+  @keyframes wTwinkle{ 0%,100%{ opacity:0.25; transform:scale(0.6); } 50%{ opacity:1; transform:scale(1.15); } }
+  @keyframes wNote{ 0%{ opacity:0; transform:translate(0,10px); } 20%{ opacity:0.95; } 100%{ opacity:0; transform:translate(8px,-34px); } }
+  @media (prefers-reduced-motion: reduce){
+    .worship-svg *{ animation:none !important; }
+    .worship-svg .w-note{ opacity:0; }
+  }
+  @media (max-width:600px){
+    .event-countdown{ flex-direction:column; gap:12px; }
+    .event-countdown-body{ align-items:center; text-align:center; }
+    .event-countdown-art{ width:112px; }
+  }
   .event-countdown-label{
     font-family:var(--font-mono);
     font-size:0.74rem;
@@ -2853,12 +2886,68 @@
       <!-- Countdown to the in-person conference — updates itself every day (see the script near the
            Give modal; EDITABLE: EVENT_DATE_UTC there if the date moves). Hides itself after the event. -->
       <div class="event-countdown" id="event-countdown" role="timer" aria-live="off" hidden>
-        <span class="event-countdown-label" data-i18n="events.cdLabel">In-Person Prophetic Conference</span>
-        <div class="event-countdown-main">
-          <span class="event-countdown-number" id="event-countdown-number">0</span>
-          <span class="event-countdown-caption" id="event-countdown-caption">days to go</span>
+        <div class="event-countdown-art">
+        <svg class="worship-svg" viewBox="0 0 170 200" aria-hidden="true" focusable="false">
+          <defs>
+            <radialGradient id="wGlow" cx="50%" cy="45%" r="55%">
+              <stop offset="0%" stop-color="#F0D28C" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#F0D28C" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle class="w-glow" cx="85" cy="100" r="82" fill="url(#wGlow)"/>
+          <!-- twinkles -->
+          <path class="w-twinkle t1" d="M20 40 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5 -6 -6 -2.5 6 -2.5z" fill="#F0D28C"/>
+          <path class="w-twinkle t2" d="M150 62 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" fill="#F0D28C"/>
+          <path class="w-twinkle t3" d="M138 20 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6z" fill="#fff"/>
+          <!-- music notes drifting up from the microphone -->
+          <g class="w-note n1" fill="#F0D28C"><ellipse cx="124" cy="82" rx="3.6" ry="2.7"/><rect x="126.6" y="70" width="1.8" height="12"/><path d="M128.4 70 q5 1 5 6 q-3 -3 -5 -2z"/></g>
+          <g class="w-note n2" fill="#fff"><ellipse cx="140" cy="96" rx="3" ry="2.3"/><rect x="142.2" y="86" width="1.6" height="10"/><path d="M143.8 86 q4.2 1 4.2 5 q-2.5 -2.5 -4.2 -1.6z"/></g>
+          <g class="w-body">
+            <!-- torso -->
+            <path d="M44 200 L44 134 Q44 112 66 108 L94 108 Q116 112 116 134 L116 200 Z" fill="#F3E9D2"/>
+            <path d="M80 112 L80 200" stroke="#D9CBA8" stroke-width="1.6"/>
+            <!-- neck + head -->
+            <rect x="72" y="94" width="16" height="18" rx="6" fill="#6E4129"/>
+            <ellipse cx="59.5" cy="79" rx="4" ry="6" fill="#7E4B2F"/>
+            <ellipse cx="100.5" cy="79" rx="4" ry="6" fill="#7E4B2F"/>
+            <ellipse cx="80" cy="77" rx="21" ry="25" fill="#8D5A3B"/>
+            <!-- hair -->
+            <path d="M58.5 74 Q58 50 80 50 Q102 50 101.5 74 Q97 61 80 61 Q63 61 58.5 74Z" fill="#17120E"/>
+            <!-- brows, closed eyes, mouth -->
+            <path d="M66 70 Q71 67 76 69" stroke="#17120E" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M84 69 Q89 67 94 70" stroke="#17120E" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M67 77 Q71.5 81 76 77" stroke="#17120E" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M84 77 Q88.5 81 93 77" stroke="#17120E" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M80 80 q-1.6 5 0 7" stroke="#6E4129" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <ellipse class="w-mouth" cx="80" cy="93" rx="5" ry="3.2" fill="#3A1D12"/>
+            <!-- beard shadow -->
+            <path d="M62 86 Q63 102 80 103 Q97 102 98 86 Q94 98 80 98 Q66 98 62 86Z" fill="#17120E" opacity="0.55"/>
+            <!-- arm holding the microphone (viewer's right) -->
+            <path d="M108 120 L124 140" stroke="#F3E9D2" stroke-width="16" stroke-linecap="round" fill="none"/>
+            <path d="M124 140 L103 111" stroke="#8D5A3B" stroke-width="11" stroke-linecap="round" fill="none"/>
+            <!-- microphone -->
+            <path d="M102 114 L92 98" stroke="#25252B" stroke-width="6" stroke-linecap="round" fill="none"/>
+            <circle cx="90.5" cy="95.5" r="5.6" fill="#9A9AA6"/>
+            <circle cx="90.5" cy="95.5" r="5.6" fill="none" stroke="#25252B" stroke-width="1.2"/>
+            <circle cx="103" cy="112" r="6.2" fill="#8D5A3B"/>
+            <!-- raised arm (viewer's left), sways from the shoulder -->
+            <g class="w-raised">
+              <path d="M54 122 L30 100" stroke="#F3E9D2" stroke-width="16" stroke-linecap="round" fill="none"/>
+              <path d="M30 100 L25 60" stroke="#8D5A3B" stroke-width="11" stroke-linecap="round" fill="none"/>
+              <ellipse cx="24.5" cy="50" rx="7.2" ry="9.5" fill="#8D5A3B"/>
+              <path d="M18 45 l-1.5 -9 M22 42 l-0.5 -10 M27 42 l0.8 -9.5 M31 45 l2.5 -8" stroke="#8D5A3B" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+            </g>
+          </g>
+        </svg>
         </div>
-        <span class="event-countdown-date" data-i18n="events.cdDate">Saturday, October 31, 2026 · 9 AM – 3 PM GMT</span>
+        <div class="event-countdown-body">
+          <span class="event-countdown-label" data-i18n="events.cdLabel">In-Person Prophetic Conference</span>
+          <div class="event-countdown-main">
+            <span class="event-countdown-number" id="event-countdown-number">0</span>
+            <span class="event-countdown-caption" id="event-countdown-caption">days to go</span>
+          </div>
+          <span class="event-countdown-date" data-i18n="events.cdDate">Saturday, October 31, 2026 · 9 AM – 3 PM GMT</span>
+        </div>
       </div>
 
       <!-- RSVP count dashboard for the Oct 31 conference — live count is read from the same
