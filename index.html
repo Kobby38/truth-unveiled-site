@@ -1250,18 +1250,20 @@
     height:1px;
     background:linear-gradient(90deg, transparent, rgba(240,210,140,0.35), transparent);
   }
+  /* EDITABLE: --pace is one full there-and-back trip; --step is one footfall */
+  .event-countdown-stage{ --pace:36s; --step:1s; }
   .pacer{
     position:absolute;
     bottom:3px;
     left:0;
     width:44px;
-    animation:wPace 22s linear infinite;
+    animation:wPace var(--pace) linear infinite;
   }
-  .pacer-flip{ animation:wFace 22s steps(1, end) infinite; line-height:0; }
+  .pacer-flip{ animation:wFace var(--pace) steps(1, end) infinite; line-height:0; }
   .worship-svg{ width:100%; height:auto; display:block; overflow:visible; }
-  .worship-svg .w-body{ animation:wBob 0.7s ease-in-out infinite; }
-  .worship-svg .w-leg{ transform-origin:80px 168px; animation:wStep 0.7s ease-in-out infinite; }
-  .worship-svg .w-leg-b{ animation-delay:-0.35s; }
+  .worship-svg .w-body{ animation:wBob var(--step) ease-in-out infinite; }
+  .worship-svg .w-leg{ transform-origin:80px 168px; animation:wStep var(--step) ease-in-out infinite; }
+  .worship-svg .w-leg-b{ animation-delay:calc(var(--step) / -2); }
   .worship-svg .w-raised{ transform-origin:54px 122px; animation:wRaise 2.6s ease-in-out infinite; }
   .worship-svg .w-mouth{ transform-origin:80px 93px; animation:wSing 1.3s ease-in-out infinite; }
   @keyframes wPace{ 0%{ left:0; } 50%{ left:calc(100% - 44px); } 100%{ left:0; } }
@@ -2908,7 +2910,7 @@
         <!-- Cartoon man pacing left and right across the box, singing with a microphone and one hand raised -->
         <div class="event-countdown-stage" aria-hidden="true">
           <div class="pacer"><div class="pacer-flip">
-            <svg class="worship-svg" viewBox="10 0 130 266" aria-hidden="true" focusable="false">
+            <svg class="worship-svg" viewBox="6 0 134 266" aria-hidden="true" focusable="false">
               <g class="w-body">
                 <!-- legs (swing alternately from the hip while pacing) -->
                 <g class="w-leg w-leg-a">
@@ -2950,8 +2952,16 @@
                 <g class="w-raised">
                   <path d="M54 122 L30 100" stroke="#F3E9D2" stroke-width="16" stroke-linecap="round" fill="none"/>
                   <path d="M30 100 L25 60" stroke="#8D5A3B" stroke-width="11" stroke-linecap="round" fill="none"/>
-                  <ellipse cx="24.5" cy="50" rx="7.2" ry="9.5" fill="#8D5A3B"/>
-                  <path d="M18 45 l-1.5 -9 M22 42 l-0.5 -10 M27 42 l0.8 -9.5 M31 45 l2.5 -8" stroke="#8D5A3B" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+                  <!-- Bible held up in the raised hand -->
+                  <g transform="rotate(-7 24 40)">
+                    <rect x="10" y="5" width="28" height="43" rx="2.5" fill="#6B1B2A"/>
+                    <rect x="10" y="5" width="5" height="43" rx="2" fill="#4A1220"/>
+                    <rect x="36" y="7" width="2.6" height="39" fill="#F3E9D2"/>
+                    <rect x="22.2" y="12" width="3" height="19" rx="0.8" fill="#F0D28C"/>
+                    <rect x="16.5" y="17" width="14.4" height="3" rx="0.8" fill="#F0D28C"/>
+                  </g>
+                  <ellipse cx="24.5" cy="52" rx="7.6" ry="8.2" fill="#8D5A3B"/>
+                  <ellipse cx="31.5" cy="45" rx="3" ry="5" fill="#8D5A3B" transform="rotate(-18 31.5 45)"/>
                 </g>
               </g>
             </svg>
