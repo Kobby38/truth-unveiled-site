@@ -1254,39 +1254,39 @@
   .sitter{
     position:absolute;
     left:50%;
-    margin-left:-53px;
+    margin-left:-43px;
     bottom:3px;
-    width:106px;
-    height:127px;
+    width:86px;
+    height:128px;
   }
-  .sit-svg{ width:100%; height:100%; display:block; overflow:visible; transform:scaleX(-1); }
-  .sit-svg .s-upper{ transform-origin:56px 118px; animation:sSlouch var(--loop) ease-in-out infinite; }
-  .sit-svg .s-head{ transform-origin:66px 66px; animation:sHead var(--loop) ease-in-out infinite; }
-  .sit-svg .s-mouth{ transform-origin:85px 54px; animation:sMouth var(--loop) ease-in-out infinite; }
+  .sit-svg{ width:100%; height:100%; display:block; overflow:visible; }
+  .sit-svg .s-upper{ transform-origin:75px 116px; animation:sSlouch var(--loop) ease-in-out infinite; }
+  .sit-svg .s-head{ transform-origin:75px 62px; animation:sHead var(--loop) ease-in-out infinite; }
+  .sit-svg .s-mouth{ transform-origin:75px 55px; animation:sMouth var(--loop) ease-in-out infinite; }
   .sit-svg .s-eye-shut{ animation:sEyeShut var(--loop) linear infinite; }
   .sit-svg .s-eye-open{ opacity:0; animation:sEyeOpen var(--loop) linear infinite; }
-  .sit-svg .s-fore{ transform-origin:68px 100px; animation:sFore var(--loop) ease-in-out infinite; }
-  .sit-svg .s-glint{ transform-origin:84px 98px; opacity:0; animation:sGlint var(--loop) ease-out infinite; }
-  .sit-svg .s-foot{ transform-origin:98px 164px; animation:sTap var(--loop) ease-in-out infinite; }
+  .sit-svg .s-fore{ transform-origin:105px 101px; animation:sFore var(--loop) ease-in-out infinite; }
+  .sit-svg .s-glint{ transform-origin:96px 111px; opacity:0; animation:sGlint var(--loop) ease-out infinite; }
+  .sit-svg .s-foot{ animation:sTap var(--loop) ease-in-out infinite; }
   @keyframes sSlouch{ 0%,100%{ transform:rotate(0deg); } 50%{ transform:rotate(-1.8deg); } }
   @keyframes sHead{
-    0%{ transform:rotate(7deg); } 28%{ transform:rotate(9deg); } 34%{ transform:rotate(-12deg); }
-    54%{ transform:rotate(-12deg); } 60%{ transform:rotate(8deg); } 64%{ transform:rotate(20deg); }
-    84%{ transform:rotate(20deg); } 92%{ transform:rotate(8deg); } 100%{ transform:rotate(7deg); }
+    0%{ transform:rotate(6deg) translateY(1px); } 28%{ transform:rotate(8deg) translateY(2px); } 34%{ transform:rotate(0deg) translateY(-3px); }
+    54%{ transform:rotate(0deg) translateY(-3px); } 60%{ transform:rotate(5deg) translateY(1px); } 64%{ transform:rotate(7deg) translateY(3px); }
+    84%{ transform:rotate(7deg) translateY(3px); } 92%{ transform:rotate(6deg) translateY(1px); } 100%{ transform:rotate(6deg) translateY(1px); }
   }
   @keyframes sMouth{ 0%,34%{ transform:scaleY(0); } 39%,52%{ transform:scaleY(1); } 57%,100%{ transform:scaleY(0); } }
   @keyframes sEyeShut{ 0%,59%{ opacity:1; } 61%,85%{ opacity:0; } 87%,100%{ opacity:1; } }
   @keyframes sEyeOpen{ 0%,59%{ opacity:0; } 61%,85%{ opacity:1; } 87%,100%{ opacity:0; } }
-  @keyframes sFore{ 0%,56%{ transform:rotate(0deg); } 64%,84%{ transform:rotate(-72deg); } 92%,100%{ transform:rotate(0deg); } }
+  @keyframes sFore{ 0%,56%{ transform:rotate(0deg); } 64%,84%{ transform:rotate(103deg); } 92%,100%{ transform:rotate(0deg); } }
   @keyframes sGlint{ 0%,66%{ opacity:0; transform:scale(0.3); } 70%{ opacity:1; transform:scale(1.2); } 77%,100%{ opacity:0; transform:scale(0.5); } }
   @keyframes sTap{
-    0%,26%,100%{ transform:rotate(0deg); }
-    3%,9%,15%,21%{ transform:rotate(-10deg); }
-    6%,12%,18%,24%{ transform:rotate(0deg); }
+    0%,26%,100%{ transform:translateY(0); }
+    3%,9%,15%,21%{ transform:translateY(-4px); }
+    6%,12%,18%,24%{ transform:translateY(0); }
   }
   @media (prefers-reduced-motion: reduce){
     .sit-svg *{ animation:none !important; }
-    .sit-svg .s-head{ transform:rotate(7deg); }
+    .sit-svg .s-head{ transform:rotate(6deg); }
     .sit-svg .s-mouth{ transform:scaleY(0); }
   }
   .event-countdown-label{
@@ -2923,66 +2923,83 @@
         <!-- Cartoon man sitting on a bench, tired: taps his foot, yawns, then checks his watch (can't wait for day 0) -->
         <div class="event-countdown-stage" aria-hidden="true">
           <div class="sitter">
-            <svg class="sit-svg" viewBox="8 16 134 160" aria-hidden="true" focusable="false">
+            <svg class="sit-svg" viewBox="22 12 106 158" aria-hidden="true" focusable="false">
               <!-- bench -->
-              <rect x="18" y="118" width="96" height="8" rx="3" fill="#7A5632"/>
-              <rect x="26" y="126" width="7" height="42" rx="2" fill="#5E4224"/>
-              <rect x="99" y="126" width="7" height="42" rx="2" fill="#5E4224"/>
+              <rect x="26" y="114" width="98" height="8" rx="3" fill="#7A5632"/>
+              <rect x="32" y="122" width="7" height="46" rx="2" fill="#5E4224"/>
+              <rect x="111" y="122" width="7" height="46" rx="2" fill="#5E4224"/>
               <g class="s-upper">
-                <!-- far leg -->
-                <rect x="107" y="108" width="15" height="56" rx="7" fill="#DAD6E6"/>
-                <ellipse cx="118" cy="166" rx="14" ry="6" fill="#0F0C09"/>
-                <!-- near thigh + lower leg + shoe (the shoe taps impatiently) -->
-                <rect x="50" y="102" width="58" height="17" rx="8" fill="#FFFFFF"/>
-                <rect x="95" y="108" width="15" height="56" rx="7" fill="#FFFFFF"/>
-                <ellipse class="s-foot" cx="110" cy="166" rx="14" ry="6" fill="#17120E"/>
                 <!-- torso -->
-                <path d="M44 118 L45 82 Q47 66 62 64 L74 66 Q86 72 84 92 L82 118 Z" fill="#F3E9D2"/>
-                <path d="M62 70 Q66 94 62 118" stroke="#D9CBA8" stroke-width="1.6" fill="none"/>
+                <path d="M48 116 L50 78 Q52 66 66 64 L84 64 Q98 66 100 78 L102 116 Z" fill="#F3E9D2"/>
+                <path d="M75 68 L75 114" stroke="#D9CBA8" stroke-width="1.5"/>
+                <circle cx="75" cy="82" r="1.3" fill="#D9CBA8"/><circle cx="75" cy="95" r="1.3" fill="#D9CBA8"/><circle cx="75" cy="108" r="1.3" fill="#D9CBA8"/>
                 <!-- neck -->
-                <rect x="62" y="62" width="13" height="16" rx="5" fill="#6E4129"/>
-                <!-- head (tilts back to yawn, then down to read the watch) -->
+                <rect x="68" y="56" width="14" height="14" rx="5" fill="#6E4129"/>
+                <!-- head, facing the visitor (nods off to the side, lifts back to yawn, tips down to read the watch) -->
                 <g class="s-head">
-                  <ellipse cx="72" cy="46" rx="17" ry="21" fill="#8D5A3B"/>
-                  <ellipse cx="89" cy="49" rx="4" ry="3.6" fill="#8D5A3B"/>
-                  <ellipse cx="65" cy="49" rx="3.3" ry="5" fill="#7E4B2F"/>
-                  <!-- a normal short haircut: fuller on top, clean hairline, tapered sides and back, small sideburn -->
-                  <path d="M54.8 41 Q54 51 57.4 56 L60.4 53 Q59 46 62 33 Q56.6 35 54.8 41Z" fill="#2B211A"/>
-                  <path d="M87.6 38.4 Q89.4 21.5 73 21 Q56 21.4 54.6 40 Q56.6 34.2 62.4 32.6 Q75.4 29.2 87.6 38.4Z" fill="#17120E"/>
-                  <path d="M66.6 34.6 L70.8 36 L70.2 47 Q68.2 48.4 66.8 46Z" fill="#17120E"/>
-                  <path d="M76 37 Q82 35.5 87 39" stroke="#17120E" stroke-width="1.9" fill="none" stroke-linecap="round"/>
-                  <!-- eyes: heavy and shut (sleepy / yawning) ... -->
+                  <ellipse cx="55.4" cy="42" rx="3.4" ry="5" fill="#7E4B2F"/>
+                  <ellipse cx="94.6" cy="42" rx="3.4" ry="5" fill="#7E4B2F"/>
+                  <ellipse cx="75" cy="40" rx="19" ry="23" fill="#8D5A3B"/>
+                  <!-- a normal short haircut: fuller on top, clean hairline, tapered sides, small sideburns -->
+                  <path d="M56 40 Q54.6 16.4 75 16 Q95.4 16.4 94 40 L91.4 40 L91.4 33 Q85 25.8 75 25.4 Q65 25.8 58.6 33 L58.6 40Z" fill="#17120E"/>
+                  <path d="M55.2 38 L58.8 38 L59 47 L56.4 46Z" fill="#2B211A"/>
+                  <path d="M94.8 38 L91.2 38 L91 47 L93.6 46Z" fill="#2B211A"/>
+                  <!-- tired brows -->
+                  <path d="M62 33.6 Q66.6 31.4 71.4 34" stroke="#17120E" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <path d="M78.6 34 Q83.4 31.4 88 33.6" stroke="#17120E" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <!-- eyes shut / heavy (sleepy, yawning) -->
                   <g class="s-eye-shut">
-                    <path d="M77 43 Q81.5 46.5 86 43" stroke="#17120E" stroke-width="2.1" fill="none" stroke-linecap="round"/>
+                    <path d="M61.6 40 Q66.5 43.8 71.4 40" stroke="#17120E" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+                    <path d="M78.6 40 Q83.5 43.8 88.4 40" stroke="#17120E" stroke-width="2.2" fill="none" stroke-linecap="round"/>
                   </g>
-                  <!-- ... and wide open when he checks the time -->
+                  <!-- eyes open (half-lidded) when he checks the time, looking down at his wrist -->
                   <g class="s-eye-open">
-                    <ellipse cx="82" cy="43" rx="3.8" ry="3.1" fill="#fff"/>
-                    <circle cx="83.6" cy="44.2" r="1.6" fill="#17120E"/>
-                    <path d="M77.2 39.6 Q82 36.8 86.8 39.6 L86.8 42.6 Q82 41 77.2 42.6Z" fill="#8D5A3B"/>
-                    <path d="M77.4 42.6 Q82 41.1 86.6 42.6" stroke="#17120E" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+                    <ellipse cx="66.5" cy="40" rx="4.4" ry="3.4" fill="#fff"/>
+                    <ellipse cx="83.5" cy="40" rx="4.4" ry="3.4" fill="#fff"/>
+                    <circle cx="68" cy="41.4" r="1.8" fill="#17120E"/>
+                    <circle cx="85" cy="41.4" r="1.8" fill="#17120E"/>
+                    <path d="M61.8 36.4 Q66.5 33.4 71.2 36.4 L71.2 39.6 Q66.5 37.8 61.8 39.6Z" fill="#8D5A3B"/>
+                    <path d="M78.8 36.4 Q83.5 33.4 88.2 36.4 L88.2 39.6 Q83.5 37.8 78.8 39.6Z" fill="#8D5A3B"/>
+                    <path d="M62 39.6 Q66.5 37.9 71 39.6" stroke="#17120E" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+                    <path d="M79 39.6 Q83.5 37.9 88 39.6" stroke="#17120E" stroke-width="1.7" fill="none" stroke-linecap="round"/>
                   </g>
-                  <path d="M56 52 Q58 68 74 66 Q85 64 87 59 Q80 63 71 61 Q60 58 56 52Z" fill="#17120E" opacity="0.6"/>
-                  <!-- tired: dark puffy bags under the eye -->
-                  <path d="M76.4 46.4 Q82 53.4 87.6 46.4 Q82 49.6 76.4 46.4Z" fill="#4A2616" opacity="0.85"/>
-                  <path d="M77.6 50.6 Q82 53.4 86.4 50.6" stroke="#5A3322" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.8"/>
-                  <path d="M80 57 Q84 58 88 57" stroke="#3A1D12" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <!-- tired: dark puffy bags under both eyes -->
+                  <path d="M61 44 Q66.5 51.4 72 44 Q66.5 47.4 61 44Z" fill="#4A2616" opacity="0.85"/>
+                  <path d="M78 44 Q83.5 51.4 89 44 Q83.5 47.4 78 44Z" fill="#4A2616" opacity="0.85"/>
+                  <path d="M62.6 48.6 Q66.5 51.4 70.4 48.6" stroke="#5A3322" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.8"/>
+                  <path d="M79.6 48.6 Q83.5 51.4 87.4 48.6" stroke="#5A3322" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.8"/>
+                  <!-- nose -->
+                  <path d="M75 42 Q72.2 50 73.6 52.4 Q75 53.6 76.8 52.4" stroke="#6E4129" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  <!-- beard shadow -->
+                  <path d="M56.6 46 Q57.6 66 75 68.4 Q92.4 66 93.4 46 Q89 58.4 75 58.4 Q61 58.4 56.6 46Z" fill="#17120E" opacity="0.55"/>
+                  <!-- mouth: flat and bored, opens wide for the yawn -->
+                  <path d="M69 59.6 Q75 61.4 81 59.6" stroke="#3A1D12" stroke-width="2" fill="none" stroke-linecap="round"/>
                   <g class="s-mouth">
-                    <ellipse cx="85" cy="59" rx="5.4" ry="7.4" fill="#2A100A"/>
-                    <ellipse cx="85.5" cy="62.5" rx="3.4" ry="2.6" fill="#B5524A"/>
+                    <ellipse cx="75" cy="60.5" rx="7" ry="8.2" fill="#2A100A"/>
+                    <ellipse cx="75" cy="65.4" rx="4.6" ry="3" fill="#B5524A"/>
                   </g>
                 </g>
-                <!-- arm: upper arm hangs, forearm lifts to look at the watch -->
-                <path d="M62 74 L68 100" stroke="#F3E9D2" stroke-width="14" stroke-linecap="round" fill="none"/>
-                <g class="s-fore">
-                  <path d="M68 100 L90 104" stroke="#8D5A3B" stroke-width="10" stroke-linecap="round" fill="none"/>
-                  <circle cx="92" cy="104" r="5.4" fill="#8D5A3B"/>
-                  <!-- watch seen side-on: strap around the wrist + the edge of the case; its dial faces HIM, not the viewer -->
-                  <rect x="80.4" y="97.8" width="5" height="11.4" rx="1.6" fill="#F0D28C" transform="rotate(8 83 103)"/>
-                  <rect x="79.6" y="95.2" width="6.8" height="3.6" rx="1.6" fill="#C9A24A" transform="rotate(8 83 97)"/>
-                  <rect x="80.8" y="95.7" width="4.4" height="1" rx="0.5" fill="#17120E" opacity="0.85" transform="rotate(8 83 97)"/>
-                  <path class="s-glint" d="M84 91 l1.5 3.6 3.6 1.5 -3.6 1.5 -1.5 3.6 -1.5 -3.6 -3.6 -1.5 3.6 -1.5z" fill="#fff"/>
-                </g>
+              </g>
+              <!-- legs: thighs towards the viewer, lower legs, shoes (one foot taps impatiently) -->
+              <rect x="50" y="106" width="23" height="21" rx="9" fill="#FFFFFF"/>
+              <rect x="77" y="106" width="23" height="21" rx="9" fill="#FFFFFF"/>
+              <rect x="52" y="120" width="19" height="42" rx="8" fill="#FFFFFF"/>
+              <rect x="79" y="120" width="19" height="42" rx="8" fill="#F1EFF7"/>
+              <ellipse cx="58" cy="164" rx="12.5" ry="6" fill="#17120E"/>
+              <ellipse class="s-foot" cx="92" cy="164" rx="12.5" ry="6" fill="#17120E"/>
+              <!-- arm (viewer's left): hand rests on his knee -->
+              <path d="M53 74 L45 101" stroke="#F3E9D2" stroke-width="14" stroke-linecap="round" fill="none"/>
+              <path d="M45 101 L57 118" stroke="#8D5A3B" stroke-width="10" stroke-linecap="round" fill="none"/>
+              <circle cx="59" cy="120.4" r="5.6" fill="#8D5A3B"/>
+              <!-- arm (viewer's right): forearm lifts across his chest to check the watch -->
+              <path d="M97 74 L105 101" stroke="#F3E9D2" stroke-width="14" stroke-linecap="round" fill="none"/>
+              <g class="s-fore">
+                <path d="M105 101 L93 119" stroke="#8D5A3B" stroke-width="10" stroke-linecap="round" fill="none"/>
+                <circle cx="91" cy="121.4" r="5.6" fill="#8D5A3B"/>
+                <!-- watch strap only: the dial faces HIM (turned away from the visitor) -->
+                <path d="M101.2 117.9 L90.8 111.1" stroke="#F0D28C" stroke-width="4.6" fill="none"/>
+                <path d="M99.6 115.8 L92.4 111.1" stroke="#C9A24A" stroke-width="1.2" fill="none"/>
+                <path class="s-glint" d="M96 106 l1.4 3.4 3.4 1.4 -3.4 1.4 -1.4 3.4 -1.4 -3.4 -3.4 -1.4 3.4 -1.4z" fill="#fff"/>
               </g>
             </svg>
           </div>
